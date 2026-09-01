@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - Ultra Pro Edition</title>
+    <title>NeonArcade Hub - Pro Edition</title>
     <style>
         :root {
             --bg-color: #020205;
@@ -69,6 +69,7 @@
         .canvas-container {
             position: relative;
             display: inline-block;
+            cursor: none; /* İmleç tamamen gizlendi */
         }
 
         #gameCanvas {
@@ -81,9 +82,9 @@
             height: 900px;
             max-width: 70vw;
             max-height: 74vh;
+            cursor: none; /* Canvas üzerinde imleç yok */
         }
 
-        /* Sağ Yan Gelişmiş Oyun Seçim Paneli */
         .sidebar {
             width: 260px;
             background: var(--panel-bg);
@@ -137,6 +138,7 @@
             align-items: center;
             z-index: 10;
             border-radius: 6px;
+            cursor: default; /* Menülerde imleç görünsün */
         }
 
         .overlay.hidden { display: none; }
@@ -176,7 +178,7 @@
 </head>
 <body>
 
-    <h1>⚡ NEON ARCADE ULTRA HUB : 6 PRO GAMES ⚡</h1>
+    <h1>⚡ NEON ARCADE ULTRA HUB : PRO GAMES ⚡</h1>
     <div class="hud">
         <div class="hud-item">⭐ SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">🏆 REKOR: <span id="highVal">0</span></div>
@@ -191,7 +193,7 @@
             
             <div id="menuOverlay" class="overlay">
                 <h2 id="menuTitle">NEON BOUNCE PRO</h2>
-                <p id="menuDesc">Tam profesyonel, particle patlamaları, güçlendirmeler ve boss katmanları içeren sürüm.</p>
+                <p id="menuDesc">Tam profesyonel, gizli imleç, particle patlamaları ve güçlendirmeler.</p>
                 <button class="btn" id="startBtn">OYUNA BAŞLA</button>
             </div>
 
@@ -257,11 +259,10 @@
         let highScore = localStorage.getItem("neon_ultra_high") || 0;
         highEl.innerText = highScore;
 
-        let inputX = canvas.width / 2;
+        let paddlePos = canvas.width / 2;
         let keys = {};
         let particles = [];
 
-        // Profesyonel Particle Sistemi
         function addParticles(x, y, color, count = 12) {
             for (let i = 0; i < count; i++) {
                 let angle = Math.random() * Math.PI * 2;
@@ -277,7 +278,6 @@
             }
         }
 
-        // Web Audio Sintisayzı
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -295,12 +295,11 @@
             } catch(e) {}
         }
 
-        // --- 1. NEON BOUNCE PRO (50+ Detay Mekaniği) ---
+        // --- Oyun Modelleri ---
         let nb = {
             paddle: { x: 260, y: 840, w: 130, h: 16, color: "#ff007f", laser: false },
             ball: { x: 340, y: 810, r: 8, dx: 3.2, dy: -3.2, color: "#00f0ff" },
-            bricks: [], powerups: [], lasers: [],
-            lives: 3, level: 1, combo: 1, comboTimer: 0
+            bricks: [], powerups: [], lasers: [], lives: 3, level: 1, combo: 1, comboTimer: 0
         };
 
         function initNeonBounceLevel() {
@@ -327,13 +326,11 @@
             nb.ball.dy = -3.2;
         }
 
-        // --- 2. CYBER SNAKE X PRO ---
         let cs = {
             snake: [{x: 15, y: 15}, {x: 14, y: 15}, {x: 13, y: 15}],
             dir: {x: 1, y: 0}, nextDir: {x: 1, y: 0},
             food: {x: 5, y: 5, color: "#00ff66", type: "normal"},
-            portalA: {x: 3, y: 3}, portalB: {x: 20, y: 20},
-            gridSize: 25, timer: 0
+            portalA: {x: 3, y: 3}, portalB: {x: 20, y: 20}, gridSize: 25, timer: 0
         };
         function spawnCSFood() {
             cs.food.x = Math.floor(Math.random() * (canvas.width / cs.gridSize));
@@ -342,10 +339,9 @@
             cs.food.color = cs.food.type === "bonus" ? "#ffe600" : "#00ff66";
         }
 
-        // --- 3. NEON INVADERS X PRO ---
         let ni = {
             ship: {x: 310, y: 830, w: 50, h: 25, shield: true},
-            bullets: [], alienBullets: [], aliens: [], alienDir: 1, lives: 3
+            bullets: [], alienBullets: [], aliens: [], lives: 3
         };
         function initNeonInvaders() {
             ni.bullets = []; ni.alienBullets = []; ni.aliens = [];
@@ -359,14 +355,12 @@
             }
         }
 
-        // --- 4. GRAVITON JUMP PRO ---
         let gj = {
-            player: {x: 320, y: 700, w: 30, h: 30, vy: 0, rocket: false},
-            platforms: [], enemies: []
+            player: {x: 320, y: 700, w: 30, h: 30, vy: 0},
+            platforms: []
         };
         function initGravitonJump() {
             gj.platforms = [{x: 280, y: 820, w: 120, h: 16, type: "normal"}];
-            gj.enemies = [];
             for (let i = 0; i < 9; i++) {
                 let pType = Math.random() < 0.25 ? "moving" : "normal";
                 gj.platforms.push({
@@ -380,15 +374,12 @@
             gj.player.vy = -10;
         }
 
-        // --- 5. PULSE PONG PRO ---
         let pp = {
             p1: {x: 25, y: 390, w: 16, h: 90, score: 0},
             p2: {x: 639, y: 390, w: 16, h: 90, score: 0},
-            ball: {x: 340, y: 450, r: 8, dx: 3.5, dy: 2.5},
-            shieldTimer: 0
+            ball: {x: 340, y: 450, r: 8, dx: 3.5, dy: 2.5}
         };
 
-        // --- 6. NEON ASTEROIDS PRO ---
         let na = {
             ship: {x: 340, y: 450, angle: 0, speed: 0, bomb: 1},
             bullets: [], asteroids: [], lives: 3
@@ -398,12 +389,11 @@
             for (let i = 0; i < 6; i++) {
                 na.asteroids.push({
                     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                    dx: (Math.random() - 0.5) * 3.5, dy: (Math.random() - 0.5) * 3.5, radius: 32, size: 'large'
+                    dx: (Math.random() - 0.5) * 3.5, dy: (Math.random() - 0.5) * 3.5, radius: 32
                 });
             }
         }
 
-        // Oyun Geçişleri
         function switchGame(index) {
             activeGameIndex = index;
             document.querySelectorAll(".sidebar .game-btn").forEach((btn, idx) => {
@@ -412,7 +402,7 @@
 
             let titles = ["NEON BOUNCE PRO", "CYBER SNAKE X PRO", "NEON INVADERS X", "GRAVITON JUMP PRO", "PULSE PONG PRO", "NEON ASTEROIDS PRO"];
             let descs = [
-                "Güçlendirmeler, lazer tetikleyiciler ve boss katmanlı tuğlalar.",
+                "Güçlendirmeler, gizli imleç ve boss katmanlı tuğlalar.",
                 "Portallar, bonus yemler ve tam profesyonel yılan dinamikleri.",
                 "Düşman karşı ateşleri, kalkan koruması ve boss filosu.",
                 "Hareketli platformlar, roket bot takviyesi ve dikey tırmanış.",
@@ -440,6 +430,9 @@
             gameOverOverlay.classList.add("hidden");
             particles = [];
 
+            // Profesyonel İmleç Kilidi (Pointer Lock)
+            canvas.requestPointerLock();
+
             if (activeGameIndex === 0) {
                 nb.lives = 3; nb.level = 1; nb.combo = 1;
                 livesEl.innerText = nb.lives; levelEl.innerText = nb.level;
@@ -464,6 +457,7 @@
 
         function triggerGameOver() {
             gameState = "GAMEOVER";
+            document.exitPointerLock();
             playSound(120, "sawtooth", 0.3);
             if (score > highScore) {
                 highScore = score;
@@ -474,20 +468,30 @@
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Fare ve Klavye Kontrolleri
+        // Hassas Gizli İmleç ve Fare Hareket Yönetimi
         window.addEventListener("mousemove", (e) => {
-            let rect = canvas.getBoundingClientRect();
-            inputX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            if (gameState !== "PLAYING") return;
+            
+            // Pointer lock aktifse hareket deltası, değilse absolute koordinat
+            let movementX = e.movementX || e.clientX || 0;
+            paddlePos += movementX * 1.2;
+
             if (activeGameIndex === 0) {
-                nb.paddle.x = inputX - nb.paddle.w / 2;
+                nb.paddle.x = paddlePos;
                 if (nb.paddle.x < 0) nb.paddle.x = 0;
                 if (nb.paddle.x + nb.paddle.w > canvas.width) nb.paddle.x = canvas.width - nb.paddle.w;
             } else if (activeGameIndex === 2) {
-                ni.ship.x = inputX - ni.ship.w / 2;
+                ni.ship.x = paddlePos;
+                if (ni.ship.x < 0) ni.ship.x = 0;
+                if (ni.ship.x + ni.ship.w > canvas.width) ni.ship.x = canvas.width - ni.ship.w;
             } else if (activeGameIndex === 3) {
-                gj.player.x = inputX;
+                gj.player.x = paddlePos;
+                if (gj.player.x < 0) gj.player.x = 0;
+                if (gj.player.x + gj.player.w > canvas.width) gj.player.x = canvas.width - gj.player.w;
             } else if (activeGameIndex === 4) {
-                pp.p1.y = inputX - pp.p1.h / 2;
+                pp.p1.y = paddlePos;
+                if (pp.p1.y < 0) pp.p1.y = 0;
+                if (pp.p1.y + pp.p1.h > canvas.height) pp.p1.y = canvas.height - pp.p1.h;
             }
         });
 
@@ -520,12 +524,10 @@
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
 
-        // --- UPDATE LOOP ---
         let snakeCounter = 0;
         function update() {
             if (gameState !== "PLAYING") return;
 
-            // Particle Güncelleme
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.x += p.dx; p.y += p.dy; p.life--;
@@ -533,7 +535,6 @@
             }
 
             if (activeGameIndex === 0) {
-                // Neon Bounce Pro Güncelleme
                 if (nb.combo > 1) {
                     nb.comboTimer--;
                     if (nb.comboTimer <= 0) { nb.combo = 1; comboEl.innerText = "x" + nb.combo; }
@@ -546,7 +547,6 @@
                 if (nb.ball.x + nb.ball.r > canvas.width) { nb.ball.x = canvas.width - nb.ball.r; nb.ball.dx = -nb.ball.dx; playSound(300); }
                 if (nb.ball.y - nb.ball.r < 0) { nb.ball.y = nb.ball.r; nb.ball.dy = -nb.ball.dy; playSound(300); }
 
-                // Lazerler
                 for (let i = nb.lasers.length - 1; i >= 0; i--) {
                     nb.lasers[i].y -= 9;
                     if (nb.lasers[i].y < 0) { nb.lasers.splice(i, 1); continue; }
@@ -562,7 +562,6 @@
                     });
                 }
 
-                // Power-up düşme
                 for (let i = nb.powerups.length - 1; i >= 0; i--) {
                     let p = nb.powerups[i];
                     p.y += 2.5;
@@ -626,13 +625,11 @@
                 }
 
             } else if (activeGameIndex === 1) {
-                // Cyber Snake X Pro Güncelleme
                 snakeCounter++;
                 if (snakeCounter % 6 === 0) {
                     cs.dir = cs.nextDir;
                     let head = {x: cs.snake[0].x + cs.dir.x, y: cs.snake[0].y + cs.dir.y};
                     
-                    // Portallar
                     if (head.x === cs.portalA.x && head.y === cs.portalA.y) head = {x: cs.portalB.x + 1, y: cs.portalB.y};
                     else if (head.x === cs.portalB.x && head.y === cs.portalB.y) head = {x: cs.portalA.x + 1, y: cs.portalA.y};
 
@@ -650,7 +647,6 @@
                 }
 
             } else if (activeGameIndex === 2) {
-                // Neon Invaders X Güncelleme
                 for (let i = ni.bullets.length - 1; i >= 0; i--) {
                     ni.bullets[i].y -= 9;
                     if (ni.bullets[i].y < 0) { ni.bullets.splice(i, 1); continue; }
@@ -670,7 +666,6 @@
                 if (allDead) initNeonInvaders();
 
             } else if (activeGameIndex === 3) {
-                // Graviton Jump Pro Güncelleme
                 gj.player.vy += 0.36;
                 gj.player.y += gj.player.vy;
                 gj.platforms.forEach(p => {
@@ -702,7 +697,6 @@
                 if (gj.player.y > canvas.height) triggerGameOver();
 
             } else if (activeGameIndex === 4) {
-                // Pulse Pong Pro Güncelleme
                 pp.ball.x += pp.ball.dx; pp.ball.y += pp.ball.dy;
                 if (pp.ball.y - pp.ball.r < 0 || pp.ball.y + pp.ball.r > canvas.height) pp.ball.dy = -pp.ball.dy;
 
@@ -723,7 +717,6 @@
                 if (pp.ball.x > canvas.width) { pp.p1.score++; score += 120; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
 
             } else if (activeGameIndex === 5) {
-                // Neon Asteroids Pro Güncelleme
                 if (keys["ArrowLeft"]) na.ship.angle -= 0.065;
                 if (keys["ArrowRight"]) na.ship.angle += 0.065;
                 if (keys["ArrowUp"]) {
@@ -748,16 +741,13 @@
             }
         }
 
-        // --- DRAW LOOP ---
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Arka Plan Grid
             ctx.strokeStyle = "rgba(0, 240, 255, 0.035)";
             for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
             for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-            // Particle Çizimi
             particles.forEach(p => {
                 ctx.fillStyle = p.color; ctx.shadowBlur = 8; ctx.shadowColor = p.color;
                 ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
@@ -765,7 +755,6 @@
             ctx.shadowBlur = 0;
 
             if (activeGameIndex === 0) {
-                // Neon Bounce Pro Çizim
                 nb.bricks.forEach(b => {
                     if (b.status === 1) {
                         ctx.shadowBlur = 12; ctx.shadowColor = b.color; ctx.fillStyle = b.color;
@@ -794,11 +783,9 @@
                 ctx.beginPath(); ctx.arc(nb.ball.x, nb.ball.y, nb.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 1) {
-                // Cyber Snake X Pro Çizim
                 ctx.fillStyle = cs.food.color; ctx.shadowBlur = 15; ctx.shadowColor = cs.food.color;
                 ctx.fillRect(cs.food.x * cs.gridSize, cs.food.y * cs.gridSize, cs.gridSize - 2, cs.gridSize - 2);
                 
-                // Portallar
                 ctx.fillStyle = "#ffe600"; ctx.shadowColor = "#ffe600";
                 ctx.fillRect(cs.portalA.x * cs.gridSize, cs.portalA.y * cs.gridSize, cs.gridSize, cs.gridSize);
                 ctx.fillRect(cs.portalB.x * cs.gridSize, cs.portalB.y * cs.gridSize, cs.gridSize, cs.gridSize);
@@ -811,7 +798,6 @@
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 2) {
-                // Neon Invaders X Çizim
                 ctx.fillStyle = "#00f0ff"; ctx.shadowBlur = 15; ctx.shadowColor = "#00f0ff";
                 ctx.fillRect(ni.ship.x, ni.ship.y, ni.ship.w, ni.ship.h);
                 ctx.fillStyle = "#ffe600";
@@ -825,7 +811,6 @@
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 3) {
-                // Graviton Jump Pro Çizim
                 ctx.fillStyle = "#00ff66"; ctx.shadowBlur = 15; ctx.shadowColor = "#00ff66";
                 ctx.fillRect(gj.player.x, gj.player.y, gj.player.w, gj.player.h);
                 gj.platforms.forEach(p => {
@@ -836,7 +821,6 @@
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 4) {
-                // Pulse Pong Pro Çizim
                 ctx.fillStyle = "#ff007f"; ctx.shadowBlur = 12; ctx.shadowColor = "#ff007f";
                 ctx.fillRect(pp.p1.x, pp.p1.y, pp.p1.w, pp.p1.h);
                 ctx.fillStyle = "#00f0ff"; ctx.shadowColor = "#00f0ff";
@@ -845,7 +829,6 @@
                 ctx.beginPath(); ctx.arc(pp.ball.x, pp.ball.y, pp.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 5) {
-                // Neon Asteroids Pro Çizim
                 ctx.save();
                 ctx.translate(na.ship.x, na.ship.y);
                 ctx.rotate(na.ship.angle);
