@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonBounce - Professional Edition</title>
+    <title>NeonBounce - Pure Retro Edition</title>
     <style>
         :root {
-            --bg-color: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.75);
-            --neon-cyan: #38bdf8;
-            --neon-pink: #ec4899;
-            --neon-purple: #a855f7;
-            --neon-yellow: #facc15;
-            --text-main: #f8fafc;
+            --bg-color: #000000;
+            --panel-bg: #111111;
+            --pure-cyan: #00ffff;
+            --pure-pink: #ff00ff;
+            --pure-purple: #9900ff;
+            --pure-yellow: #ffff00;
+            --text-main: #ffffff;
         }
 
         body {
             background: var(--bg-color);
             color: var(--text-main);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Courier New', Courier, monospace;
             text-align: center;
             margin: 0;
             padding: 5px;
@@ -29,29 +29,27 @@
 
         h1 {
             font-size: 1.4rem;
-            text-shadow: 0 0 12px var(--neon-cyan);
-            margin: 2px 0;
+            color: var(--pure-cyan);
+            margin: 4px 0;
             letter-spacing: 2px;
         }
 
         .hud {
             display: flex;
             justify-content: space-between;
-            max-width: 400px;
+            max-width: 380px;
             margin: 0 auto 4px auto;
             padding: 6px 12px;
             background: var(--panel-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 8px;
+            border: 2px solid var(--pure-cyan);
+            border-radius: 4px;
             font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            font-weight: bold;
         }
 
-        .hud-item span { color: var(--neon-cyan); }
-        .hud-item.lives span { color: var(--neon-pink); }
-        .hud-item.high span { color: var(--neon-yellow); }
+        .hud-item span { color: var(--pure-cyan); }
+        .hud-item.lives span { color: var(--pure-pink); }
+        .hud-item.high span { color: var(--pure-yellow); }
 
         .canvas-container {
             position: relative;
@@ -60,11 +58,10 @@
         }
 
         canvas {
-            background: #020617;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
+            background: #000000;
+            border: 2px solid var(--pure-cyan);
             display: block;
-            border-radius: 10px;
+            border-radius: 4px;
         }
 
         .overlay {
@@ -73,52 +70,46 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(3, 7, 18, 0.85);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
-            border-radius: 10px;
-            transition: opacity 0.3s ease;
+            border-radius: 4px;
         }
 
         .overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
+            display: none;
         }
 
         .overlay h2 {
             font-size: 1.8rem;
             margin-bottom: 10px;
-            text-shadow: 0 0 15px var(--neon-pink);
-            color: var(--text-main);
+            color: var(--pure-pink);
         }
 
         .overlay p {
             font-size: 0.95rem;
-            color: #94a3b8;
+            color: #cccccc;
             margin-bottom: 20px;
             padding: 0 20px;
         }
 
         .btn {
-            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
-            color: #fff;
-            border: none;
+            background: var(--pure-cyan);
+            color: #000000;
+            border: 2px solid #ffffff;
             padding: 12px 30px;
             font-size: 1rem;
             font-weight: bold;
-            border-radius: 25px;
+            font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
-            transition: transform 0.1s, box-shadow 0.1s;
         }
 
         .btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            background: #ffffff;
+            color: var(--pure-cyan);
         }
     </style>
 </head>
@@ -137,7 +128,7 @@
         <!-- Menü Ekranı -->
         <div id="menuOverlay" class="overlay">
             <h2>NEON BOUNCE</h2>
-            <p>Tuğlaları kır, güçlendiricileri topla ve rekoru kır!</p>
+            <p>Tuğlaları kır, güçlendiricileri topla!</p>
             <button class="btn" id="startBtn">OYUNA BAŞLA</button>
         </div>
 
@@ -153,7 +144,6 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // UI Elementleri
         const scoreEl = document.getElementById("scoreVal");
         const highEl = document.getElementById("highVal");
         const livesEl = document.getElementById("livesVal");
@@ -163,18 +153,13 @@
         const startBtn = document.getElementById("startBtn");
         const restartBtn = document.getElementById("restartBtn");
 
-        // Oyun Durumları
-        let gameState = "MENU"; // MENU, PLAYING, GAMEOVER
+        let gameState = "MENU"; 
         let score = 0;
-        let highScore = localStorage.getItem("neon_high_score") || 0;
+        let highScore = localStorage.getItem("neon_pure_high") || 0;
         let lives = 3;
         highEl.innerText = highScore;
 
-        // Screen Shake Değişkenleri
-        let shakeDuration = 0;
-        let shakeIntensity = 0;
-
-        // Web Audio API Sentezleyici
+        // Web Audio API Sentezleyici (Saf tonlar)
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -189,71 +174,54 @@
                 let gain = audioCtx.createGain();
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-
                 let now = audioCtx.currentTime;
 
                 if (type === "hit") {
-                    osc.type = "sine";
-                    osc.frequency.setValueAtTime(300, now);
-                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.08);
-                    gain.gain.setValueAtTime(0.15, now);
+                    osc.type = "square";
+                    osc.frequency.setValueAtTime(220, now);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === "brick") {
+                    osc.type = "square";
+                    osc.frequency.setValueAtTime(440, now);
+                    gain.gain.setValueAtTime(0.1, now);
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
                     osc.start(now);
                     osc.stop(now + 0.08);
-                } else if (type === "brick") {
+                } else if (type === "powerup") {
                     osc.type = "triangle";
-                    osc.frequency.setValueAtTime(450, now);
-                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
-                    gain.gain.setValueAtTime(0.2, now);
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.linearRampToValueAtTime(600, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now);
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
                     osc.start(now);
                     osc.stop(now + 0.1);
-                } else if (type === "powerup") {
-                    osc.type = "square";
-                    osc.frequency.setValueAtTime(200, now);
-                    osc.frequency.linearRampToValueAtTime(600, now + 0.15);
-                    gain.gain.setValueAtTime(0.15, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.15);
-                    osc.start(now);
-                    osc.stop(now + 0.15);
                 } else if (type === "gameover") {
                     osc.type = "sawtooth";
-                    osc.frequency.setValueAtTime(200, now);
-                    osc.frequency.linearRampToValueAtTime(60, now + 0.4);
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.frequency.linearRampToValueAtTime(50, now + 0.3);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
                     osc.start(now);
-                    osc.stop(now + 0.4);
+                    osc.stop(now + 0.3);
                 }
             } catch(e) {}
         }
 
-        // Oyun Nesneleri
         let paddle = {
             x: canvas.width / 2 - 45,
             y: canvas.height - 30,
             width: 90,
             height: 12,
-            dx: 0,
-            color: "#ec4899",
+            color: "#ff00ff",
             targetWidth: 90
         };
 
         let balls = [];
         let bricks = [];
-        let particles = [];
         let powerUps = [];
-        let backgroundStars = [];
-
-        // Yıldız Arkaplanı Oluşturma
-        for (let i = 0; i < 40; i++) {
-            backgroundStars.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5 + 0.5,
-                alpha: Math.random() * 0.7 + 0.2
-            });
-        }
 
         function initLevel() {
             bricks = [];
@@ -267,15 +235,14 @@
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    let health = (r === 0 || r === 1) ? 2 : 1; // Üst sıra daha dayanıklı
-                    let color = health === 2 ? "#a855f7" : "#38bdf8";
+                    let health = (r === 0 || r === 1) ? 2 : 1;
+                    let color = health === 2 ? "#9900ff" : "#00ffff";
                     bricks.push({
                         x: offsetLeft + c * (brickWidth + padding),
                         y: offsetTop + r * (brickHeight + padding),
                         width: brickWidth,
                         height: brickHeight,
                         health: health,
-                        maxHealth: health,
                         color: color
                     });
                 }
@@ -289,10 +256,10 @@
             balls = [{
                 x: canvas.width / 2,
                 y: paddle.y - 15,
-                radius: 8,
+                radius: 6,
                 speedX: 3 * (Math.random() > 0.5 ? 1 : -1),
                 speedY: -4,
-                color: "#38bdf8"
+                color: "#00ffff"
             }];
         }
 
@@ -314,14 +281,13 @@
             playSound("gameover");
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_high_score", highScore);
+                localStorage.setItem("neon_pure_high", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Kontroller (Mouse / Dokunmatik)
         function handlePointerMove(clientX) {
             let rect = canvas.getBoundingClientRect();
             let rootX = clientX - rect.left;
@@ -343,75 +309,33 @@
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
 
-        // Parçacık Efekti Üretici
-        function createParticles(x, y, color, count = 8) {
-            for (let i = 0; i < count; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let speed = Math.random() * 3 + 1;
-                particles.push({
-                    x: x,
-                    y: y,
-                    dx: Math.cos(angle) * speed,
-                    dy: Math.sin(angle) * speed,
-                    radius: Math.random() * 2 + 1,
-                    color: color,
-                    alpha: 1,
-                    decay: Math.random() * 0.03 + 0.02
-                });
-            }
-        }
-
-        // Power-Up Düşürme
         function spawnPowerUp(x, y) {
-            if (Math.random() < 0.35) { // %35 ihtimalle
+            if (Math.random() < 0.35) {
                 let types = ["wide", "multiball"];
                 let type = types[Math.floor(Math.random() * types.length)];
                 powerUps.push({
                     x: x,
                     y: y,
-                    width: 22,
+                    width: 20,
                     height: 12,
                     dy: 2,
                     type: type,
-                    color: type === "wide" ? "#facc15" : "#ec4899"
+                    color: type === "wide" ? "#ffff00" : "#ff00ff"
                 });
             }
         }
 
-        function triggerScreenShake(intensity, duration) {
-            shakeIntensity = intensity;
-            shakeDuration = duration;
-        }
-
-        // Oyun Döngüsü Güncelleme
         function update() {
             if (gameState !== "PLAYING") return;
 
-            // Çubuk genişliği yumuşak geçiş
             if (paddle.width !== paddle.targetWidth) {
-                paddle.width += (paddle.targetWidth - paddle.width) * 0.1;
+                paddle.width += (paddle.targetWidth - paddle.width) * 0.2;
             }
 
-            // Screen Shake Azaltma
-            if (shakeDuration > 0) {
-                shakeDuration--;
-            }
-
-            // Parçacık Güncelleme
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.dx;
-                p.y += p.dy;
-                p.alpha -= p.decay;
-                if (p.alpha <= 0) particles.splice(i, 1);
-            }
-
-            // Power-Up Güncelleme
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 let pu = powerUps[i];
                 pu.y += pu.dy;
 
-                // Çubukla çarpışma kontrolü
                 if (
                     pu.y + pu.height >= paddle.y &&
                     pu.y <= paddle.y + paddle.height &&
@@ -427,29 +351,26 @@
                         balls.push({
                             x: b.x,
                             y: b.y,
-                            radius: 8,
+                            radius: 6,
                             speedX: -b.speedX,
                             speedY: b.speedY,
-                            color: "#facc15"
+                            color: "#ffff00"
                         });
                     }
                     powerUps.splice(i, 1);
                     continue;
                 }
 
-                // Ekran dışına çıkma
                 if (pu.y > canvas.height) {
                     powerUps.splice(i, 1);
                 }
             }
 
-            // Topları Güncelleme
             for (let i = balls.length - 1; i >= 0; i--) {
                 let ball = balls[i];
                 ball.x += ball.speedX;
                 ball.y += ball.speedY;
 
-                // Sol / Sağ Duvar
                 if (ball.x - ball.radius < 0) {
                     ball.x = ball.radius;
                     ball.speedX = -ball.speedX;
@@ -460,15 +381,12 @@
                     ball.speedX = -ball.speedX;
                     playSound("hit");
                 }
-
-                // Tavan
                 if (ball.y - ball.radius < 0) {
                     ball.y = ball.radius;
                     ball.speedY = -ball.speedY;
                     playSound("hit");
                 }
 
-                // Çubuk (Paddle) Çarpışması
                 if (
                     ball.y + ball.radius >= paddle.y &&
                     ball.y - ball.radius <= paddle.y + paddle.height &&
@@ -476,14 +394,11 @@
                     ball.x <= paddle.x + paddle.width
                 ) {
                     ball.speedY = -Math.abs(ball.speedY);
-                    // Falsolu açı verme
                     let hitPoint = ball.x - (paddle.x + paddle.width / 2);
                     ball.speedX = hitPoint * 0.15;
                     playSound("hit");
-                    createParticles(ball.x, paddle.y, paddle.color, 5);
                 }
 
-                // Tuğla Çarpışmaları
                 for (let j = bricks.length - 1; j >= 0; j--) {
                     let b = bricks[j];
                     if (
@@ -495,7 +410,6 @@
                         ball.speedY = -ball.speedY;
                         b.health--;
                         playSound("brick");
-                        createParticles(ball.x, ball.y, b.color, 6);
 
                         if (b.health <= 0) {
                             spawnPowerUp(b.x + b.width / 2, b.y + b.height / 2);
@@ -503,25 +417,21 @@
                             score += 25;
                         } else {
                             score += 10;
-                            b.color = "#38bdf8"; // Renk değişimi (hasar aldı)
+                            b.color = "#00ffff";
                         }
                         scoreEl.innerText = score;
-                        triggerScreenShake(3, 8);
                         break;
                     }
                 }
 
-                // Alt Taban (Top Kaybı)
                 if (ball.y > canvas.height + ball.radius) {
                     balls.splice(i, 1);
                 }
             }
 
-            // Tüm toplar bittiyse can azalt
             if (balls.length === 0) {
                 lives--;
                 livesEl.innerText = lives;
-                triggerScreenShake(6, 15);
                 if (lives <= 0) {
                     triggerGameOver();
                 } else {
@@ -529,7 +439,6 @@
                 }
             }
 
-            // Bölüm bittiyse yeni seviye yükle
             if (bricks.length === 0) {
                 score += 150;
                 initLevel();
@@ -537,88 +446,49 @@
             }
         }
 
-        // Çizim İşlemleri (Render)
         function draw() {
-            ctx.save();
-
-            // Screen Shake Uygulaması
-            if (shakeDuration > 0) {
-                let offsetX = (Math.random() - 0.5) * shakeIntensity;
-                let offsetY = (Math.random() - 0.5) * shakeIntensity;
-                ctx.translate(offsetX, offsetY);
-            }
-
-            // Arkaplan İz Efekti (Motion Blur)
-            ctx.fillStyle = "rgba(2, 6, 23, 0.4)";
+            ctx.fillStyle = "#000000";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Yıldızları Çiz
-            backgroundStars.forEach(star => {
-                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
-                ctx.fillRect(star.x, star.y, star.size, star.size);
-            });
-
             if (gameState === "PLAYING" || gameState === "GAMEOVER") {
-                // Tuğlaları Çiz
+                // Tuğlalar (Net renkler, efekt yok)
                 bricks.forEach(b => {
-                    ctx.save();
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = b.color;
                     ctx.fillStyle = b.color;
                     ctx.fillRect(b.x, b.y, b.width, b.height);
-                    ctx.restore();
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(b.x, b.y, b.width, b.height);
                 });
 
-                // Power-Up'ları Çiz
+                // Power-up Kutuları
                 powerUps.forEach(pu => {
-                    ctx.save();
-                    ctx.shadowBlur = 12;
-                    ctx.shadowColor = pu.color;
                     ctx.fillStyle = pu.color;
-                    ctx.beginPath();
-                    ctx.roundRect(pu.x, pu.y, pu.width, pu.height, 4);
-                    ctx.fill();
-                    ctx.restore();
+                    ctx.fillRect(pu.x, pu.y, pu.width, pu.height);
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(pu.x, pu.y, pu.width, pu.height);
                 });
 
-                // Parçacıkları Çiz
-                particles.forEach(p => {
-                    ctx.save();
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                });
-
-                // Çubuğu Çiz
-                ctx.save();
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = paddle.color;
+                // Raket
                 ctx.fillStyle = paddle.color;
-                ctx.beginPath();
-                ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 6);
-                ctx.fill();
-                ctx.restore();
+                ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 
-                // Topları Çiz
+                // Toplar
                 balls.forEach(ball => {
-                    ctx.save();
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = ball.color;
                     ctx.fillStyle = ball.color;
                     ctx.beginPath();
                     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
                     ctx.fill();
-                    ctx.restore();
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
                 });
             }
-
-            ctx.restore();
         }
 
-        // Ana Oyun Döngüsü (60+ FPS)
         function loop() {
             update();
             draw();
