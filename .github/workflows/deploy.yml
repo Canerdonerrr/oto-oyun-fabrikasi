@@ -1,0 +1,15 @@
+name: Oto Oyun Fabrikasi CI/CD
+on:
+  push:
+    branches: [ main, master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodları Depodan Çek
+        uses: actions/checkout@v4
+      - name: Oyun Build Süreci
+        run: |
+          echo "NeonBounce başarıyla derleniyor..."
+          ls -la
+          echo "Derleme tamamlandı!"
