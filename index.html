@@ -37,7 +37,7 @@
         .hud {
             display: flex;
             justify-content: space-between;
-            max-width: 380px;
+            max-width: 440px;
             margin: 0 auto 4px auto;
             padding: 6px 12px;
             background: var(--panel-bg);
@@ -123,7 +123,8 @@
     </div>
 
     <div class="canvas-container">
-        <canvas id="gameCanvas" width="380" height="480"></canvas>
+        <!-- Genişletilmiş Oyun Alanı (440x560) -->
+        <canvas id="gameCanvas" width="440" height="560"></canvas>
         
         <!-- Menü Ekranı -->
         <div id="menuOverlay" class="overlay">
@@ -159,7 +160,7 @@
         let lives = 3;
         highEl.innerText = highScore;
 
-        // Web Audio API Sentezleyici (Saf tonlar)
+        // Web Audio API Sentezleyici
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -211,12 +212,12 @@
         }
 
         let paddle = {
-            x: canvas.width / 2 - 45,
-            y: canvas.height - 30,
-            width: 90,
+            x: canvas.width / 2 - 50,
+            y: canvas.height - 35,
+            width: 100,
             height: 12,
             color: "#ff00ff",
-            targetWidth: 90
+            targetWidth: 100
         };
 
         let balls = [];
@@ -225,13 +226,13 @@
 
         function initLevel() {
             bricks = [];
-            let rows = 4;
-            let cols = 6;
-            let brickWidth = 52;
+            let rows = 5;
+            let cols = 7;
+            let brickWidth = 50;
             let brickHeight = 18;
-            let padding = 10;
-            let offsetTop = 45;
-            let offsetLeft = 22;
+            let padding = 8;
+            let offsetTop = 50;
+            let offsetLeft = 21;
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
@@ -250,15 +251,15 @@
         }
 
         function resetBallAndPaddle() {
-            paddle.width = 90;
-            paddle.targetWidth = 90;
+            paddle.width = 100;
+            paddle.targetWidth = 100;
             paddle.x = canvas.width / 2 - paddle.width / 2;
             balls = [{
                 x: canvas.width / 2,
                 y: paddle.y - 15,
                 radius: 6,
-                speedX: 3 * (Math.random() > 0.5 ? 1 : -1),
-                speedY: -4,
+                speedX: 3.5 * (Math.random() > 0.5 ? 1 : -1),
+                speedY: -4.5,
                 color: "#00ffff"
             }];
         }
@@ -318,7 +319,7 @@
                     y: y,
                     width: 20,
                     height: 12,
-                    dy: 2,
+                    dy: 2.5,
                     type: type,
                     color: type === "wide" ? "#ffff00" : "#ff00ff"
                 });
@@ -344,8 +345,8 @@
                 ) {
                     playSound("powerup");
                     if (pu.type === "wide") {
-                        paddle.targetWidth = 130;
-                        setTimeout(() => { paddle.targetWidth = 90; }, 8000);
+                        paddle.targetWidth = 140;
+                        setTimeout(() => { paddle.targetWidth = 100; }, 8000);
                     } else if (pu.type === "multiball" && balls.length > 0) {
                         let b = balls[0];
                         balls.push({
@@ -451,7 +452,6 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (gameState === "PLAYING" || gameState === "GAMEOVER") {
-                // Tuğlalar (Net renkler, efekt yok)
                 bricks.forEach(b => {
                     ctx.fillStyle = b.color;
                     ctx.fillRect(b.x, b.y, b.width, b.height);
@@ -460,7 +460,6 @@
                     ctx.strokeRect(b.x, b.y, b.width, b.height);
                 });
 
-                // Power-up Kutuları
                 powerUps.forEach(pu => {
                     ctx.fillStyle = pu.color;
                     ctx.fillRect(pu.x, pu.y, pu.width, pu.height);
@@ -469,14 +468,12 @@
                     ctx.strokeRect(pu.x, pu.y, pu.width, pu.height);
                 });
 
-                // Raket
                 ctx.fillStyle = paddle.color;
                 ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 ctx.strokeStyle = "#ffffff";
                 ctx.lineWidth = 1;
                 ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 
-                // Toplar
                 balls.forEach(ball => {
                     ctx.fillStyle = ball.color;
                     ctx.beginPath();
