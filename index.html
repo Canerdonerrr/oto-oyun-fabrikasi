@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonBounce 3D - Godlike Edition</title>
+    <title>NeonBounce 2D - Classic Arcade Edition</title>
     <style>
         :root {
             --bg-color: #020205;
@@ -22,14 +22,14 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             margin: 0;
-            padding: 2px;
+            padding: 4px;
             overflow: hidden;
             touch-action: none;
             user-select: none;
         }
 
         h1 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--pure-cyan);
             margin: 2px 0;
             letter-spacing: 3px;
@@ -39,19 +39,18 @@
         .hud {
             display: flex;
             justify-content: space-between;
-            max-width: 880px;
-            margin: 0 auto 3px auto;
-            padding: 5px 12px;
+            max-width: 800px;
+            margin: 0 auto 4px auto;
+            padding: 6px 14px;
             background: var(--panel-bg);
             border: 1px solid rgba(0, 240, 255, 0.5);
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
-            backdrop-filter: blur(6px);
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
 
-        .hud-item { display: flex; align-items: center; gap: 4px; }
+        .hud-item { display: flex; align-items: center; gap: 5px; }
         .hud-item span { color: var(--pure-cyan); }
         .hud-item.lives span { color: var(--pure-pink); }
         .hud-item.high span { color: var(--pure-yellow); }
@@ -64,123 +63,71 @@
             margin: 0 auto;
         }
 
-        #webgl-container {
-            width: 880px;
-            height: 1040px;
-            max-width: 95vw;
-            max-height: 72vh;
+        #gameCanvas {
+            background: #05050c;
             border: 1px solid rgba(0, 240, 255, 0.6);
             border-radius: 6px;
             display: block;
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-        }
-
-        /* Yüzen Anlık Bonus / Kombo Metinleri */
-        #floatingTextContainer {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 5;
-        }
-
-        .float-txt {
-            position: absolute;
-            font-weight: bold;
-            font-size: 1.1rem;
-            text-shadow: 0 0 10px currentColor;
-            animation: floatUp 0.8s ease-out forwards;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.8); opacity: 1; }
-            100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
+            max-width: 95vw;
+            max-height: 74vh;
+            width: 800px;
+            height: 950px;
         }
 
         .overlay {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(2, 2, 5, 0.95);
+            background: rgba(2, 2, 5, 0.94);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
             border-radius: 6px;
-            backdrop-filter: blur(10px);
         }
 
         .overlay.hidden { display: none; }
 
         .overlay h2 {
             font-size: 2.2rem;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--pure-pink);
             text-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
             letter-spacing: 2px;
         }
 
         .overlay p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #b8b8d8;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             padding: 0 20px;
-            max-width: 600px;
+            max-width: 550px;
             line-height: 1.4;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 12px;
         }
 
         .btn {
             background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
             color: #000000;
             border: 1px solid #ffffff;
-            padding: 10px 22px;
-            font-size: 0.9rem;
+            padding: 12px 28px;
+            font-size: 1rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
             border-radius: 4px;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
             transition: all 0.2s ease;
         }
 
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 22px rgba(0, 240, 255, 0.9); }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 240, 255, 0.9); }
         .btn:active { transform: scale(0.98); }
-
-        .btn-secondary {
-            background: rgba(15, 15, 30, 0.9);
-            color: var(--pure-cyan);
-            border: 1px solid var(--pure-cyan);
-            box-shadow: none;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-            font-size: 0.72rem;
-            color: #9090b0;
-            margin-bottom: 15px;
-            max-width: 500px;
-            text-align: left;
-            padding: 0 10px;
-        }
-        .features-grid div span { color: var(--pure-yellow); font-weight: bold; }
     </style>
-    <!-- Three.js Kütüphanesi -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <h1>⚡ NEON BOUNCE 3D : GODLIKE EDITION ⚡</h1>
+    <h1>⚡ NEON BOUNCE 2D : CLASSIC EDITION ⚡</h1>
     <div class="hud">
         <div class="hud-item">⭐ SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">🏆 REKOR: <span id="highVal">0</span></div>
@@ -190,29 +137,13 @@
     </div>
 
     <div class="canvas-container">
-        <div id="webgl-container"></div>
-        <div id="floatingTextContainer"></div>
+        <canvas id="gameCanvas" width="800" height="950"></canvas>
         
         <!-- Ana Menü -->
         <div id="menuOverlay" class="overlay">
-            <h2>GODLIKE ARCADE</h2>
-            <p>50+ Gelişmiş Özellik: Kombo Çarpanları, Zırhlı Boss Tuğlalar, Parçacık Patlamaları, Ekran Sarsıntısı ve Dahası!</p>
-            
-            <div class="features-grid">
-                <div><span>🔥 KOMBO:</span> Ardışık Vuruş Çarpanı</div>
-                <div><span>🛡️ BOSS TUĞLA:</span> Zırhlı & Çift Vuruş</div>
-                <div><span>💥 PARTİKÜL:</span> 3D Patlama Efektleri</div>
-                <div><span>⚡ GÜÇLER:</span> Çoklu Top, Geniş Raket, Lazer</div>
-            </div>
-
-            <p style="margin-bottom:6px; color:var(--pure-cyan);">Kamera Modu Seçin:</p>
-            <div class="btn-group">
-                <button class="btn btn-secondary" id="cam1Btn" onclick="setCameraMode(1)">1. Klasik Üst</button>
-                <button class="btn btn-secondary" id="cam2Btn" onclick="setCameraMode(2)">2. 3.Şahıs Takip</button>
-                <button class="btn btn-secondary" id="cam3Btn" onclick="setCameraMode(3)">3. Sinematik</button>
-            </div>
-
-            <button class="btn" id="startBtn" style="margin-top:8px;">OYUNA BAŞLA</button>
+            <h2>CLASSIC ARCADE</h2>
+            <p>Saf 2D Akıcılık: Kayan raket, zarif tuğla dizilimi, özel ödüller, kombo çarpanları ve zırhlı boss tuğlalar!</p>
+            <button class="btn" id="startBtn">OYUNA BAŞLA</button>
         </div>
 
         <!-- Game Over -->
@@ -224,6 +155,9 @@
     </div>
 
     <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
         const scoreEl = document.getElementById("scoreVal");
         const highEl = document.getElementById("highVal");
         const comboEl = document.getElementById("comboVal");
@@ -234,106 +168,40 @@
         const finalScoreText = document.getElementById("finalScoreText");
         const startBtn = document.getElementById("startBtn");
         const restartBtn = document.getElementById("restartBtn");
-        const floatContainer = document.getElementById("floatingTextContainer");
 
         let gameState = "MENU";
         let score = 0;
-        let highScore = localStorage.getItem("neon_godlike_high") || 0;
+        let highScore = localStorage.getItem("neon_2d_high") || 0;
         let lives = 3;
         let level = 1;
         let combo = 1;
         let comboTimer = 0;
         highEl.innerText = highScore;
 
-        let cameraMode = 1;
-        function setCameraMode(mode) {
-            cameraMode = mode;
-            document.getElementById("cam1Btn").style.borderColor = (mode === 1) ? "#ff007f" : "#00f0ff";
-            document.getElementById("cam2Btn").style.borderColor = (mode === 2) ? "#ff007f" : "#00f0ff";
-            document.getElementById("cam3Btn").style.borderColor = (mode === 3) ? "#ff007f" : "#ff007f";
-        }
-        setCameraMode(1);
-
-        const container = document.getElementById("webgl-container");
-        const renderWidth = 880;
-        const renderHeight = 1040;
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020205);
-
-        const camera = new THREE.PerspectiveCamera(60, renderWidth / renderHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(renderWidth, renderHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        container.appendChild(renderer.domElement);
-
-        // Işıklandırma
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-        scene.add(ambientLight);
-
-        const pointLight = new THREE.PointLight(0x00f0ff, 2.5, 75);
-        pointLight.position.set(0, 5, 15);
-        scene.add(pointLight);
-
-        const fieldWidth = 14;
-        const fieldHeight = 18;
-
-        // Arka Plan Grid
-        const gridHelper = new THREE.GridHelper(22, 22, 0x00f0ff, 0x0b0b18);
-        gridHelper.position.set(0, 0, -2.5);
-        gridHelper.rotation.x = Math.PI / 2;
-        scene.add(gridHelper);
-
-        // Raket
-        const paddleGeo = new THREE.BoxGeometry(3.2, 0.4, 0.6);
-        const paddleMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.45, shininess: 100 });
-        const paddle = new THREE.Mesh(paddleGeo, paddleMat);
-        paddle.position.set(0, -7.5, 0);
-        scene.add(paddle);
+        // Raket (Kayan)
+        let paddle = {
+            x: canvas.width / 2 - 70,
+            y: canvas.height - 50,
+            w: 140,
+            h: 18,
+            dx: 0,
+            color: "#ff007f"
+        };
 
         let balls = [];
-        let brickMeshes = [];
+        let bricks = [];
         let powerUps = [];
-        let particles = []; // 3D Parçacıklar
+        let particles = [];
 
-        function createBall(x, y, vx, vy) {
-            const ballGeo = new THREE.SphereGeometry(0.32, 24, 24);
-            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.9 });
-            const ballMesh = new THREE.Mesh(ballGeo, ballMat);
-            ballMesh.position.set(x, y, 0);
-            scene.add(ballMesh);
-            balls.push({ mesh: ballMesh, vx: vx, vy: vy });
-        }
-
-        // Parçacık Efekti Oluşturucu
-        function createExplosion(x, y, colorHex) {
-            let count = 12;
-            for (let i = 0; i < count; i++) {
-                let pGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
-                let pMat = new THREE.MeshBasicMaterial({ color: colorHex });
-                let pMesh = new THREE.Mesh(pGeo, pMat);
-                pMesh.position.set(x, y, 0);
-
-                let angle = Math.random() * Math.PI * 2;
-                let speed = 0.05 + Math.random() * 0.12;
-                let vx = Math.cos(angle) * speed;
-                let vy = Math.sin(angle) * speed;
-
-                scene.add(pMesh);
-                particles.push({ mesh: pMesh, vx: vx, vy: vy, life: 30 });
-            }
-        }
-
-        // Yüzen Metin Gösterici
-        function showFloatingText(text, color, clientX, clientY) {
-            let el = document.createElement("div");
-            el.className = "float-txt";
-            el.innerText = text;
-            el.style.color = color;
-            el.style.left = (renderer.domElement.offsetLeft + renderer.domElement.clientWidth / 2) + "px";
-            el.style.top = (renderer.domElement.offsetTop + renderer.domElement.clientHeight / 2 - 50) + "px";
-            floatContainer.appendChild(el);
-            setTimeout(() => el.remove(), 800);
+        function createBall(x, y, dx, dy) {
+            balls.push({
+                x: x,
+                y: y,
+                r: 9,
+                dx: dx,
+                dy: dy,
+                color: "#00f0ff"
+            });
         }
 
         // Ses Efektleri (Web Audio API)
@@ -351,20 +219,20 @@
                 let now = audioCtx.currentTime;
 
                 if (type === "hit") {
-                    osc.type = "sine"; osc.frequency.setValueAtTime(340 + combo * 20, now);
-                    osc.frequency.exponentialRampToValueAtTime(140, now + 0.05);
+                    osc.type = "sine"; osc.frequency.setValueAtTime(320 + combo * 15, now);
+                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
                     gain.gain.setValueAtTime(0.08, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
                 } else if (type === "brick") {
-                    osc.type = "triangle"; osc.frequency.setValueAtTime(400 + combo * 40, now);
-                    osc.frequency.exponentialRampToValueAtTime(950, now + 0.08);
+                    osc.type = "triangle"; osc.frequency.setValueAtTime(420 + combo * 30, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
                     gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
                 } else if (type === "boss") {
-                    osc.type = "square"; osc.frequency.setValueAtTime(220, now);
-                    osc.frequency.linearRampToValueAtTime(110, now + 0.1);
+                    osc.type = "square"; osc.frequency.setValueAtTime(200, now);
+                    osc.frequency.linearRampToValueAtTime(100, now + 0.1);
                     gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
                 } else if (type === "powerup") {
-                    osc.type = "square"; osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.setValueAtTime(920, now + 0.09);
+                    osc.type = "square"; osc.frequency.setValueAtTime(580, now);
+                    osc.frequency.setValueAtTime(880, now + 0.08);
                     gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
                 } else if (type === "gameover") {
                     osc.type = "sawtooth"; osc.frequency.setValueAtTime(180, now);
@@ -376,64 +244,53 @@
         }
 
         function initLevel() {
-            brickMeshes.forEach(b => scene.remove(b));
-            brickMeshes = [];
-            powerUps.forEach(p => scene.remove(p.mesh));
+            bricks = [];
             powerUps = [];
 
-            let rows = 5 + Math.min(level, 3);
-            let cols = 8;
-            let bWidth = 1.4;
-            let bHeight = 0.45;
-            let gapX = 0.18;
-            let gapY = 0.2;
-            let startX = -((cols * (bWidth + gapX)) / 2) + bWidth / 2;
-            let startY = 6.5;
-
-            const brickGeo = new THREE.BoxGeometry(bWidth, bHeight, 0.4);
+            let rows = 5 + Math.min(level, 4);
+            let cols = 9;
+            let bWidth = 72;
+            let bHeight = 24;
+            let padding = 12;
+            let offsetTop = 70;
+            let offsetLeft = (canvas.width - (cols * (bWidth + padding) - padding)) / 2;
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    // Üst sıralarda Zırhlı Boss Tuğla ihtimali (%15)
-                    let isBoss = (r === 0 && Math.random() < 0.6) || (r === 1 && Math.random() < 0.3);
+                    let isBoss = (r === 0 && Math.random() < 0.5);
                     let health = isBoss ? 2 : 1;
-                    let color = isBoss ? 0xffe600 : [0xff007f, 0x00f0ff, 0x00ff66, 0x9d00ff][r % 4];
+                    let colors = ["#ff007f", "#ffe600", "#00f0ff", "#00ff66", "#9d00ff"];
+                    let color = isBoss ? "#ffe600" : colors[r % colors.length];
 
-                    let mat = new THREE.MeshPhongMaterial({ 
-                        color: color, 
-                        emissive: color, 
-                        emissiveIntensity: isBoss ? 0.7 : 0.35,
-                        shininess: 90 
-                    });
-                    let mesh = new THREE.Mesh(brickGeo, mat);
-
-                    mesh.position.set(
-                        startX + c * (bWidth + gapX),
-                        startY - r * (bHeight + gapY),
-                        0
-                    );
-
-                    let hasPowerUp = Math.random() < 0.25;
+                    let hasPowerUp = Math.random() < 0.22;
                     let pTypes = ['WIDEN', 'MULTI', 'SLOW'];
                     let pType = pTypes[Math.floor(Math.random() * pTypes.length)];
 
-                    mesh.userData = { active: true, health: health, isBoss: isBoss, hasPowerUp: hasPowerUp, pType: pType, color: color };
-                    scene.add(mesh);
-                    brickMeshes.push(mesh);
+                    bricks.push({
+                        x: offsetLeft + c * (bWidth + padding),
+                        y: offsetTop + r * (bHeight + padding),
+                        w: bWidth,
+                        h: bHeight,
+                        status: 1,
+                        health: health,
+                        isBoss: isBoss,
+                        color: color,
+                        hasPowerUp: hasPowerUp,
+                        pType: pType
+                    });
                 }
             }
         }
 
         function resetGameBalls() {
-            balls.forEach(b => scene.remove(b.mesh));
             balls = [];
-            paddle.position.x = 0;
-            paddle.scale.set(1, 1, 1);
+            paddle.w = 140;
+            paddle.x = canvas.width / 2 - paddle.w / 2;
             combo = 1;
             comboEl.innerText = "x" + combo;
 
-            let speed = 0.085 + (level * 0.008);
-            createBall(0, -6.6, speed * (Math.random() > 0.5 ? 1 : -1), speed * 1.3);
+            let speed = 4 + (level * 0.5);
+            createBall(canvas.width / 2, paddle.y - 20, (Math.random() > 0.5 ? 1 : -1) * speed * 0.7, -speed);
         }
 
         function startGame() {
@@ -456,7 +313,7 @@
             playSound("gameover");
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_godlike_high", highScore);
+                localStorage.setItem("neon_2d_high", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
@@ -464,65 +321,71 @@
         }
 
         function spawnPowerUp(x, y, type) {
-            let color = type === 'MULTI' ? 0x00f0ff : (type === 'WIDEN' ? 0x00ff66 : 0xff007f);
-            const pGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
-            const pMat = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.8 });
-            const pMesh = new THREE.Mesh(pGeo, pMat);
-            pMesh.position.set(x, y, 0);
-            scene.add(pMesh);
-            powerUps.push({ mesh: pMesh, type: type });
+            let color = type === 'MULTI' ? '#00f0ff' : (type === 'WIDEN' ? '#00ff66' : '#ff007f');
+            powerUps.push({
+                x: x,
+                y: y,
+                w: 26,
+                h: 26,
+                dy: 2.5,
+                type: type,
+                color: color
+            });
         }
 
         function applyPowerUp(type) {
             playSound("powerup");
             if (type === 'WIDEN') {
-                paddle.scale.set(1.5, 1, 1);
-                showFloatingText("GENİŞ RAKET!", "#00ff66");
+                paddle.w = 190;
             } else if (type === 'MULTI') {
                 if (balls.length > 0) {
                     let b = balls[0];
-                    createBall(b.mesh.position.x, b.mesh.position.y, -b.vx, b.vy);
-                    createBall(b.mesh.position.x, b.mesh.position.y, b.vx * 0.6, b.vy * 1.1);
+                    createBall(b.x, b.y, -b.dx, b.dy);
+                    createBall(b.x, b.y, b.dx * 0.5, b.dy * 1.2);
                 }
-                showFloatingText("ÇOKLU TOP!", "#00f0ff");
             } else if (type === 'SLOW') {
-                balls.forEach(b => { b.vx *= 0.7; b.vy *= 0.7; });
-                showFloatingText("YAVAŞLATICI!", "#ff007f");
+                balls.forEach(b => { b.dx *= 0.7; b.dy *= 0.7; });
             }
         }
 
-        function handleMove(clientX) {
-            let rect = renderer.domElement.getBoundingClientRect();
-            let xNorm = ((clientX - rect.left) / rect.width) * 2 - 1;
-            let limit = (paddle.scale.x > 1) ? fieldWidth / 2 - 2.4 : fieldWidth / 2 - 1.6;
-            paddle.position.x = xNorm * limit;
-            if (paddle.position.x < -limit) paddle.position.x = -limit;
-            if (paddle.position.x > limit) paddle.position.x = limit;
+        // Parçacık Patlaması
+        function createParticles(x, y, color) {
+            for (let i = 0; i < 12; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let speed = 1 + Math.random() * 3;
+                particles.push({
+                    x: x,
+                    y: y,
+                    dx: Math.cos(angle) * speed,
+                    dy: Math.sin(angle) * speed,
+                    radius: 3 + Math.random() * 3,
+                    color: color,
+                    life: 25
+                });
+            }
         }
 
-        window.addEventListener("mousemove", (e) => { if (gameState === "PLAYING") handleMove(e.clientX); });
-        window.addEventListener("touchmove", (e) => {
-            if (gameState === "PLAYING") {
-                handleMove(e.touches[0].clientX);
-                e.preventDefault();
-            }
+        // Kontroller (Kayan Raket)
+        let mouseX = canvas.width / 2;
+        canvas.addEventListener("mousemove", (e) => {
+            let rect = canvas.getBoundingClientRect();
+            mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            paddle.x = mouseX - paddle.w / 2;
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            let rect = canvas.getBoundingClientRect();
+            mouseX = (e.touches[0].clientX - rect.left) * (canvas.width / rect.width);
+            paddle.x = mouseX - paddle.w / 2;
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
+            e.preventDefault();
         }, { passive: false });
 
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
-
-        function updateCamera() {
-            if (cameraMode === 1) {
-                camera.position.set(0, -3, 15);
-                camera.lookAt(0, 0, 0);
-            } else if (cameraMode === 2) {
-                camera.position.set(paddle.position.x * 0.4, -11, 5.5);
-                camera.lookAt(0, 2, 0);
-            } else if (cameraMode === 3) {
-                camera.position.set(8.5, -10, 11);
-                camera.lookAt(0, 0, 0);
-            }
-        }
 
         function update() {
             if (gameState !== "PLAYING") return;
@@ -538,48 +401,39 @@
 
             // Parçacıkları Güncelle
             for (let i = particles.length - 1; i >= 0; i--) {
-                let pt = particles[i];
-                pt.mesh.position.x += pt.vx;
-                pt.mesh.position.y += pt.vy;
-                pt.life--;
-                pt.mesh.scale.multiplyScalar(0.92);
-                if (pt.life <= 0) {
-                    scene.remove(pt.mesh);
-                    particles.splice(i, 1);
-                }
+                let p = particles[i];
+                p.x += p.dx;
+                p.y += p.dy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
             }
 
             // Topları Güncelle
             for (let i = balls.length - 1; i >= 0; i--) {
                 let b = balls[i];
-                b.mesh.position.x += b.vx;
-                b.mesh.position.y += b.vy;
+                b.x += b.dx;
+                b.y += b.dy;
 
-                if (b.mesh.position.x < -fieldWidth / 2 + 0.35) {
-                    b.mesh.position.x = -fieldWidth / 2 + 0.35; b.vx = -b.vx; playSound("hit");
-                }
-                if (b.mesh.position.x > fieldWidth / 2 - 0.35) {
-                    b.mesh.position.x = fieldWidth / 2 - 0.35; b.vx = -b.vx; playSound("hit");
-                }
-                if (b.mesh.position.y > fieldHeight / 2) {
-                    b.mesh.position.y = fieldHeight / 2; b.vy = -b.vy; playSound("hit");
-                }
+                // Duvar Çarpışmaları
+                if (b.x - b.r < 0) { b.x = b.r; b.dx = -b.dx; playSound("hit"); }
+                if (b.x + b.r > canvas.width) { b.x = canvas.width - b.r; b.dx = -b.dx; playSound("hit"); }
+                if (b.y - b.r < 0) { b.y = b.r; b.dy = -b.dy; playSound("hit"); }
 
-                let halfPaddleW = (paddle.scale.x > 1) ? 2.4 : 1.6;
+                // Raket Çarpışması
                 if (
-                    b.mesh.position.y <= paddle.position.y + 0.35 &&
-                    b.mesh.position.y >= paddle.position.y - 0.35 &&
-                    b.mesh.position.x >= paddle.position.x - halfPaddleW &&
-                    b.mesh.position.x <= paddle.position.x + halfPaddleW
+                    b.y + b.r >= paddle.y &&
+                    b.y - b.r <= paddle.y + paddle.h &&
+                    b.x >= paddle.x &&
+                    b.x <= paddle.x + paddle.w
                 ) {
-                    b.vy = -b.vy;
-                    let hitDist = b.mesh.position.x - paddle.position.x;
-                    b.vx = hitDist * 0.09;
+                    b.dy = -Math.abs(b.dy);
+                    let hitPoint = b.x - (paddle.x + paddle.w / 2);
+                    b.dx = hitPoint * 0.15;
                     playSound("hit");
                 }
 
-                if (b.mesh.position.y < -9) {
-                    scene.remove(b.mesh);
+                // Top Düşme
+                if (b.y > canvas.height + 20) {
                     balls.splice(i, 1);
                 }
             }
@@ -595,97 +449,146 @@
                 }
             }
 
-            // Düşen Ödüller
+            // Ödülleri Güncelle
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 let p = powerUps[i];
-                p.mesh.position.y -= 0.05;
-                p.mesh.rotation.z += 0.03;
+                p.y += p.dy;
 
-                let halfPaddleW = (paddle.scale.x > 1) ? 2.4 : 1.6;
                 if (
-                    p.mesh.position.y <= paddle.position.y + 0.5 &&
-                    p.mesh.position.y >= paddle.position.y - 0.5 &&
-                    p.mesh.position.x >= paddle.position.x - halfPaddleW &&
-                    p.mesh.position.x <= paddle.position.x + halfPaddleW
+                    p.y + p.h >= paddle.y &&
+                    p.y <= paddle.y + paddle.h &&
+                    p.x + p.w >= paddle.x &&
+                    p.x <= paddle.x + paddle.w
                 ) {
                     applyPowerUp(p.type);
-                    scene.remove(p.mesh);
                     powerUps.splice(i, 1);
-                } else if (p.mesh.position.y < -9) {
-                    scene.remove(p.mesh);
+                } else if (p.y > canvas.height) {
                     powerUps.splice(i, 1);
                 }
             }
 
-            // Tuğla & Boss Çarpışmaları
-            let activeBricksCount = 0;
-            brickMeshes.forEach(b => {
-                if (!b.userData.active) return;
-                activeBricksCount++;
+            // Tuğla Çarpışmaları
+            let activeBricks = 0;
+            bricks.forEach(b => {
+                if (b.status === 1) {
+                    activeBricks++;
+                    for (let i = 0; i < balls.length; i++) {
+                        let ball = balls[i];
+                        if (
+                            ball.x + ball.r > b.x &&
+                            ball.x - ball.r < b.x + b.w &&
+                            ball.y + ball.r > b.y &&
+                            ball.y - ball.r < b.y + b.h
+                        ) {
+                            ball.dy = -ball.dy;
+                            b.health--;
 
-                let bx = b.position.x;
-                let by = b.position.y;
+                            if (b.health > 0) {
+                                playSound("boss");
+                                createParticles(ball.x, ball.y, "#ffe600");
+                            } else {
+                                b.status = 0;
+                                playSound("brick");
+                                createParticles(ball.x, ball.y, b.color);
 
-                for (let j = 0; j < balls.length; j++) {
-                    let ball = balls[j];
-                    if (
-                        ball.mesh.position.x + 0.32 > bx - 0.7 &&
-                        ball.mesh.position.x - 0.32 < bx + 0.7 &&
-                        ball.mesh.position.y + 0.32 > by - 0.22 &&
-                        ball.mesh.position.y - 0.32 < by + 0.22
-                    ) {
-                        ball.vy = -ball.vy;
-                        b.userData.health--;
+                                combo++;
+                                comboTimer = 180;
+                                comboEl.innerText = "x" + combo;
 
-                        if (b.userData.health > 0) {
-                            // Boss hasar aldı ama kırılmadı
-                            playSound("boss");
-                            createExplosion(bx, by, 0xffe600);
-                        } else {
-                            // Tuğla tamamen kırıldı
-                            b.userData.active = false;
-                            b.visible = false;
-                            playSound("brick");
-                            createExplosion(bx, by, b.userData.color);
+                                score += 25 * combo;
+                                scoreEl.innerText = score;
 
-                            // Kombo Güncelleme
-                            combo++;
-                            comboTimer = 180; // 3 saniye kombo süresi
-                            comboEl.innerText = "x" + combo;
-
-                            let earnedScore = 30 * combo;
-                            score += earnedScore;
-                            scoreEl.innerText = score;
-
-                            if (b.userData.hasPowerUp) {
-                                spawnPowerUp(bx, by, b.userData.pType);
+                                if (b.hasPowerUp) {
+                                    spawnPowerUp(b.x + b.w / 2 - 13, b.y, b.pType);
+                                }
                             }
+                            break;
                         }
-                        break;
                     }
                 }
             });
 
-            if (activeBricksCount === 0) {
-                score += 250 * level;
+            if (activeBricks === 0) {
+                score += 200 * level;
                 level++;
                 levelEl.innerText = level;
                 initLevel();
                 resetGameBalls();
             }
-
-            updateCamera();
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Arka Plan Hafif Izgara Efekti
+            ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
+            ctx.lineWidth = 1;
+            for (let x = 0; x < canvas.width; x += 40) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += 40) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+            }
+
+            // Tuğlalar
+            bricks.forEach(b => {
+                if (b.status === 1) {
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = b.color;
+                    ctx.fillStyle = b.color;
+                    ctx.fillRect(b.x, b.y, b.w, b.h);
+                    
+                    // İç Çizgi Detayı
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(b.x, b.y, b.w, b.h);
+                    ctx.shadowBlur = 0;
+                }
+            });
+
+            // Ödüller
+            powerUps.forEach(p => {
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = p.color;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.w, p.h);
+                ctx.shadowBlur = 0;
+            });
+
+            // Parçacıklar
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Raket
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = paddle.color;
+            ctx.fillStyle = paddle.color;
+            ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+            ctx.shadowBlur = 0;
+
+            // Toplar
+            balls.forEach(b => {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = b.color;
+                ctx.fillStyle = b.color;
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+        }
+
+        function loop() {
             update();
-            renderer.render(scene, camera);
+            draw();
+            requestAnimationFrame(loop);
         }
 
-        camera.position.set(0, -3, 15);
-        camera.lookAt(0, 0, 0);
-        animate();
+        loop();
     </script>
 </body>
 </html>
