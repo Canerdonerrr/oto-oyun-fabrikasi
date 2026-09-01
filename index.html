@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - 6 in 1 Pro Edition</title>
+    <title>NeonArcade Hub - Ultra Pro Edition</title>
     <style>
         :root {
             --bg-color: #020205;
-            --panel-bg: rgba(10, 10, 20, 0.92);
+            --panel-bg: rgba(10, 10, 22, 0.95);
             --pure-cyan: #00f0ff;
             --pure-pink: #ff007f;
             --pure-yellow: #ffe600;
@@ -29,23 +29,23 @@
         }
 
         h1 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--pure-cyan);
             margin: 2px 0;
             letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
         }
 
         .hud {
             display: flex;
             justify-content: space-between;
-            max-width: 960px;
+            max-width: 980px;
             margin: 0 auto 4px auto;
-            padding: 5px 12px;
+            padding: 4px 10px;
             background: var(--panel-bg);
             border: 1px solid rgba(0, 240, 255, 0.5);
             border-radius: 6px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: bold;
             box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
@@ -62,7 +62,7 @@
             justify-content: center;
             align-items: flex-start;
             gap: 10px;
-            max-width: 980px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -72,20 +72,20 @@
         }
 
         #gameCanvas {
-            background: #05050c;
+            background: #04040a;
             border: 1px solid rgba(0, 240, 255, 0.6);
             border-radius: 6px;
             display: block;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
             width: 680px;
             height: 900px;
-            max-width: 72vw;
-            max-height: 75vh;
+            max-width: 70vw;
+            max-height: 74vh;
         }
 
-        /* Sağ Yan Oyun Seçim Paneli */
+        /* Sağ Yan Gelişmiş Oyun Seçim Paneli */
         .sidebar {
-            width: 250px;
+            width: 260px;
             background: var(--panel-bg);
             border: 1px solid rgba(0, 240, 255, 0.4);
             border-radius: 6px;
@@ -94,23 +94,23 @@
             flex-direction: column;
             gap: 6px;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
-            max-height: 75vh;
+            max-height: 74vh;
             overflow-y: auto;
         }
 
         .sidebar h3 {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--pure-yellow);
-            margin: 4px 0 6px 0;
+            margin: 2px 0 4px 0;
             text-shadow: 0 0 8px rgba(255, 230, 0, 0.5);
         }
 
         .game-btn {
             background: rgba(15, 15, 30, 0.9);
             color: var(--text-main);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            padding: 8px 10px;
-            font-size: 0.72rem;
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            padding: 7px 9px;
+            font-size: 0.7rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
@@ -122,15 +122,15 @@
             gap: 2px;
         }
 
-        .game-btn span { font-size: 0.6rem; color: #8888b0; }
-        .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.1); transform: translateX(2px); }
-        .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.15); color: var(--pure-pink); box-shadow: 0 0 10px rgba(255, 0, 127, 0.3); }
+        .game-btn span { font-size: 0.58rem; color: #8888b0; }
+        .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.12); transform: translateX(2px); }
+        .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); box-shadow: 0 0 10px rgba(255, 0, 127, 0.35); }
 
         .overlay {
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(2, 2, 5, 0.95);
+            background: rgba(2, 2, 6, 0.96);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -142,16 +142,16 @@
         .overlay.hidden { display: none; }
 
         .overlay h2 {
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
             color: var(--pure-pink);
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
         }
 
         .overlay p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #b8b8d8;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             padding: 0 15px;
             max-width: 450px;
             line-height: 1.4;
@@ -161,8 +161,8 @@
             background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
             color: #000000;
             border: 1px solid #ffffff;
-            padding: 10px 24px;
-            font-size: 0.9rem;
+            padding: 9px 22px;
+            font-size: 0.85rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
@@ -176,7 +176,7 @@
 </head>
 <body>
 
-    <h1>⚡ NEON ARCADE HUB : 6 IN 1 PRO ⚡</h1>
+    <h1>⚡ NEON ARCADE ULTRA HUB : 6 PRO GAMES ⚡</h1>
     <div class="hud">
         <div class="hud-item">⭐ SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">🏆 REKOR: <span id="highVal">0</span></div>
@@ -189,47 +189,44 @@
         <div class="canvas-container">
             <canvas id="gameCanvas" width="680" height="900"></canvas>
             
-            <!-- Ana Menü -->
             <div id="menuOverlay" class="overlay">
-                <h2 id="menuTitle">NEON BOUNCE 3D</h2>
-                <p id="menuDesc">Standart dengeli hızda klasik neon tuğla kırıcısı. Sağdan diğer efsane oyunları seçebilirsin!</p>
+                <h2 id="menuTitle">NEON BOUNCE PRO</h2>
+                <p id="menuDesc">Tam profesyonel, particle patlamaları, güçlendirmeler ve boss katmanları içeren sürüm.</p>
                 <button class="btn" id="startBtn">OYUNA BAŞLA</button>
             </div>
 
-            <!-- Game Over -->
             <div id="gameOverOverlay" class="overlay hidden">
                 <h2>OYUN BİTTİ</h2>
                 <p id="finalScoreText">Skorun: 0</p>
-                <button class="btn" id="restartBtn">TEKRAR DENE</button>
+                <button class="btn" id="restartBtn">YENİDEN BAŞLA</button>
             </div>
         </div>
 
-        <!-- Sağ Yan Oyun Seçim Paneli -->
         <div class="sidebar">
-            <h3>🕹️ OYUN ARŞİVİ</h3>
+            <h3>🕹️ PRO OYUN SEÇİCİ</h3>
             <button class="game-btn active" onclick="switchGame(0)">
-                1. Neon Bounce
-                <span>Klasik Tuğla Kırıcı</span>
+                1. Neon Bounce Pro
+                <span>Power-up, Lazer & Boss Tuğlalar</span>
             </button>
             <button class="game-btn" onclick="switchGame(1)">
                 2. Cyber Snake X
-                <span>Yılan & Neon Yem</span>
+                <span>Portal, Hız Yemi & Neon İhtişam</span>
             </button>
             <button class="game-btn" onclick="switchGame(2)">
-                3. Neon Invaders
-                <span>Uzay Savunma Savaşçısı</span>
+                3. Neon Invaders X
+                <span>Gelişmiş Düşman Filosu & Kalkan</span>
             </button>
             <button class="game-btn" onclick="switchGame(3)">
-                4. Graviton Jump
-                <span>Platform Zıplama Macerası</span>
+                4. Graviton Jump Pro
+                <span>Hareketli Platformlar & Roket Bot</span>
             </button>
             <button class="game-btn" onclick="switchGame(4)">
-                5. Pulse Pong
-                <span>Retro Tenis Düellosu</span>
+                5. Pulse Pong Pro
+                <span>Kavisli Vuruşlar & Kalkan Duvarı</span>
             </button>
             <button class="game-btn" onclick="switchGame(5)">
-                6. Neon Asteroids
-                <span>Asteroit İmha Operasyonu</span>
+                6. Neon Asteroids Pro
+                <span>Gelişmiş Radar, Bomba & Bölünme</span>
             </button>
         </div>
     </div>
@@ -257,13 +254,30 @@
         let activeGameIndex = 0;
         let gameState = "MENU";
         let score = 0;
-        let highScore = localStorage.getItem("neon_hub_high") || 0;
+        let highScore = localStorage.getItem("neon_ultra_high") || 0;
         highEl.innerText = highScore;
 
         let inputX = canvas.width / 2;
         let keys = {};
+        let particles = [];
 
-        // Ses Motoru
+        // Profesyonel Particle Sistemi
+        function addParticles(x, y, color, count = 12) {
+            for (let i = 0; i < count; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let speed = Math.random() * 4 + 1;
+                particles.push({
+                    x: x, y: y,
+                    dx: Math.cos(angle) * speed,
+                    dy: Math.sin(angle) * speed,
+                    radius: Math.random() * 3 + 1,
+                    color: color,
+                    life: 30
+                });
+            }
+        }
+
+        // Web Audio Sintisayzı
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -281,26 +295,26 @@
             } catch(e) {}
         }
 
-        // --- 1. NEON BOUNCE (Tuğla Kırıcı - Normal Standart Hız) ---
+        // --- 1. NEON BOUNCE PRO (50+ Detay Mekaniği) ---
         let nb = {
-            paddle: { x: 260, y: 840, w: 130, h: 16, color: "#ff007f" },
+            paddle: { x: 260, y: 840, w: 130, h: 16, color: "#ff007f", laser: false },
             ball: { x: 340, y: 810, r: 8, dx: 3.2, dy: -3.2, color: "#00f0ff" },
-            bricks: [],
+            bricks: [], powerups: [], lasers: [],
             lives: 3, level: 1, combo: 1, comboTimer: 0
         };
 
         function initNeonBounceLevel() {
-            nb.bricks = [];
-            let rows = 5; let cols = 8;
+            nb.bricks = []; nb.powerups = []; nb.lasers = [];
+            let rows = 6; let cols = 8;
             let bw = 70; let bh = 22; let pad = 10;
             let offsetLeft = (canvas.width - (cols * (bw + pad) - pad)) / 2;
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    let isBoss = (r === 0 && Math.random() < 0.4);
+                    let hp = r === 0 ? 3 : (r < 2 ? 2 : 1);
                     nb.bricks.push({
                         x: offsetLeft + c * (bw + pad), y: 60 + r * (bh + pad), w: bw, h: bh,
-                        status: 1, health: isBoss ? 2 : 1, isBoss: isBoss,
-                        color: isBoss ? "#ffe600" : ["#ff007f", "#00f0ff", "#00ff66", "#9d00ff"][r % 4]
+                        status: 1, health: hp, maxHealth: hp,
+                        color: hp === 3 ? "#ffe600" : (hp === 2 ? "#9d00ff" : ["#ff007f", "#00f0ff", "#00ff66"][r % 3])
                     });
                 }
             }
@@ -313,44 +327,52 @@
             nb.ball.dy = -3.2;
         }
 
-        // --- 2. CYBER SNAKE X ---
+        // --- 2. CYBER SNAKE X PRO ---
         let cs = {
             snake: [{x: 15, y: 15}, {x: 14, y: 15}, {x: 13, y: 15}],
             dir: {x: 1, y: 0}, nextDir: {x: 1, y: 0},
-            food: {x: 5, y: 5, color: "#00ff66"},
-            gridSize: 25, timer: 0, speed: 8
+            food: {x: 5, y: 5, color: "#00ff66", type: "normal"},
+            portalA: {x: 3, y: 3}, portalB: {x: 20, y: 20},
+            gridSize: 25, timer: 0
         };
         function spawnCSFood() {
             cs.food.x = Math.floor(Math.random() * (canvas.width / cs.gridSize));
             cs.food.y = Math.floor(Math.random() * (canvas.height / cs.gridSize));
+            cs.food.type = Math.random() < 0.2 ? "bonus" : "normal";
+            cs.food.color = cs.food.type === "bonus" ? "#ffe600" : "#00ff66";
         }
 
-        // --- 3. NEON INVADERS ---
+        // --- 3. NEON INVADERS X PRO ---
         let ni = {
-            ship: {x: 310, y: 830, w: 50, h: 25, speed: 6},
-            bullets: [], aliens: [], alienDir: 1, lives: 3
+            ship: {x: 310, y: 830, w: 50, h: 25, shield: true},
+            bullets: [], alienBullets: [], aliens: [], alienDir: 1, lives: 3
         };
         function initNeonInvaders() {
-            ni.bullets = []; ni.aliens = [];
-            for (let r = 0; r < 4; r++) {
+            ni.bullets = []; ni.alienBullets = []; ni.aliens = [];
+            for (let r = 0; r < 5; r++) {
                 for (let c = 0; c < 8; c++) {
-                    ni.aliens.push({x: 80 + c * 65, y: 80 + r * 50, w: 40, h: 25, status: 1, color: ["#ff007f", "#00f0ff", "#ffe600", "#00ff66"][r]});
+                    ni.aliens.push({
+                        x: 80 + c * 65, y: 70 + r * 45, w: 42, h: 24, status: 1,
+                        color: ["#ff007f", "#00f0ff", "#ffe600", "#00ff66", "#9d00ff"][r]
+                    });
                 }
             }
         }
 
-        // --- 4. GRAVITON JUMP ---
+        // --- 4. GRAVITON JUMP PRO ---
         let gj = {
-            player: {x: 320, y: 700, w: 32, h: 32, vy: 0},
-            platforms: [], score: 0, cameraY: 0
+            player: {x: 320, y: 700, w: 30, h: 30, vy: 0, rocket: false},
+            platforms: [], enemies: []
         };
         function initGravitonJump() {
-            gj.platforms = [{x: 280, y: 820, w: 120, h: 16}];
-            for (let i = 0; i < 8; i++) {
+            gj.platforms = [{x: 280, y: 820, w: 120, h: 16, type: "normal"}];
+            gj.enemies = [];
+            for (let i = 0; i < 9; i++) {
+                let pType = Math.random() < 0.25 ? "moving" : "normal";
                 gj.platforms.push({
-                    x: Math.random() * (canvas.width - 120),
-                    y: 700 - i * 110,
-                    w: 100 - i * 4, h: 16
+                    x: Math.random() * (canvas.width - 110),
+                    y: 720 - i * 95,
+                    w: 95, h: 16, type: pType, dx: pType === "moving" ? 2 : 0
                 });
             }
             gj.player.x = gj.platforms[0].x + 40;
@@ -358,49 +380,49 @@
             gj.player.vy = -10;
         }
 
-        // --- 5. PULSE PONG ---
+        // --- 5. PULSE PONG PRO ---
         let pp = {
-            p1: {x: 30, y: 390, w: 16, h: 100, score: 0},
-            p2: {x: 634, y: 390, w: 16, h: 100, score: 0},
-            ball: {x: 340, y: 450, r: 8, dx: 3.5, dy: 2.5}
+            p1: {x: 25, y: 390, w: 16, h: 90, score: 0},
+            p2: {x: 639, y: 390, w: 16, h: 90, score: 0},
+            ball: {x: 340, y: 450, r: 8, dx: 3.5, dy: 2.5},
+            shieldTimer: 0
         };
 
-        // --- 6. NEON ASTEROIDS ---
+        // --- 6. NEON ASTEROIDS PRO ---
         let na = {
-            ship: {x: 340, y: 450, angle: 0, speed: 0},
+            ship: {x: 340, y: 450, angle: 0, speed: 0, bomb: 1},
             bullets: [], asteroids: [], lives: 3
         };
         function initNeonAsteroids() {
             na.bullets = []; na.asteroids = [];
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 6; i++) {
                 na.asteroids.push({
                     x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                    dx: (Math.random() - 0.5) * 3, dy: (Math.random() - 0.5) * 3, radius: 35
+                    dx: (Math.random() - 0.5) * 3.5, dy: (Math.random() - 0.5) * 3.5, radius: 32, size: 'large'
                 });
             }
         }
 
-        // Oyun Değiştirici
+        // Oyun Geçişleri
         function switchGame(index) {
             activeGameIndex = index;
             document.querySelectorAll(".sidebar .game-btn").forEach((btn, idx) => {
                 btn.classList.toggle("active", idx === index);
             });
 
-            let titles = ["NEON BOUNCE", "CYBER SNAKE X", "NEON INVADERS", "GRAVITON JUMP", "PULSE PONG", "NEON ASTEROIDS"];
+            let titles = ["NEON BOUNCE PRO", "CYBER SNAKE X PRO", "NEON INVADERS X", "GRAVITON JUMP PRO", "PULSE PONG PRO", "NEON ASTEROIDS PRO"];
             let descs = [
-                "Standart dengeli hızda klasik neon tuğla kırıcısı.",
-                "Yön tuşları veya fare ile neon yılanı yönlendir, yemleri topla.",
-                "Uzay geminle neon istilacıları vurarak yok et.",
-                "Yukarı doğru sürekli zıplayan neon karakteri yönet.",
-                "Yapay zekaya karşı retro pong tenis maçı.",
-                "Uzay boşluğunda asteroitleri lazerle imha et."
+                "Güçlendirmeler, lazer tetikleyiciler ve boss katmanlı tuğlalar.",
+                "Portallar, bonus yemler ve tam profesyonel yılan dinamikleri.",
+                "Düşman karşı ateşleri, kalkan koruması ve boss filosu.",
+                "Hareketli platformlar, roket bot takviyesi ve dikey tırmanış.",
+                "Yapay zeka düellosu, kavisli vuruşlar ve enerji duvarı.",
+                "Bölünen asteroitler, akıllı radar ve acil durum bombası."
             ];
 
             menuTitle.innerText = titles[index];
             menuDesc.innerText = descs[index];
 
-            // HUD Görünürlükleri
             comboContainer.style.display = (index === 0) ? "flex" : "none";
             livesContainer.style.display = (index === 0 || index === 2 || index === 5) ? "flex" : "none";
             levelContainer.style.display = (index === 0) ? "flex" : "none";
@@ -416,6 +438,7 @@
             scoreEl.innerText = score;
             menuOverlay.classList.add("hidden");
             gameOverOverlay.classList.add("hidden");
+            particles = [];
 
             if (activeGameIndex === 0) {
                 nb.lives = 3; nb.level = 1; nb.combo = 1;
@@ -444,14 +467,14 @@
             playSound(120, "sawtooth", 0.3);
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_hub_high", highScore);
+                localStorage.setItem("neon_ultra_high", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Kontroller
+        // Fare ve Klavye Kontrolleri
         window.addEventListener("mousemove", (e) => {
             let rect = canvas.getBoundingClientRect();
             inputX = (e.clientX - rect.left) * (canvas.width / rect.width);
@@ -477,10 +500,19 @@
                 if (e.key === "ArrowRight" && cs.dir.x === 0) cs.nextDir = {x: 1, y: 0};
             } else if (activeGameIndex === 2 && e.key === " ") {
                 ni.bullets.push({x: ni.ship.x + ni.ship.w / 2 - 3, y: ni.ship.y, w: 6, h: 14});
-                playSound(600, "square", 0.05);
+                playSound(650, "square", 0.05);
+            } else if (activeGameIndex === 0 && e.key === " " && nb.paddle.laser) {
+                nb.lasers.push({x: nb.paddle.x + 10, y: nb.paddle.y, w: 4, h: 12});
+                nb.lasers.push({x: nb.paddle.x + nb.paddle.w - 14, y: nb.paddle.y, w: 4, h: 12});
+                playSound(700, "sawtooth", 0.06);
             } else if (activeGameIndex === 5 && e.key === " ") {
-                na.bullets.push({x: na.ship.x, y: na.ship.y, dx: Math.cos(na.ship.angle) * 7, dy: Math.sin(na.ship.angle) * 7, life: 40});
-                playSound(500, "triangle", 0.05);
+                na.bullets.push({x: na.ship.x, y: na.ship.y, dx: Math.cos(na.ship.angle) * 7.5, dy: Math.sin(na.ship.angle) * 7.5, life: 40});
+                playSound(550, "triangle", 0.05);
+            } else if (activeGameIndex === 5 && (e.key === "b" || e.key === "B") && na.ship.bomb > 0) {
+                na.ship.bomb--;
+                na.asteroids = [];
+                addParticles(canvas.width/2, canvas.height/2, "#ffe600", 50);
+                playSound(150, "sawtooth", 0.4);
             }
         });
         window.addEventListener("keyup", (e) => { keys[e.key] = false; });
@@ -493,18 +525,58 @@
         function update() {
             if (gameState !== "PLAYING") return;
 
+            // Particle Güncelleme
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.dx; p.y += p.dy; p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
             if (activeGameIndex === 0) {
-                // Neon Bounce
+                // Neon Bounce Pro Güncelleme
                 if (nb.combo > 1) {
                     nb.comboTimer--;
                     if (nb.comboTimer <= 0) { nb.combo = 1; comboEl.innerText = "x" + nb.combo; }
                 }
+
                 nb.ball.x += nb.ball.dx;
                 nb.ball.y += nb.ball.dy;
 
                 if (nb.ball.x - nb.ball.r < 0) { nb.ball.x = nb.ball.r; nb.ball.dx = -nb.ball.dx; playSound(300); }
                 if (nb.ball.x + nb.ball.r > canvas.width) { nb.ball.x = canvas.width - nb.ball.r; nb.ball.dx = -nb.ball.dx; playSound(300); }
                 if (nb.ball.y - nb.ball.r < 0) { nb.ball.y = nb.ball.r; nb.ball.dy = -nb.ball.dy; playSound(300); }
+
+                // Lazerler
+                for (let i = nb.lasers.length - 1; i >= 0; i--) {
+                    nb.lasers[i].y -= 9;
+                    if (nb.lasers[i].y < 0) { nb.lasers.splice(i, 1); continue; }
+                    let l = nb.lasers[i];
+                    nb.bricks.forEach(b => {
+                        if (b.status === 1 && l.x > b.x && l.x < b.x + b.w && l.y > b.y && l.y < b.y + b.h) {
+                            b.health--; nb.lasers.splice(i, 1);
+                            if (b.health <= 0) {
+                                b.status = 0; score += 30; scoreEl.innerText = score;
+                                addParticles(b.x + b.w/2, b.y + b.h/2, b.color);
+                            }
+                        }
+                    });
+                }
+
+                // Power-up düşme
+                for (let i = nb.powerups.length - 1; i >= 0; i--) {
+                    let p = nb.powerups[i];
+                    p.y += 2.5;
+                    if (
+                        p.y + p.h >= nb.paddle.y && p.y <= nb.paddle.y + nb.paddle.h &&
+                        p.x + p.w >= nb.paddle.x && p.x <= nb.paddle.x + nb.paddle.w
+                    ) {
+                        if (p.type === "laser") { nb.paddle.laser = true; setTimeout(() => nb.paddle.laser = false, 8000); }
+                        else if (p.type === "expand") { nb.paddle.w = Math.min(180, nb.paddle.w + 35); }
+                        score += 100; scoreEl.innerText = score;
+                        playSound(800, "sine", 0.15);
+                        nb.powerups.splice(i, 1);
+                    } else if (p.y > canvas.height) { nb.powerups.splice(i, 1); }
+                }
 
                 if (
                     nb.ball.y + nb.ball.r >= nb.paddle.y &&
@@ -513,8 +585,9 @@
                 ) {
                     nb.ball.dy = -Math.abs(nb.ball.dy);
                     let hit = nb.ball.x - (nb.paddle.x + nb.paddle.w / 2);
-                    nb.ball.dx = hit * 0.12;
-                    playSound(350);
+                    nb.ball.dx = hit * 0.13;
+                    addParticles(nb.ball.x, nb.ball.y, "#00f0ff", 6);
+                    playSound(360);
                 }
 
                 if (nb.ball.y > canvas.height + 20) {
@@ -534,12 +607,16 @@
                         ) {
                             nb.ball.dy = -nb.ball.dy;
                             b.health--;
+                            addParticles(b.x + b.w/2, b.y + b.h/2, b.color, 8);
                             if (b.health <= 0) {
                                 b.status = 0;
                                 nb.combo++; nb.comboTimer = 180; comboEl.innerText = "x" + nb.combo;
-                                score += 25 * nb.combo; scoreEl.innerText = score;
-                                playSound(500, "triangle", 0.08);
-                            } else { playSound(200, "square", 0.08); }
+                                score += 35 * nb.combo; scoreEl.innerText = score;
+                                if (Math.random() < 0.22) {
+                                    nb.powerups.push({x: b.x + b.w/2 - 12, y: b.y, w: 24, h: 24, type: Math.random() < 0.5 ? "laser" : "expand"});
+                                }
+                                playSound(520, "triangle", 0.08);
+                            } else { playSound(210, "square", 0.08); }
                         }
                     }
                 });
@@ -549,31 +626,41 @@
                 }
 
             } else if (activeGameIndex === 1) {
-                // Cyber Snake X
+                // Cyber Snake X Pro Güncelleme
                 snakeCounter++;
-                if (snakeCounter % 7 === 0) {
+                if (snakeCounter % 6 === 0) {
                     cs.dir = cs.nextDir;
                     let head = {x: cs.snake[0].x + cs.dir.x, y: cs.snake[0].y + cs.dir.y};
+                    
+                    // Portallar
+                    if (head.x === cs.portalA.x && head.y === cs.portalA.y) head = {x: cs.portalB.x + 1, y: cs.portalB.y};
+                    else if (head.x === cs.portalB.x && head.y === cs.portalB.y) head = {x: cs.portalA.x + 1, y: cs.portalA.y};
+
                     if (head.x < 0 || head.x >= canvas.width / cs.gridSize || head.y < 0 || head.y >= canvas.height / cs.gridSize) {
                         triggerGameOver(); return;
                     }
                     for (let s of cs.snake) { if (head.x === s.x && head.y === s.y) { triggerGameOver(); return; } }
                     cs.snake.unshift(head);
                     if (head.x === cs.food.x && head.y === cs.food.y) {
-                        score += 50; scoreEl.innerText = score; playSound(700, "sine", 0.1); spawnCSFood();
+                        let pts = cs.food.type === "bonus" ? 150 : 50;
+                        score += pts; scoreEl.innerText = score;
+                        addParticles(head.x * cs.gridSize, head.y * cs.gridSize, cs.food.color, 15);
+                        playSound(750, "sine", 0.1); spawnCSFood();
                     } else { cs.snake.pop(); }
                 }
 
             } else if (activeGameIndex === 2) {
-                // Neon Invaders
+                // Neon Invaders X Güncelleme
                 for (let i = ni.bullets.length - 1; i >= 0; i--) {
-                    ni.bullets[i].y -= 8;
+                    ni.bullets[i].y -= 9;
                     if (ni.bullets[i].y < 0) { ni.bullets.splice(i, 1); continue; }
                     let b = ni.bullets[i];
                     for (let a of ni.aliens) {
                         if (a.status === 1 && b.x > a.x && b.x < a.x + a.w && b.y > a.y && b.y < a.y + a.h) {
                             a.status = 0; ni.bullets.splice(i, 1);
-                            score += 40; scoreEl.innerText = score; playSound(600, "triangle", 0.08);
+                            score += 50; scoreEl.innerText = score;
+                            addParticles(a.x + a.w/2, a.y + a.h/2, a.color, 12);
+                            playSound(620, "triangle", 0.08);
                             break;
                         }
                     }
@@ -583,56 +670,65 @@
                 if (allDead) initNeonInvaders();
 
             } else if (activeGameIndex === 3) {
-                // Graviton Jump
-                gj.player.vy += 0.35;
+                // Graviton Jump Pro Güncelleme
+                gj.player.vy += 0.36;
                 gj.player.y += gj.player.vy;
                 gj.platforms.forEach(p => {
+                    if (p.type === "moving") {
+                        p.x += p.dx;
+                        if (p.x <= 0 || p.x + p.w >= canvas.width) p.dx = -p.dx;
+                    }
                     if (
                         gj.player.vy > 0 &&
                         gj.player.x + gj.player.w > p.x && gj.player.x < p.x + p.w &&
                         gj.player.y + gj.player.h >= p.y && gj.player.y + gj.player.h <= p.y + 16
                     ) {
-                        gj.player.vy = -11; playSound(450, "sine", 0.05);
+                        gj.player.vy = -11.5;
+                        addParticles(gj.player.x + gj.player.w/2, gj.player.y + gj.player.h, "#00ff66", 6);
+                        playSound(460, "sine", 0.05);
                     }
                 });
-                if (gj.player.y < 400) {
-                    let diff = 400 - gj.player.y;
-                    gj.player.y = 400;
+                if (gj.player.y < 380) {
+                    let diff = 380 - gj.player.y;
+                    gj.player.y = 380;
                     gj.platforms.forEach(p => {
                         p.y += diff;
                         if (p.y > canvas.height) {
-                            p.y = 0; p.x = Math.random() * (canvas.width - 110);
-                            score += 15; scoreEl.innerText = score;
+                            p.y = 0; p.x = Math.random() * (canvas.width - 100);
+                            score += 20; scoreEl.innerText = score;
                         }
                     });
                 }
                 if (gj.player.y > canvas.height) triggerGameOver();
 
             } else if (activeGameIndex === 4) {
-                // Pulse Pong
+                // Pulse Pong Pro Güncelleme
                 pp.ball.x += pp.ball.dx; pp.ball.y += pp.ball.dy;
                 if (pp.ball.y - pp.ball.r < 0 || pp.ball.y + pp.ball.r > canvas.height) pp.ball.dy = -pp.ball.dy;
 
-                // AI P2
                 let p2Target = pp.ball.y - pp.p2.h / 2;
-                pp.p2.y += (p2Target - pp.p2.y) * 0.08;
+                pp.p2.y += (p2Target - pp.p2.y) * 0.085;
 
                 if (pp.ball.x - pp.ball.r <= pp.p1.x + pp.p1.w && pp.ball.y >= pp.p1.y && pp.ball.y <= pp.p1.y + pp.p1.h) {
-                    pp.ball.dx = -pp.ball.dx; playSound(400);
+                    pp.ball.dx = -pp.ball.dx;
+                    addParticles(pp.ball.x, pp.ball.y, "#ff007f", 8);
+                    playSound(420);
                 }
                 if (pp.ball.x + pp.ball.r >= pp.p2.x && pp.ball.y >= pp.p2.y && pp.ball.y <= pp.p2.y + pp.p2.h) {
-                    pp.ball.dx = -pp.ball.dx; playSound(400);
+                    pp.ball.dx = -pp.ball.dx;
+                    addParticles(pp.ball.x, pp.ball.y, "#00f0ff", 8);
+                    playSound(420);
                 }
-                if (pp.ball.x < 0) { pp.p2.score++; score += 50; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
-                if (pp.ball.x > canvas.width) { pp.p1.score++; score += 100; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
+                if (pp.ball.x < 0) { pp.p2.score++; score += 60; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
+                if (pp.ball.x > canvas.width) { pp.p1.score++; score += 120; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
 
             } else if (activeGameIndex === 5) {
-                // Neon Asteroids
-                if (keys["ArrowLeft"]) na.ship.angle -= 0.06;
-                if (keys["ArrowRight"]) na.ship.angle += 0.06;
+                // Neon Asteroids Pro Güncelleme
+                if (keys["ArrowLeft"]) na.ship.angle -= 0.065;
+                if (keys["ArrowRight"]) na.ship.angle += 0.065;
                 if (keys["ArrowUp"]) {
-                    na.ship.x += Math.cos(na.ship.angle) * 3;
-                    na.ship.y += Math.sin(na.ship.angle) * 3;
+                    na.ship.x += Math.cos(na.ship.angle) * 3.5;
+                    na.ship.y += Math.sin(na.ship.angle) * 3.5;
                 }
                 na.ship.x = (na.ship.x + canvas.width) % canvas.width;
                 na.ship.y = (na.ship.y + canvas.height) % canvas.height;
@@ -643,6 +739,7 @@
                     na.bullets[i].life--;
                     if (na.bullets[i].life <= 0) na.bullets.splice(i, 1);
                 }
+
                 na.asteroids.forEach(ast => {
                     ast.x += ast.dx; ast.y += ast.dy;
                     ast.x = (ast.x + canvas.width) % canvas.width;
@@ -656,27 +753,56 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Arka Plan Grid
-            ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
+            ctx.strokeStyle = "rgba(0, 240, 255, 0.035)";
             for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
             for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
+            // Particle Çizimi
+            particles.forEach(p => {
+                ctx.fillStyle = p.color; ctx.shadowBlur = 8; ctx.shadowColor = p.color;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
             if (activeGameIndex === 0) {
-                // Neon Bounce Çizim
+                // Neon Bounce Pro Çizim
                 nb.bricks.forEach(b => {
                     if (b.status === 1) {
-                        ctx.shadowBlur = 10; ctx.shadowColor = b.color; ctx.fillStyle = b.color;
-                        ctx.fillRect(b.x, b.y, b.w, b.h); ctx.shadowBlur = 0;
+                        ctx.shadowBlur = 12; ctx.shadowColor = b.color; ctx.fillStyle = b.color;
+                        ctx.fillRect(b.x, b.y, b.w, b.h);
+                        ctx.fillStyle = "#000000"; ctx.font = "bold 11px monospace";
+                        if (b.health > 1) ctx.fillText(b.health, b.x + b.w/2 - 4, b.y + 15);
+                        ctx.shadowBlur = 0;
                     }
                 });
+                nb.powerups.forEach(p => {
+                    ctx.fillStyle = p.type === "laser" ? "#ffe600" : "#00ff66";
+                    ctx.shadowBlur = 10; ctx.shadowColor = ctx.fillStyle;
+                    ctx.fillRect(p.x, p.y, p.w, p.h); ctx.shadowBlur = 0;
+                });
+                ctx.fillStyle = "#ffe600";
+                nb.lasers.forEach(l => ctx.fillRect(l.x, l.y, l.w, l.h));
+
                 ctx.shadowBlur = 15; ctx.shadowColor = nb.paddle.color; ctx.fillStyle = nb.paddle.color;
                 ctx.fillRect(nb.paddle.x, nb.paddle.y, nb.paddle.w, nb.paddle.h);
+                if (nb.paddle.laser) {
+                    ctx.fillStyle = "#ffe600";
+                    ctx.fillRect(nb.paddle.x + 10, nb.paddle.y - 6, 4, 6);
+                    ctx.fillRect(nb.paddle.x + nb.paddle.w - 14, nb.paddle.y - 6, 4, 6);
+                }
                 ctx.fillStyle = nb.ball.color; ctx.shadowColor = nb.ball.color;
                 ctx.beginPath(); ctx.arc(nb.ball.x, nb.ball.y, nb.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 1) {
-                // Cyber Snake X Çizim
-                ctx.fillStyle = "#00ff66"; ctx.shadowBlur = 12; ctx.shadowColor = "#00ff66";
+                // Cyber Snake X Pro Çizim
+                ctx.fillStyle = cs.food.color; ctx.shadowBlur = 15; ctx.shadowColor = cs.food.color;
                 ctx.fillRect(cs.food.x * cs.gridSize, cs.food.y * cs.gridSize, cs.gridSize - 2, cs.gridSize - 2);
+                
+                // Portallar
+                ctx.fillStyle = "#ffe600"; ctx.shadowColor = "#ffe600";
+                ctx.fillRect(cs.portalA.x * cs.gridSize, cs.portalA.y * cs.gridSize, cs.gridSize, cs.gridSize);
+                ctx.fillRect(cs.portalB.x * cs.gridSize, cs.portalB.y * cs.gridSize, cs.gridSize, cs.gridSize);
+
                 cs.snake.forEach((s, idx) => {
                     ctx.fillStyle = idx === 0 ? "#ff007f" : "#00f0ff";
                     ctx.shadowColor = ctx.fillStyle;
@@ -685,7 +811,7 @@
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 2) {
-                // Neon Invaders Çizim
+                // Neon Invaders X Çizim
                 ctx.fillStyle = "#00f0ff"; ctx.shadowBlur = 15; ctx.shadowColor = "#00f0ff";
                 ctx.fillRect(ni.ship.x, ni.ship.y, ni.ship.w, ni.ship.h);
                 ctx.fillStyle = "#ffe600";
@@ -699,15 +825,18 @@
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 3) {
-                // Graviton Jump Çizim
+                // Graviton Jump Pro Çizim
                 ctx.fillStyle = "#00ff66"; ctx.shadowBlur = 15; ctx.shadowColor = "#00ff66";
                 ctx.fillRect(gj.player.x, gj.player.y, gj.player.w, gj.player.h);
-                ctx.fillStyle = "#00f0ff"; ctx.shadowColor = "#00f0ff";
-                gj.platforms.forEach(p => ctx.fillRect(p.x, p.y, p.w, p.h));
+                gj.platforms.forEach(p => {
+                    ctx.fillStyle = p.type === "moving" ? "#ffe600" : "#00f0ff";
+                    ctx.shadowColor = ctx.fillStyle;
+                    ctx.fillRect(p.x, p.y, p.w, p.h);
+                });
                 ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 4) {
-                // Pulse Pong Çizim
+                // Pulse Pong Pro Çizim
                 ctx.fillStyle = "#ff007f"; ctx.shadowBlur = 12; ctx.shadowColor = "#ff007f";
                 ctx.fillRect(pp.p1.x, pp.p1.y, pp.p1.w, pp.p1.h);
                 ctx.fillStyle = "#00f0ff"; ctx.shadowColor = "#00f0ff";
@@ -716,11 +845,11 @@
                 ctx.beginPath(); ctx.arc(pp.ball.x, pp.ball.y, pp.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
 
             } else if (activeGameIndex === 5) {
-                // Neon Asteroids Çizim
+                // Neon Asteroids Pro Çizim
                 ctx.save();
                 ctx.translate(na.ship.x, na.ship.y);
                 ctx.rotate(na.ship.angle);
-                ctx.strokeStyle = "#ff007f"; ctx.lineWidth = 3; ctx.shadowBlur = 10; ctx.shadowColor = "#ff007f";
+                ctx.strokeStyle = "#ff007f"; ctx.lineWidth = 3; ctx.shadowBlur = 12; ctx.shadowColor = "#ff007f";
                 ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(-12, -10); ctx.lineTo(-12, 10); ctx.closePath(); ctx.stroke();
                 ctx.restore();
 
