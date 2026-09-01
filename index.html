@@ -2,14 +2,138 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NeonBounce - Oto Oyun Fabrikası</title>
     <style>
-        body { background: #0f172a; color: #38bdf8; font-family: sans-serif; text-align: center; padding-top: 50px; }
-        h1 { font-size: 3rem; text-shadow: 0 0 10px #38bdf8; }
+        body {
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 2rem;
+            text-shadow: 0 0 10px #38bdf8;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #94a3b8;
+            margin-top: 0;
+        }
+        canvas {
+            background: #020617;
+            border: 2px solid #38bdf8;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            display: block;
+            margin: 20px auto;
+            border-radius: 8px;
+            touch-action: none;
+        }
     </style>
 </head>
 <body>
-    <h1>NeonBounce Yükleniyor...</h1>
-    <p>Oto Oyun Fabrikası tarafından otomatik üretilmiştir.</p>
+    <h1>NEON BOUNCE</h1>
+    <p>Oto Oyun Fabrikası - v0.1 Basit Sürüm</p>
+    
+    <canvas id="gameCanvas" width="400" height="500"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        let ball = {
+            x: canvas.width / 2,
+            y: 50,
+            radius: 12,
+            speedX: 3,
+            speedY: 3,
+            color: "#38bdf8"
+        };
+
+        let paddle = {
+            width: 100,
+            height: 12,
+            x: canvas.width / 2 - 50,
+            y: canvas.height - 30,
+            color: "#ec4899"
+        };
+
+        function moveHandler(clientX) {
+            let rect = canvas.getBoundingClientRect();
+            let rootX = clientX - rect.left;
+            paddle.x = rootX - paddle.width / 2;
+            
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+        }
+
+        canvas.addEventListener("mousemove", (e) => moveHandler(e.clientX));
+        canvas.addEventListener("touchmove", (e) => {
+            moveHandler(e.touches[0].clientX);
+            e.preventDefault();
+        }, { passive: false });
+
+        function update() {
+            ball.x += ball.speedX;
+            ball.y += ball.speedY;
+
+            if (ball.x - ball.radius < 0 || ball.x + ball.radius > canvas.width) {
+                ball.speedX = -ball.speedX;
+            }
+
+            if (ball.y - ball.radius < 0) {
+                ball.speedY = -ball.speedY;
+            }
+
+            if (
+                ball.y + ball.radius >= paddle.y &&
+                ball.x >= paddle.x &&
+                ball.x <= paddle.x + paddle.width
+            ) {
+                ball.speedY = -ball.speedY;
+                let hitPoint = ball.x - (paddle.x + paddle.width / 2);
+                ball.speedX = hitPoint * 0.15;
+            }
+
+            if (ball.y > canvas.height) {
+                ball.x = canvas.width / 2;
+                ball.y = 50;
+                ball.speedY = 3;
+                ball.speedX = (Math.random() > 0.5 ? 1 : -1) * 3;
+            }
+        }
+
+        function draw() {
+            ctx.fillStyle = "rgba(2, 6, 23, 0.3)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = ball.color;
+            ctx.fillStyle = ball.color;
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.save();
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = paddle.color;
+            ctx.fillStyle = paddle.color;
+            ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+            ctx.restore();
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+    </script>
 </body>
 </html>
