@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonBounce - 3D Multi-Camera Edition</title>
+    <title>NeonBounce - 3D Multi-Camera Edition (HD 4X)</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -28,7 +28,7 @@
         }
 
         h1 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--pure-cyan);
             margin: 2px 0;
             letter-spacing: 2px;
@@ -37,13 +37,13 @@
         .hud {
             display: flex;
             justify-content: space-between;
-            max-width: 440px;
-            margin: 0 auto 2px auto;
-            padding: 4px 8px;
+            max-width: 880px;
+            margin: 0 auto 4px auto;
+            padding: 6px 12px;
             background: var(--panel-bg);
             border: 2px solid var(--pure-cyan);
             border-radius: 4px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: bold;
         }
 
@@ -59,8 +59,10 @@
         }
 
         #webgl-container {
-            width: 440px;
-            height: 520px;
+            width: 880px;
+            height: 1040px;
+            max-width: 95vw;
+            max-height: 75vh;
             border: 2px solid var(--pure-cyan);
             border-radius: 4px;
             display: block;
@@ -86,32 +88,32 @@
         }
 
         .overlay h2 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
+            font-size: 2rem;
+            margin-bottom: 12px;
             color: var(--pure-pink);
         }
 
         .overlay p {
-            font-size: 0.85rem;
+            font-size: 1rem;
             color: #cccccc;
-            margin-bottom: 15px;
-            padding: 0 15px;
+            margin-bottom: 20px;
+            padding: 0 20px;
         }
 
         .btn-group {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .btn {
             background: var(--pure-cyan);
             color: #000000;
             border: 2px solid #ffffff;
-            padding: 10px 18px;
-            font-size: 0.9rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
@@ -133,7 +135,7 @@
 </head>
 <body>
 
-    <h1>NEON BOUNCE 3D</h1>
+    <h1>NEON BOUNCE 3D (HD 4X)</h1>
     <div class="hud">
         <div class="hud-item">SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">REKOR: <span id="highVal">0</span></div>
@@ -147,16 +149,16 @@
         <!-- Ana Menü -->
         <div id="menuOverlay" class="overlay">
             <h2>3D NEON BOUNCE</h2>
-            <p>Kamera Açısı Seç ve 3 Boyutlu Tuğla Kırma Macerasına Başla!</p>
+            <p>4 Kat Daha Büyük Çözünürlük ve Genişletilmiş Görüş Alanı!</p>
             
-            <p style="margin-bottom:5px; color:var(--pure-cyan);">Kamera Modu:</p>
+            <p style="margin-bottom:8px; color:var(--pure-cyan);">Kamera Modu:</p>
             <div class="btn-group">
                 <button class="btn btn-secondary" id="cam1Btn" onclick="setCameraMode(1)">1. Klasik Üst</button>
                 <button class="btn btn-secondary" id="cam2Btn" onclick="setCameraMode(2)">2. 3.Şahıs Takip</button>
                 <button class="btn btn-secondary" id="cam3Btn" onclick="setCameraMode(3)">3. Sinematik</button>
             </div>
 
-            <button class="btn" id="startBtn" style="margin-top:10px;">OYUNA BAŞLA</button>
+            <button class="btn" id="startBtn" style="margin-top:15px;">OYUNA BAŞLA</button>
         </div>
 
         <!-- Game Over -->
@@ -168,7 +170,6 @@
     </div>
 
     <script>
-        // Skor & UI Elementleri
         const scoreEl = document.getElementById("scoreVal");
         const highEl = document.getElementById("highVal");
         const livesEl = document.getElementById("livesVal");
@@ -181,12 +182,12 @@
 
         let gameState = "MENU";
         let score = 0;
-        let highScore = localStorage.getItem("neon_3d_high") || 0;
+        let highScore = localStorage.getItem("neon_3d_high_4x") || 0;
         let lives = 3;
         let level = 1;
         highEl.innerText = highScore;
 
-        let cameraMode = 1; // 1: Klasik, 2: Takip, 3: Sinematik
+        let cameraMode = 1;
         function setCameraMode(mode) {
             cameraMode = mode;
             document.getElementById("cam1Btn").style.borderColor = (mode === 1) ? "#ff00ff" : "#ffffff";
@@ -195,37 +196,40 @@
         }
         setCameraMode(1);
 
-        // Three.js Kurulumu
+        // 4 Kat Daha Büyük Render Alanı (880x1040)
         const container = document.getElementById("webgl-container");
+        const renderWidth = 880;
+        const renderHeight = 1040;
+
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x000000);
 
-        const camera = new THREE.PerspectiveCamera(60, 440 / 520, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, renderWidth / renderHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(440, 520);
+        renderer.setSize(renderWidth, renderHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         container.appendChild(renderer.domElement);
 
         // Işıklandırma
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0x00ffff, 1.5, 50);
-        pointLight.position.set(0, 10, 10);
+        const pointLight = new THREE.PointLight(0x00ffff, 2.0, 60);
+        pointLight.position.set(0, 10, 12);
         scene.add(pointLight);
 
-        // Oyun Alanı Sınırları (Koordinat Sistemi)
         const fieldWidth = 14;
         const fieldHeight = 18;
 
-        // Raket (Paddle) 3D
+        // Raket
         const paddleGeo = new THREE.BoxGeometry(3.2, 0.6, 0.8);
         const paddleMat = new THREE.MeshPhongMaterial({ color: 0xff00ff, emissive: 0x330033 });
         const paddle = new THREE.Mesh(paddleGeo, paddleMat);
         paddle.position.set(0, -7.5, 0);
         scene.add(paddle);
 
-        // Top (Ball) 3D
-        const ballGeo = new THREE.SphereGeometry(0.35, 16, 16);
+        // Top
+        const ballGeo = new THREE.SphereGeometry(0.35, 24, 24);
         const ballMat = new THREE.MeshPhongMaterial({ color: 0x00ffff, emissive: 0x00ffff });
         const ball = new THREE.Mesh(ballGeo, ballMat);
         scene.add(ball);
@@ -233,7 +237,6 @@
         let ballVel = { x: 0, y: 0 };
         let brickMeshes = [];
 
-        // Web Audio API Sentezleyici
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -262,11 +265,10 @@
         }
 
         function initLevel() {
-            // Eski tuğlaları temizle
             brickMeshes.forEach(b => scene.remove(b));
             brickMeshes = [];
 
-            let rows = 4 + Math.min(level, 2);
+            let rows = 4 + Math.min(level, 3);
             let cols = 6;
             let bWidth = 1.9;
             let bHeight = 0.6;
@@ -279,7 +281,7 @@
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
                     let color = (r % 2 === 0) ? 0x00ffff : 0x9900ff;
-                    if (r === 0) color = 0xff0000; // Üst sıra kırmızı patlayıcı hissi
+                    if (r === 0) color = 0xff0000;
 
                     let mat = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.3 });
                     let mesh = new THREE.Mesh(brickGeo, mat);
@@ -325,14 +327,13 @@
             playSound("gameover");
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_3d_high", highScore);
+                localStorage.setItem("neon_3d_high_4x", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Kontroller (Mouse / Dokunmatik)
         function handleMove(clientX) {
             let rect = renderer.domElement.getBoundingClientRect();
             let xNorm = ((clientX - rect.left) / rect.width) * 2 - 1;
@@ -352,31 +353,25 @@
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
 
-        // Kamera Açılarını Güncelleme
         function updateCamera() {
             if (cameraMode === 1) {
-                // Klasik Üstten Bakış (Açılı Arcade)
                 camera.position.set(0, -3, 15);
                 camera.lookAt(0, 0, 0);
             } else if (cameraMode === 2) {
-                // Arkadan Takip / 3. Şahıs Açısı
                 camera.position.set(paddle.position.x * 0.5, -11, 5);
                 camera.lookAt(0, 2, 0);
             } else if (cameraMode === 3) {
-                // Sinematik İzometrik Açı
                 camera.position.set(8, -10, 11);
                 camera.lookAt(0, 0, 0);
             }
         }
 
-        // Oyun Döngüsü (Update)
         function update() {
             if (gameState !== "PLAYING") return;
 
             ball.position.x += ballVel.x;
             ball.position.y += ballVel.y;
 
-            // Duvar Çarpışmaları
             if (ball.position.x < -fieldWidth / 2 + 0.4) {
                 ball.position.x = -fieldWidth / 2 + 0.4;
                 ballVel.x = -ballVel.x; playSound("hit");
@@ -390,7 +385,6 @@
                 ballVel.y = -ballVel.y; playSound("hit");
             }
 
-            // Raket Çarpışması
             if (
                 ball.position.y <= paddle.position.y + 0.4 &&
                 ball.position.y >= paddle.position.y - 0.4 &&
@@ -403,7 +397,6 @@
                 playSound("hit");
             }
 
-            // Tuğla Çarpışmaları
             let activeBricksCount = 0;
             brickMeshes.forEach(b => {
                 if (!b.userData.active) return;
@@ -426,7 +419,6 @@
                 }
             });
 
-            // Alt Sınır (Can Kaybı)
             if (ball.position.y < -9) {
                 lives--;
                 livesEl.innerText = lives;
@@ -437,7 +429,6 @@
                 }
             }
 
-            // Seviye Atlama
             if (activeBricksCount === 0) {
                 score += 150;
                 level++;
@@ -455,7 +446,6 @@
             renderer.render(scene, camera);
         }
 
-        // Başlangıç Kamera Konumlandırma
         camera.position.set(0, -3, 15);
         camera.lookAt(0, 0, 0);
         animate();
