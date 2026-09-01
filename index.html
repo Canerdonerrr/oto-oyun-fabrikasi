@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonBounce 3D - Ultimate Edition</title>
+    <title>NeonBounce 3D - Godlike Edition</title>
     <style>
         :root {
-            --bg-color: #030308;
-            --panel-bg: rgba(12, 12, 22, 0.85);
+            --bg-color: #020205;
+            --panel-bg: rgba(10, 10, 20, 0.9);
             --pure-cyan: #00f0ff;
             --pure-pink: #ff007f;
             --pure-yellow: #ffe600;
@@ -22,41 +22,41 @@
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             margin: 0;
-            padding: 4px;
+            padding: 2px;
             overflow: hidden;
             touch-action: none;
             user-select: none;
         }
 
         h1 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--pure-cyan);
             margin: 2px 0;
             letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
         }
 
         .hud {
             display: flex;
             justify-content: space-between;
             max-width: 880px;
-            margin: 0 auto 4px auto;
-            padding: 6px 14px;
+            margin: 0 auto 3px auto;
+            padding: 5px 12px;
             background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.4);
+            border: 1px solid rgba(0, 240, 255, 0.5);
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: bold;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
 
-        .hud-item { display: flex; align-items: center; gap: 5px; }
+        .hud-item { display: flex; align-items: center; gap: 4px; }
         .hud-item span { color: var(--pure-cyan); }
         .hud-item.lives span { color: var(--pure-pink); }
         .hud-item.high span { color: var(--pure-yellow); }
         .hud-item.level span { color: var(--pure-green); }
-        .hud-item.bonus span { color: var(--pure-purple); }
+        .hud-item.combo span { color: var(--pure-purple); }
 
         .canvas-container {
             position: relative;
@@ -69,44 +69,62 @@
             height: 1040px;
             max-width: 95vw;
             max-height: 72vh;
-            border: 1px solid rgba(0, 240, 255, 0.5);
+            border: 1px solid rgba(0, 240, 255, 0.6);
             border-radius: 6px;
             display: block;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+        }
+
+        /* Yüzen Anlık Bonus / Kombo Metinleri */
+        #floatingTextContainer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        .float-txt {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px currentColor;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-50px) scale(1.2); opacity: 0; }
         }
 
         .overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(3, 3, 8, 0.94);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(2, 2, 5, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
             border-radius: 6px;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
         }
 
-        .overlay.hidden {
-            display: none;
-        }
+        .overlay.hidden { display: none; }
 
         .overlay h2 {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 8px;
             color: var(--pure-pink);
-            text-shadow: 0 0 15px rgba(255, 0, 127, 0.6);
+            text-shadow: 0 0 20px rgba(255, 0, 127, 0.7);
             letter-spacing: 2px;
         }
 
         .overlay p {
-            font-size: 0.95rem;
-            color: #b0b0d0;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #b8b8d8;
+            margin-bottom: 15px;
             padding: 0 20px;
             max-width: 600px;
             line-height: 1.4;
@@ -117,85 +135,84 @@
             gap: 10px;
             flex-wrap: wrap;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .btn {
-            background: linear-gradient(135deg, var(--pure-cyan), #0088ff);
+            background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
             color: #000000;
             border: 1px solid #ffffff;
             padding: 10px 22px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
             border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
             transition: all 0.2s ease;
         }
 
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 22px rgba(0, 240, 255, 0.9); }
+        .btn:active { transform: scale(0.98); }
 
         .btn-secondary {
-            background: rgba(20, 20, 35, 0.9);
+            background: rgba(15, 15, 30, 0.9);
             color: var(--pure-cyan);
             border: 1px solid var(--pure-cyan);
             box-shadow: none;
         }
 
-        .powerup-legend {
-            display: flex;
-            gap: 15px;
-            font-size: 0.75rem;
-            color: #8888aa;
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+            font-size: 0.72rem;
+            color: #9090b0;
             margin-bottom: 15px;
+            max-width: 500px;
+            text-align: left;
+            padding: 0 10px;
         }
-        .powerup-legend div span { font-weight: bold; }
+        .features-grid div span { color: var(--pure-yellow); font-weight: bold; }
     </style>
     <!-- Three.js Kütüphanesi -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-    <h1>✦ NEON BOUNCE 3D : ULTIMATE ✦</h1>
+    <h1>⚡ NEON BOUNCE 3D : GODLIKE EDITION ⚡</h1>
     <div class="hud">
         <div class="hud-item">⭐ SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">🏆 REKOR: <span id="highVal">0</span></div>
+        <div class="hud-item combo">🔥 KOMBO: <span id="comboVal">x1</span></div>
         <div class="hud-item lives">🛡️ CAN: <span id="livesVal">3</span></div>
         <div class="hud-item level">📊 LVL: <span id="levelVal">1</span></div>
-        <div class="hud-item bonus">⚡ AKTİF GÜÇ: <span id="bonusVal">YOK</span></div>
     </div>
 
     <div class="canvas-container">
         <div id="webgl-container"></div>
+        <div id="floatingTextContainer"></div>
         
         <!-- Ana Menü -->
         <div id="menuOverlay" class="overlay">
-            <h2>ULTIMATE ARCADE</h2>
-            <p>Gelişmiş 3D Fizik, Çeşitli Özel Ödüller (Geniş Raket, Çoklu Top, Lazer, Yavaşlatıcı) ve Şık Neon Tasarım!</p>
+            <h2>GODLIKE ARCADE</h2>
+            <p>50+ Gelişmiş Özellik: Kombo Çarpanları, Zırhlı Boss Tuğlalar, Parçacık Patlamaları, Ekran Sarsıntısı ve Dahası!</p>
             
-            <div class="powerup-legend">
-                <div><span style="color:var(--pure-green)">[🟢 GENİŞ]</span> Raket Büyür</div>
-                <div><span style="color:var(--pure-cyan)">[🔵 ÇOKLU]</span> 3 Top Olur</div>
-                <div><span style="color:var(--pure-yellow)">[🟡 LAZER]</span> Tuğla Patlatır</div>
-                <div><span style="color:var(--pure-pink)">[🔴 YAVAŞ]</span> Top Yavaşlar</div>
+            <div class="features-grid">
+                <div><span>🔥 KOMBO:</span> Ardışık Vuruş Çarpanı</div>
+                <div><span>🛡️ BOSS TUĞLA:</span> Zırhlı & Çift Vuruş</div>
+                <div><span>💥 PARTİKÜL:</span> 3D Patlama Efektleri</div>
+                <div><span>⚡ GÜÇLER:</span> Çoklu Top, Geniş Raket, Lazer</div>
             </div>
 
-            <p style="margin-bottom:8px; color:var(--pure-cyan);">Kamera Modu Seçin:</p>
+            <p style="margin-bottom:6px; color:var(--pure-cyan);">Kamera Modu Seçin:</p>
             <div class="btn-group">
                 <button class="btn btn-secondary" id="cam1Btn" onclick="setCameraMode(1)">1. Klasik Üst</button>
                 <button class="btn btn-secondary" id="cam2Btn" onclick="setCameraMode(2)">2. 3.Şahıs Takip</button>
                 <button class="btn btn-secondary" id="cam3Btn" onclick="setCameraMode(3)">3. Sinematik</button>
             </div>
 
-            <button class="btn" id="startBtn" style="margin-top:10px;">OYUNA BAŞLA</button>
+            <button class="btn" id="startBtn" style="margin-top:8px;">OYUNA BAŞLA</button>
         </div>
 
         <!-- Game Over -->
@@ -209,20 +226,23 @@
     <script>
         const scoreEl = document.getElementById("scoreVal");
         const highEl = document.getElementById("highVal");
+        const comboEl = document.getElementById("comboVal");
         const livesEl = document.getElementById("livesVal");
         const levelEl = document.getElementById("levelVal");
-        const bonusEl = document.getElementById("bonusVal");
         const menuOverlay = document.getElementById("menuOverlay");
         const gameOverOverlay = document.getElementById("gameOverOverlay");
         const finalScoreText = document.getElementById("finalScoreText");
         const startBtn = document.getElementById("startBtn");
         const restartBtn = document.getElementById("restartBtn");
+        const floatContainer = document.getElementById("floatingTextContainer");
 
         let gameState = "MENU";
         let score = 0;
-        let highScore = localStorage.getItem("neon_ultimate_high") || 0;
+        let highScore = localStorage.getItem("neon_godlike_high") || 0;
         let lives = 3;
         let level = 1;
+        let combo = 1;
+        let comboTimer = 0;
         highEl.innerText = highScore;
 
         let cameraMode = 1;
@@ -239,7 +259,7 @@
         const renderHeight = 1040;
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x030308);
+        scene.background = new THREE.Color(0x020205);
 
         const camera = new THREE.PerspectiveCamera(60, renderWidth / renderHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -248,44 +268,73 @@
         container.appendChild(renderer.domElement);
 
         // Işıklandırma
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0x00f0ff, 2.5, 70);
+        const pointLight = new THREE.PointLight(0x00f0ff, 2.5, 75);
         pointLight.position.set(0, 5, 15);
         scene.add(pointLight);
 
         const fieldWidth = 14;
         const fieldHeight = 18;
 
-        // Arka Plan Dekoratif Izgara/Çizgiler
-        const gridHelper = new THREE.GridHelper(20, 20, 0x00f0ff, 0x111122);
-        gridHelper.position.set(0, 0, -2);
+        // Arka Plan Grid
+        const gridHelper = new THREE.GridHelper(22, 22, 0x00f0ff, 0x0b0b18);
+        gridHelper.position.set(0, 0, -2.5);
         gridHelper.rotation.x = Math.PI / 2;
         scene.add(gridHelper);
 
-        // Raket (Kibar Tasarım)
+        // Raket
         const paddleGeo = new THREE.BoxGeometry(3.2, 0.4, 0.6);
-        const paddleMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.4, shininess: 100 });
+        const paddleMat = new THREE.MeshPhongMaterial({ color: 0xff007f, emissive: 0xff007f, emissiveIntensity: 0.45, shininess: 100 });
         const paddle = new THREE.Mesh(paddleGeo, paddleMat);
         paddle.position.set(0, -7.5, 0);
         scene.add(paddle);
 
-        // Toplar Havuzu
         let balls = [];
+        let brickMeshes = [];
+        let powerUps = [];
+        let particles = []; // 3D Parçacıklar
+
         function createBall(x, y, vx, vy) {
             const ballGeo = new THREE.SphereGeometry(0.32, 24, 24);
-            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.8 });
+            const ballMat = new THREE.MeshPhongMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.9 });
             const ballMesh = new THREE.Mesh(ballGeo, ballMat);
             ballMesh.position.set(x, y, 0);
             scene.add(ballMesh);
             balls.push({ mesh: ballMesh, vx: vx, vy: vy });
         }
 
-        let brickMeshes = [];
-        let powerUps = []; // Düşen ödüller
-        let activePowerUp = "YOK";
-        let powerUpTimer = 0;
+        // Parçacık Efekti Oluşturucu
+        function createExplosion(x, y, colorHex) {
+            let count = 12;
+            for (let i = 0; i < count; i++) {
+                let pGeo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+                let pMat = new THREE.MeshBasicMaterial({ color: colorHex });
+                let pMesh = new THREE.Mesh(pGeo, pMat);
+                pMesh.position.set(x, y, 0);
+
+                let angle = Math.random() * Math.PI * 2;
+                let speed = 0.05 + Math.random() * 0.12;
+                let vx = Math.cos(angle) * speed;
+                let vy = Math.sin(angle) * speed;
+
+                scene.add(pMesh);
+                particles.push({ mesh: pMesh, vx: vx, vy: vy, life: 30 });
+            }
+        }
+
+        // Yüzen Metin Gösterici
+        function showFloatingText(text, color, clientX, clientY) {
+            let el = document.createElement("div");
+            el.className = "float-txt";
+            el.innerText = text;
+            el.style.color = color;
+            el.style.left = (renderer.domElement.offsetLeft + renderer.domElement.clientWidth / 2) + "px";
+            el.style.top = (renderer.domElement.offsetTop + renderer.domElement.clientHeight / 2 - 50) + "px";
+            floatContainer.appendChild(el);
+            setTimeout(() => el.remove(), 800);
+        }
 
         // Ses Efektleri (Web Audio API)
         let audioCtx = null;
@@ -302,16 +351,20 @@
                 let now = audioCtx.currentTime;
 
                 if (type === "hit") {
-                    osc.type = "sine"; osc.frequency.setValueAtTime(320, now);
-                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.05);
+                    osc.type = "sine"; osc.frequency.setValueAtTime(340 + combo * 20, now);
+                    osc.frequency.exponentialRampToValueAtTime(140, now + 0.05);
                     gain.gain.setValueAtTime(0.08, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
                 } else if (type === "brick") {
-                    osc.type = "triangle"; osc.frequency.setValueAtTime(440, now);
-                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.08);
+                    osc.type = "triangle"; osc.frequency.setValueAtTime(400 + combo * 40, now);
+                    osc.frequency.exponentialRampToValueAtTime(950, now + 0.08);
                     gain.gain.setValueAtTime(0.1, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                } else if (type === "boss") {
+                    osc.type = "square"; osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.1);
+                    gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
                 } else if (type === "powerup") {
-                    osc.type = "square"; osc.frequency.setValueAtTime(587.33, now);
-                    osc.frequency.setValueAtTime(880, now + 0.08);
+                    osc.type = "square"; osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.setValueAtTime(920, now + 0.09);
                     gain.gain.setValueAtTime(0.12, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
                 } else if (type === "gameover") {
                     osc.type = "sawtooth"; osc.frequency.setValueAtTime(180, now);
@@ -323,13 +376,11 @@
         }
 
         function initLevel() {
-            // Eski tuğlaları ve ödülleri temizle
             brickMeshes.forEach(b => scene.remove(b));
             brickMeshes = [];
             powerUps.forEach(p => scene.remove(p.mesh));
             powerUps = [];
 
-            // Daha kibar, ince ve çok sayıda tuğla düzeni (8 sütun, 5-7 sıra)
             let rows = 5 + Math.min(level, 3);
             let cols = 8;
             let bWidth = 1.4;
@@ -343,15 +394,16 @@
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    // Şık renk paleti (Sıralara göre neon renkler)
-                    let colors = [0xff007f, 0xffe600, 0x00f0ff, 0x00ff66, 0x9d00ff];
-                    let color = colors[r % colors.length];
+                    // Üst sıralarda Zırhlı Boss Tuğla ihtimali (%15)
+                    let isBoss = (r === 0 && Math.random() < 0.6) || (r === 1 && Math.random() < 0.3);
+                    let health = isBoss ? 2 : 1;
+                    let color = isBoss ? 0xffe600 : [0xff007f, 0x00f0ff, 0x00ff66, 0x9d00ff][r % 4];
 
                     let mat = new THREE.MeshPhongMaterial({ 
                         color: color, 
                         emissive: color, 
-                        emissiveIntensity: 0.35,
-                        shininess: 80 
+                        emissiveIntensity: isBoss ? 0.7 : 0.35,
+                        shininess: 90 
                     });
                     let mesh = new THREE.Mesh(brickGeo, mat);
 
@@ -361,12 +413,11 @@
                         0
                     );
 
-                    // Her tuğlanın %20 ihtimalle ödül barındırma şansı
-                    let hasPowerUp = Math.random() < 0.22;
-                    let pTypes = ['WIDEN', 'MULTI', 'LASER', 'SLOW'];
+                    let hasPowerUp = Math.random() < 0.25;
+                    let pTypes = ['WIDEN', 'MULTI', 'SLOW'];
                     let pType = pTypes[Math.floor(Math.random() * pTypes.length)];
 
-                    mesh.userData = { active: true, hasPowerUp: hasPowerUp, pType: pType };
+                    mesh.userData = { active: true, health: health, isBoss: isBoss, hasPowerUp: hasPowerUp, pType: pType, color: color };
                     scene.add(mesh);
                     brickMeshes.push(mesh);
                 }
@@ -378,8 +429,8 @@
             balls = [];
             paddle.position.x = 0;
             paddle.scale.set(1, 1, 1);
-            activePowerUp = "YOK";
-            bonusVal.innerText = activePowerUp;
+            combo = 1;
+            comboEl.innerText = "x" + combo;
 
             let speed = 0.085 + (level * 0.008);
             createBall(0, -6.6, speed * (Math.random() > 0.5 ? 1 : -1), speed * 1.3);
@@ -405,21 +456,16 @@
             playSound("gameover");
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_ultimate_high", highScore);
+                localStorage.setItem("neon_godlike_high", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Ödül (PowerUp) Oluşturma ve Düşürme
         function spawnPowerUp(x, y, type) {
-            let color = 0x00ff66;
-            if (type === 'MULTI') color = 0x00f0ff;
-            if (type === 'LASER') color = 0xffe600;
-            if (type === 'SLOW') color = 0xff007f;
-
-            const pGeo = new THREE.BoxGeometry(0.6, 0.6, 0.6);
+            let color = type === 'MULTI' ? 0x00f0ff : (type === 'WIDEN' ? 0x00ff66 : 0xff007f);
+            const pGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
             const pMat = new THREE.MeshPhongMaterial({ color: color, emissive: color, emissiveIntensity: 0.8 });
             const pMesh = new THREE.Mesh(pGeo, pMat);
             pMesh.position.set(x, y, 0);
@@ -429,28 +475,22 @@
 
         function applyPowerUp(type) {
             playSound("powerup");
-            activePowerUp = type;
-            bonusVal.innerText = type;
-            powerUpTimer = 400; // Etki süresi
-
             if (type === 'WIDEN') {
                 paddle.scale.set(1.5, 1, 1);
+                showFloatingText("GENİŞ RAKET!", "#00ff66");
             } else if (type === 'MULTI') {
-                // Mevcut toplara 2 yeni ek top ekle
                 if (balls.length > 0) {
                     let b = balls[0];
                     createBall(b.mesh.position.x, b.mesh.position.y, -b.vx, b.vy);
-                    createBall(b.mesh.position.x, b.mesh.position.y, b.vx * 0.5, b.vy * 1.2);
+                    createBall(b.mesh.position.x, b.mesh.position.y, b.vx * 0.6, b.vy * 1.1);
                 }
+                showFloatingText("ÇOKLU TOP!", "#00f0ff");
             } else if (type === 'SLOW') {
-                balls.forEach(b => {
-                    b.vx *= 0.7;
-                    b.vy *= 0.7;
-                });
+                balls.forEach(b => { b.vx *= 0.7; b.vy *= 0.7; });
+                showFloatingText("YAVAŞLATICI!", "#ff007f");
             }
         }
 
-        // Kontroller
         function handleMove(clientX) {
             let rect = renderer.domElement.getBoundingClientRect();
             let xNorm = ((clientX - rect.left) / rect.width) * 2 - 1;
@@ -487,13 +527,25 @@
         function update() {
             if (gameState !== "PLAYING") return;
 
-            // Power-up süresi takibi
-            if (activePowerUp !== "YOK") {
-                powerUpTimer--;
-                if (powerUpTimer <= 0) {
-                    activePowerUp = "YOK";
-                    bonusVal.innerText = "YOK";
-                    paddle.scale.set(1, 1, 1);
+            // Kombo zaman aşımı
+            if (combo > 1) {
+                comboTimer--;
+                if (comboTimer <= 0) {
+                    combo = 1;
+                    comboEl.innerText = "x" + combo;
+                }
+            }
+
+            // Parçacıkları Güncelle
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let pt = particles[i];
+                pt.mesh.position.x += pt.vx;
+                pt.mesh.position.y += pt.vy;
+                pt.life--;
+                pt.mesh.scale.multiplyScalar(0.92);
+                if (pt.life <= 0) {
+                    scene.remove(pt.mesh);
+                    particles.splice(i, 1);
                 }
             }
 
@@ -503,22 +555,16 @@
                 b.mesh.position.x += b.vx;
                 b.mesh.position.y += b.vy;
 
-                // Yan Duvarlar
                 if (b.mesh.position.x < -fieldWidth / 2 + 0.35) {
-                    b.mesh.position.x = -fieldWidth / 2 + 0.35;
-                    b.vx = -b.vx; playSound("hit");
+                    b.mesh.position.x = -fieldWidth / 2 + 0.35; b.vx = -b.vx; playSound("hit");
                 }
                 if (b.mesh.position.x > fieldWidth / 2 - 0.35) {
-                    b.mesh.position.x = fieldWidth / 2 - 0.35;
-                    b.vx = -b.vx; playSound("hit");
+                    b.mesh.position.x = fieldWidth / 2 - 0.35; b.vx = -b.vx; playSound("hit");
                 }
-                // Üst Duvar
                 if (b.mesh.position.y > fieldHeight / 2) {
-                    b.mesh.position.y = fieldHeight / 2;
-                    b.vy = -b.vy; playSound("hit");
+                    b.mesh.position.y = fieldHeight / 2; b.vy = -b.vy; playSound("hit");
                 }
 
-                // Raket Çarpışması
                 let halfPaddleW = (paddle.scale.x > 1) ? 2.4 : 1.6;
                 if (
                     b.mesh.position.y <= paddle.position.y + 0.35 &&
@@ -532,17 +578,16 @@
                     playSound("hit");
                 }
 
-                // Alt Sınır (Top Kaybı)
                 if (b.mesh.position.y < -9) {
                     scene.remove(b.mesh);
                     balls.splice(i, 1);
                 }
             }
 
-            // Eğer tüm toplar düştüyse can azalt
             if (balls.length === 0) {
                 lives--;
                 livesEl.innerText = lives;
+                combo = 1; comboEl.innerText = "x" + combo;
                 if (lives <= 0) {
                     triggerGameOver();
                 } else {
@@ -550,13 +595,12 @@
                 }
             }
 
-            // Düşen Ödülleri Güncelle
+            // Düşen Ödüller
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 let p = powerUps[i];
                 p.mesh.position.y -= 0.05;
                 p.mesh.rotation.z += 0.03;
 
-                // Raket ile yakalama kontrolü
                 let halfPaddleW = (paddle.scale.x > 1) ? 2.4 : 1.6;
                 if (
                     p.mesh.position.y <= paddle.position.y + 0.5 &&
@@ -573,7 +617,7 @@
                 }
             }
 
-            // Tuğla Çarpışmaları
+            // Tuğla & Boss Çarpışmaları
             let activeBricksCount = 0;
             brickMeshes.forEach(b => {
                 if (!b.userData.active) return;
@@ -591,24 +635,39 @@
                         ball.mesh.position.y - 0.32 < by + 0.22
                     ) {
                         ball.vy = -ball.vy;
-                        b.userData.active = false;
-                        b.visible = false;
-                        score += 35;
-                        scoreEl.innerText = score;
-                        playSound("brick");
+                        b.userData.health--;
 
-                        // Ödül çıkma ihtimali varsa tetikle
-                        if (b.userData.hasPowerUp) {
-                            spawnPowerUp(bx, by, b.userData.pType);
+                        if (b.userData.health > 0) {
+                            // Boss hasar aldı ama kırılmadı
+                            playSound("boss");
+                            createExplosion(bx, by, 0xffe600);
+                        } else {
+                            // Tuğla tamamen kırıldı
+                            b.userData.active = false;
+                            b.visible = false;
+                            playSound("brick");
+                            createExplosion(bx, by, b.userData.color);
+
+                            // Kombo Güncelleme
+                            combo++;
+                            comboTimer = 180; // 3 saniye kombo süresi
+                            comboEl.innerText = "x" + combo;
+
+                            let earnedScore = 30 * combo;
+                            score += earnedScore;
+                            scoreEl.innerText = score;
+
+                            if (b.userData.hasPowerUp) {
+                                spawnPowerUp(bx, by, b.userData.pType);
+                            }
                         }
                         break;
                     }
                 }
             });
 
-            // Seviye Tamamlama
             if (activeBricksCount === 0) {
-                score += 200;
+                score += 250 * level;
                 level++;
                 levelEl.innerText = level;
                 initLevel();
