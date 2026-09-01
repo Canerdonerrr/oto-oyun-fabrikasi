@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonBounce - Pure Retro Edition</title>
+    <title>NeonBounce - Ultimate Retro Edition</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -12,6 +12,8 @@
             --pure-pink: #ff00ff;
             --pure-purple: #9900ff;
             --pure-yellow: #ffff00;
+            --pure-red: #ff0000;
+            --pure-green: #00ff00;
             --text-main: #ffffff;
         }
 
@@ -28,9 +30,9 @@
         }
 
         h1 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             color: var(--pure-cyan);
-            margin: 4px 0;
+            margin: 3px 0;
             letter-spacing: 2px;
         }
 
@@ -38,18 +40,19 @@
             display: flex;
             justify-content: space-between;
             max-width: 440px;
-            margin: 0 auto 4px auto;
-            padding: 6px 12px;
+            margin: 0 auto 3px auto;
+            padding: 5px 10px;
             background: var(--panel-bg);
             border: 2px solid var(--pure-cyan);
             border-radius: 4px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
         }
 
         .hud-item span { color: var(--pure-cyan); }
         .hud-item.lives span { color: var(--pure-pink); }
         .hud-item.high span { color: var(--pure-yellow); }
+        .hud-item.level span { color: var(--pure-green); }
 
         .canvas-container {
             position: relative;
@@ -120,20 +123,18 @@
         <div class="hud-item">SKOR: <span id="scoreVal">0</span></div>
         <div class="hud-item high">REKOR: <span id="highVal">0</span></div>
         <div class="hud-item lives">CAN: <span id="livesVal">3</span></div>
+        <div class="hud-item level">LVL: <span id="levelVal">1</span></div>
     </div>
 
     <div class="canvas-container">
-        <!-- Genişletilmiş Oyun Alanı (440x560) -->
         <canvas id="gameCanvas" width="440" height="560"></canvas>
         
-        <!-- Menü Ekranı -->
         <div id="menuOverlay" class="overlay">
             <h2>NEON BOUNCE</h2>
-            <p>Tuğlaları kır, güçlendiricileri topla!</p>
+            <p>Yeni Özellikler: Patlayıcı & Zırhlı Tuğlalar, Lazer Raket, Seviye Sistemi!</p>
             <button class="btn" id="startBtn">OYUNA BAŞLA</button>
         </div>
 
-        <!-- Game Over Ekranı -->
         <div id="gameOverOverlay" class="overlay hidden">
             <h2>OYUN BİTTİ</h2>
             <p id="finalScoreText">Skorun: 0</p>
@@ -148,6 +149,7 @@
         const scoreEl = document.getElementById("scoreVal");
         const highEl = document.getElementById("highVal");
         const livesEl = document.getElementById("livesVal");
+        const levelEl = document.getElementById("levelVal");
         const menuOverlay = document.getElementById("menuOverlay");
         const gameOverOverlay = document.getElementById("gameOverOverlay");
         const finalScoreText = document.getElementById("finalScoreText");
@@ -156,11 +158,11 @@
 
         let gameState = "MENU"; 
         let score = 0;
-        let highScore = localStorage.getItem("neon_pure_high") || 0;
+        let highScore = localStorage.getItem("neon_ultimate_high") || 0;
         let lives = 3;
+        let level = 1;
         highEl.innerText = highScore;
 
-        // Web Audio API Sentezleyici
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) {
@@ -180,7 +182,7 @@
                 if (type === "hit") {
                     osc.type = "square";
                     osc.frequency.setValueAtTime(220, now);
-                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.setValueAtTime(0.08, now);
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.05);
                     osc.start(now);
                     osc.stop(now + 0.05);
@@ -191,6 +193,14 @@
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
                     osc.start(now);
                     osc.stop(now + 0.08);
+                } else if (type === "explode") {
+                    osc.type = "sawtooth";
+                    osc.frequency.setValueAtTime(120, now);
+                    osc.frequency.linearRampToValueAtTime(40, now + 0.2);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
                 } else if (type === "powerup") {
                     osc.type = "triangle";
                     osc.frequency.setValueAtTime(300, now);
@@ -199,6 +209,14 @@
                     gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
                     osc.start(now);
                     osc.stop(now + 0.1);
+                } else if (type === "laser") {
+                    osc.type = "sine";
+                    osc.frequency.setValueAtTime(800, now);
+                    osc.frequency.linearRampToValueAtTime(300, now + 0.08);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
                 } else if (type === "gameover") {
                     osc.type = "sawtooth";
                     osc.frequency.setValueAtTime(150, now);
@@ -217,16 +235,19 @@
             width: 100,
             height: 12,
             color: "#ff00ff",
-            targetWidth: 100
+            targetWidth: 100,
+            hasLaser: false
         };
 
         let balls = [];
         let bricks = [];
         let powerUps = [];
+        let lasers = [];
+        let lastScoreMilestone = 0;
 
         function initLevel() {
             bricks = [];
-            let rows = 5;
+            let rows = 4 + Math.min(level, 3); // Seviye arttıkça satır sayısı artar
             let cols = 7;
             let brickWidth = 50;
             let brickHeight = 18;
@@ -236,14 +257,31 @@
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    let health = (r === 0 || r === 1) ? 2 : 1;
-                    let color = health === 2 ? "#9900ff" : "#00ffff";
+                    let type = "normal";
+                    let health = 1;
+                    let color = "#00ffff";
+
+                    // Çeşitlilik: Bazı tuğlalar patlayıcı (kırmızı), bazıları zırhlı (mor, 3 can), bazıları normal (cyan/yeşil)
+                    let rand = Math.random();
+                    if (r === 0 && rand < 0.3) {
+                        type = "explosive";
+                        color = "#ff0000"; // Kırmızı Patlayıcı
+                    } else if (rand < 0.2 + (level * 0.05)) {
+                        type = "armored";
+                        health = 3;
+                        color = "#9900ff"; // Mor Zırhlı
+                    } else if (r % 2 === 0) {
+                        color = "#00ff00"; // Yeşil Normal
+                    }
+
                     bricks.push({
                         x: offsetLeft + c * (brickWidth + padding),
                         y: offsetTop + r * (brickHeight + padding),
                         width: brickWidth,
                         height: brickHeight,
                         health: health,
+                        maxHealth: health,
+                        type: type,
                         color: color
                     });
                 }
@@ -253,23 +291,29 @@
         function resetBallAndPaddle() {
             paddle.width = 100;
             paddle.targetWidth = 100;
+            paddle.hasLaser = false;
             paddle.x = canvas.width / 2 - paddle.width / 2;
+            let baseSpeed = 3.5 + (level * 0.3);
             balls = [{
                 x: canvas.width / 2,
                 y: paddle.y - 15,
                 radius: 6,
-                speedX: 3.5 * (Math.random() > 0.5 ? 1 : -1),
-                speedY: -4.5,
+                speedX: baseSpeed * (Math.random() > 0.5 ? 1 : -1),
+                speedY: -baseSpeed - 1,
                 color: "#00ffff"
             }];
+            lasers = [];
         }
 
         function startGame() {
             initAudio();
             score = 0;
             lives = 3;
+            level = 1;
+            lastScoreMilestone = 0;
             scoreEl.innerText = score;
             livesEl.innerText = lives;
+            levelEl.innerText = level;
             menuOverlay.classList.add("hidden");
             gameOverOverlay.classList.add("hidden");
             initLevel();
@@ -282,7 +326,7 @@
             playSound("gameover");
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem("neon_pure_high", highScore);
+                localStorage.setItem("neon_ultimate_high", highScore);
                 highEl.innerText = highScore;
             }
             finalScoreText.innerText = "Toplam Skorun: " + score;
@@ -307,13 +351,27 @@
             }
         }, { passive: false });
 
+        // Tıklama / Dokunma ile Lazer Ateşleme (Eğer lazer güçlendiricisi aktifse)
+        canvas.addEventListener("click", () => {
+            if (gameState === "PLAYING" && paddle.hasLaser) {
+                playSound("laser");
+                lasers.push({ x: paddle.x + 10, y: paddle.y, width: 4, height: 12, dy: -8 });
+                lasers.push({ x: paddle.x + paddle.width - 14, y: paddle.y, width: 4, height: 12, dy: -8 });
+            }
+        });
+
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
 
         function spawnPowerUp(x, y) {
-            if (Math.random() < 0.35) {
-                let types = ["wide", "multiball"];
+            if (Math.random() < 0.4) {
+                let types = ["wide", "multiball", "slow", "laser"];
                 let type = types[Math.floor(Math.random() * types.length)];
+                let color = "#ffff00";
+                if (type === "multiball") color = "#ff00ff";
+                if (type === "slow") color = "#00ff00";
+                if (type === "laser") color = "#ff0000";
+
                 powerUps.push({
                     x: x,
                     y: y,
@@ -321,18 +379,82 @@
                     height: 12,
                     dy: 2.5,
                     type: type,
-                    color: type === "wide" ? "#ffff00" : "#ff00ff"
+                    color: color
                 });
+            }
+        }
+
+        function destroyBrickAndCheckExplosion(index) {
+            let b = bricks[index];
+            if (!b) return;
+
+            // Patlayıcı tuğla çevresindekileri de patlatır
+            if (b.type === "explosive") {
+                playSound("explode");
+                bricks.splice(index, 1);
+                score += 50;
+
+                // Çevredeki blokları bul ve yok et
+                for (let i = bricks.length - 1; i >= 0; i--) {
+                    let target = bricks[i];
+                    let distSq = Math.pow(target.x - b.x, 2) + Math.pow(target.y - b.y, 2);
+                    if (distSq < 4500) { // Yakın mesafe
+                        bricks.splice(i, 1);
+                        score += 25;
+                    }
+                }
+            } else {
+                bricks.splice(index, 1);
+                score += 35;
             }
         }
 
         function update() {
             if (gameState !== "PLAYING") return;
 
+            // Her 1000 puanda ekstra 1 can kazanma mekaniği
+            if (score - lastScoreMilestone >= 1000) {
+                lives++;
+                livesEl.innerText = lives;
+                lastScoreMilestone = score;
+                playSound("powerup");
+            }
+
             if (paddle.width !== paddle.targetWidth) {
                 paddle.width += (paddle.targetWidth - paddle.width) * 0.2;
             }
 
+            // Lazerleri Güncelle
+            for (let i = lasers.length - 1; i >= 0; i--) {
+                let l = lasers[i];
+                l.y += l.dy;
+                if (l.y < 0) {
+                    lasers.splice(i, 1);
+                    continue;
+                }
+                // Lazer tuğla çarpışması
+                for (let j = bricks.length - 1; j >= 0; j--) {
+                    let b = bricks[j];
+                    if (
+                        l.x + l.width > b.x &&
+                        l.x < b.x + b.width &&
+                        l.y < b.y + b.height &&
+                        l.y + l.height > b.y
+                    ) {
+                        lasers.splice(i, 1);
+                        b.health--;
+                        playSound("brick");
+                        if (b.health <= 0) {
+                            spawnPowerUp(b.x + b.width / 2, b.y + b.height / 2);
+                            destroyBrickAndCheckExplosion(j);
+                        }
+                        scoreEl.innerText = score;
+                        break;
+                    }
+                }
+            }
+
+            // Power-Up Güncelleme
             for (let i = powerUps.length - 1; i >= 0; i--) {
                 let pu = powerUps[i];
                 pu.y += pu.dy;
@@ -357,6 +479,14 @@
                             speedY: b.speedY,
                             color: "#ffff00"
                         });
+                    } else if (pu.type === "slow") {
+                        balls.forEach(b => {
+                            b.speedX *= 0.75;
+                            b.speedY *= 0.75;
+                        });
+                    } else if (pu.type === "laser") {
+                        paddle.hasLaser = true;
+                        setTimeout(() => { paddle.hasLaser = false; }, 7000);
                     }
                     powerUps.splice(i, 1);
                     continue;
@@ -367,6 +497,7 @@
                 }
             }
 
+            // Topları Güncelleme
             for (let i = balls.length - 1; i >= 0; i--) {
                 let ball = balls[i];
                 ball.x += ball.speedX;
@@ -400,6 +531,7 @@
                     playSound("hit");
                 }
 
+                // Tuğla Çarpışmaları
                 for (let j = bricks.length - 1; j >= 0; j--) {
                     let b = bricks[j];
                     if (
@@ -414,11 +546,9 @@
 
                         if (b.health <= 0) {
                             spawnPowerUp(b.x + b.width / 2, b.y + b.height / 2);
-                            bricks.splice(j, 1);
-                            score += 25;
+                            destroyBrickAndCheckExplosion(j);
                         } else {
-                            score += 10;
-                            b.color = "#00ffff";
+                            score += 15;
                         }
                         scoreEl.innerText = score;
                         break;
@@ -440,8 +570,11 @@
                 }
             }
 
+            // Seviye Atlama Kontrolü
             if (bricks.length === 0) {
-                score += 150;
+                score += 200;
+                level++;
+                levelEl.innerText = level;
                 initLevel();
                 resetBallAndPaddle();
             }
@@ -452,6 +585,7 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             if (gameState === "PLAYING" || gameState === "GAMEOVER") {
+                // Tuğlalar
                 bricks.forEach(b => {
                     ctx.fillStyle = b.color;
                     ctx.fillRect(b.x, b.y, b.width, b.height);
@@ -460,6 +594,13 @@
                     ctx.strokeRect(b.x, b.y, b.width, b.height);
                 });
 
+                // Lazerler
+                ctx.fillStyle = "#ff0000";
+                lasers.forEach(l => {
+                    ctx.fillRect(l.x, l.y, l.width, l.height);
+                });
+
+                // Power-Up'lar
                 powerUps.forEach(pu => {
                     ctx.fillStyle = pu.color;
                     ctx.fillRect(pu.x, pu.y, pu.width, pu.height);
@@ -468,12 +609,21 @@
                     ctx.strokeRect(pu.x, pu.y, pu.width, pu.height);
                 });
 
+                // Raket
                 ctx.fillStyle = paddle.color;
                 ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
                 ctx.strokeStyle = "#ffffff";
                 ctx.lineWidth = 1;
                 ctx.strokeRect(paddle.x, paddle.y, paddle.width, paddle.height);
 
+                // Eğer lazer aktifse raket üstünde küçük gösterge
+                if (paddle.hasLaser) {
+                    ctx.fillStyle = "#ff0000";
+                    ctx.fillRect(paddle.x + 8, paddle.y - 4, 4, 4);
+                    ctx.fillRect(paddle.x + paddle.width - 12, paddle.y - 4, 4, 4);
+                }
+
+                // Toplar
                 balls.forEach(ball => {
                     ctx.fillStyle = ball.color;
                     ctx.beginPath();
