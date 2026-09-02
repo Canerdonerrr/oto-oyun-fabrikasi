@@ -2,159 +2,175 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HYBOT AI - Live Crypto Trading Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYBOT AI - Binance Testnet & TradingView Dashboard</title>
     <style>
-        :root {
-            --bg-color: #030408;
-            --panel-bg: rgba(10, 12, 22, 0.98);
-            --pure-cyan: #00f0ff;
-            --pure-green: #00ff66;
-            --pure-pink: #ff007f;
-            --pure-yellow: #ffe600;
-            --text-main: #ffffff;
-            --border-glow: rgba(0, 240, 255, 0.3);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            background: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0;
-            padding: 10px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: var(--panel-bg);
-            border: 1px solid var(--pure-cyan);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-            margin-bottom: 15px;
-        }
-
-        h1 {
-            font-size: 1.1rem;
-            color: var(--pure-cyan);
-            margin: 0 0 5px 0;
-            letter-spacing: 1px;
-        }
-
-        p.subtitle {
-            font-size: 0.75rem;
-            color: #8fa1c7;
-            margin: 0;
-        }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .card {
-            background: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 6px;
-        }
-
-        .card h3 {
-            font-size: 0.75rem;
-            color: var(--pure-yellow);
-            margin: 0 0 8px 0;
-        }
-
-        .card .val {
-            font-size: 1rem;
-            font-weight: bold;
-            color: var(--pure-green);
-        }
-
-        .terminal-box {
-            background: #05070d;
-            border: 1px solid var(--border-glow);
-            border-radius: 6px;
-            padding: 15px;
-            font-size: 0.75rem;
-            line-height: 1.5;
-        }
-
-        .terminal-header {
-            color: var(--pure-pink);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .log-line {
-            margin-bottom: 6px;
-            color: #b8c0d8;
-        }
-
-        .highlight-green { color: var(--pure-green); font-weight: bold; }
-        .highlight-yellow { color: var(--pure-yellow); font-weight: bold; }
-
-        .refresh-btn {
-            display: block;
-            width: 100%;
-            margin-top: 15px;
-            background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
-            color: #000;
-            border: none;
-            padding: 12px;
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .refresh-btn:active {
-            opacity: 0.8;
-        }
+        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Courier New', Courier, monospace; margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { border: 1px solid #30363d; padding: 15px; text-align: center; border-radius: 6px; background: #161b22; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0,255,100,0.15); }
+        .header h2 { color: #58a6ff; margin: 0; font-size: 1.4rem; }
+        .header p { color: #8b949e; font-size: 0.85rem; margin: 5px 0 0 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .card { border: 1px solid #30363d; background: #161b22; padding: 15px; border-radius: 6px; }
+        .card h4 { margin: 0 0 10px 0; color: #f0f6fc; font-size: 0.9rem; border-bottom: 1px solid #30363d; padding-bottom: 5px; }
+        .status-active { color: #3fb950; font-weight: bold; }
+        .logs { background: #010409; border: 1px solid #30363d; padding: 15px; border-radius: 6px; height: 140px; overflow-y: auto; font-size: 0.75rem; color: #7ee787; margin-bottom: 20px; }
+        .btn { display: block; width: 100%; background: #238636; color: white; border: none; padding: 12px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; text-align: center; text-decoration: none; transition: 0.2s; }
+        .btn:hover { background: #2ea043; }
+        .stats-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-top: 10px; }
+        .stats-table th, .stats-table td { border: 1px solid #30363d; padding: 8px; text-align: center; cursor: pointer; }
+        .stats-table th { background: #21262d; color: #58a6ff; }
+        .stats-table tr:hover { background: #21262d; }
+        .success { color: #3fb950; font-weight: bold; }
+        .fail { color: #f85149; font-weight: bold; }
+        .input-group { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+        .input-group input { background: #0d1117; border: 1px solid #30363d; color: #c9d1d9; padding: 5px; border-radius: 4px; width: 80px; text-align: center; }
+        #tradingview-container { width: 100%; height: 450px; border: 1px solid #30363d; border-radius: 6px; background: #161b22; margin-top: 20px; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="header">
-            <h1>⚡ HYBOT AI - TRADING DASHBOARD ⚡</h1>
-            <p class="subtitle">500 Mumluk Gerçek Zamanlı Analiz ve 2160 Saatlik TP Sistemi</p>
+            <h2>⚡ HYBOT AI - GITHUB PAGES TESTNET & TRADINGVIEW DASHBOARD ⚡</h2>
+            <p>Kaynak İspatı: testnet.binance.vision | Canlı Rest API Entegrasyonu</p>
         </div>
 
-        <div class="status-grid">
+        <div class="grid">
             <div class="card">
-                <h3>BOT DURUMU</h3>
-                <div class="val highlight-green">AKTİF (TERMUX)</div>
+                <h4>SİSTEM & BAĞLANTI DURUMU</h4>
+                <p>API Kaynağı: <span class="status-active">https://testnet.binance.vision</span></p>
+                <p>HTTP Durumu: <span id="http-status" class="status-active">Bekleniyor...</span></p>
             </div>
             <div class="card">
-                <h3>TARAMA HAVUZU</h3>
-                <div class="val highlight-yellow">TOP 150 + LİKİT</div>
+                <h4>İNTERAKTİF PARAMETRE PANELİ</h4>
+                <div class="input-group">
+                    <label>RSI Alt Eşik:</label>
+                    <input type="number" id="rsi-low" value="40">
+                </div>
+                <div class="input-group">
+                    <label>RSI Üst Eşik:</label>
+                    <input type="number" id="rsi-high" value="60">
+                </div>
             </div>
         </div>
 
-        <div class="terminal-box">
-            <div class="terminal-header">🤖 SON İŞLEM VE ANALİZ LOGLARI</div>
-            <div class="log-line">>>> Termux arka plan köprüsü kuruldu.</div>
-            <div class="log-line">>>> 500 mumluk teknik indikatör doğrulamaları aktif.</div>
-            <div class="log-line">>>> Telegram Komut Dinleyicisi: <span class="highlight-green">RUNNING (/analiz)</span></div>
-            <div class="log-line">>>> Son Sinyal Kontrolü: 150 coin havuzu taranıyor...</div>
-            <div class="log-line">>>> Risk Yönetimi: Kaldıraç x5 | TP & SL Seviyeleri Hazır.</div>
+        <button class="btn" onclick="fetchLiveSignals()">🔍 TESTNET'İ TARA VE CANLI VERİ ÇEK</button>
+
+        <div class="card" style="margin-top: 20px;">
+            <h4>🤖 TESTNET İSPAT VE İŞLEM LOGLARI</h4>
+            <div class="logs" id="log-box">
+                >>> Sistem hazır. Veriler doğrudan Binance Testnet'ten çekilmek üzere bekleniyor.<br>
+            </div>
         </div>
 
-        <button class="refresh-btn" onclick="location.reload()">🔄 SİNYALLERİ VE PANELİ YENİLE</button>
+        <div class="card">
+            <h4>📊 CANLI YAKALANAN TESTNET SİNYALLERİ (İncelemek için satıra tıklayın)</h4>
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Sembol</th>
+                        <th>Yön</th>
+                        <th>Testnet Fiyat</th>
+                        <th>RSI</th>
+                        <th>Güven</th>
+                        <th>TP1 / SL</th>
+                    </tr>
+                </thead>
+                <tbody id="signal-table-body">
+                    <tr><td colspan="6" style="color: #8b949e;">Henüz tarama yapılmadı. Yukarıdaki butona tıklayın.</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TradingView Canlı Grafik Alanı -->
+        <div class="card" style="margin-top: 20px;">
+            <h4 id="chart-title">📈 TRADINGVIEW GERÇEK ZAMANLI GRAFİK (Seçilen Parite)</h4>
+            <div id="tradingview-container">
+                <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #8b949e;">
+                    Grafiği yüklemek için tablodan bir sembole tıklayın.
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- TradingView Widget Kütüphanesi -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+        const API_URL = "http://localhost:8080/api/signals";
+
+        async function fetchLiveSignals() {
+            const logBox = document.getElementById("log-box");
+            const httpStatus = document.getElementById("http-status");
+            const rsiLow = document.getElementById("rsi-low").value;
+            const rsiHigh = document.getElementById("rsi-high").value;
+
+            logBox.innerHTML += `>>> [${new Date().toISOString()}] İstek atılıyor: ${API_URL}?rsi_low=${rsiLow}&rsi_high=${rsiHigh}<br>`;
+            
+            try {
+                const response = await fetch(`${API_URL}?rsi_low=${rsiLow}&rsi_high=${rsiHigh}`);
+                const result = await response.json();
+
+                httpStatus.innerText = `HTTP ${result.http_code} OK (Verified)`;
+                logBox.innerHTML += `>>> [PROOFS] Kaynak: ${result.source} | Toplam Sinyal: ${result.count}<br>`;
+                logBox.scrollTop = logBox.scrollHeight;
+
+                renderTable(result.data);
+            } catch (error) {
+                httpStatus.innerText = "Bağlantı Hatası!";
+                httpStatus.className = "fail";
+                logBox.innerHTML += `>>> [HATA] Backend sunucusuna ulaşılamadı: ${error}<br>`;
+            }
+        }
+
+        function renderTable(signals) {
+            const tbody = document.getElementById("signal-table-body");
+            tbody.innerHTML = "";
+
+            if (!signals || signals.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="fail">Testnet havuzunda bu kriterlere uygun sinyal bulunamadı.</td></tr>`;
+                return;
+            }
+
+            signals.forEach(sig => {
+                const tr = document.createElement("tr");
+                const dirClass = sig.pos === "LONG" ? "success" : "fail";
+                tr.innerHTML = `
+                    <td><b>${sig.symbol}</b></td>
+                    <td class="${dirClass}">${sig.pos}</td>
+                    <td>${sig.price}</td>
+                    <td>${sig.rsi}</td>
+                    <td>%${sig.confidence}</td>
+                    <td>TP: ${sig.tp1} / SL: ${sig.sl}</td>
+                `;
+                tr.onclick = () => loadTradingViewChart(sig.symbol);
+                tbody.appendChild(tr);
+            });
+
+            if (signals.length > 0) {
+                loadTradingViewChart(signals[0].symbol);
+            }
+        }
+
+        function loadTradingViewChart(symbol) {
+            document.getElementById("chart-title").innerText = `📈 TRADINGVIEW GERÇEK ZAMANLI GRAFİK: ${symbol}`;
+            document.getElementById("tradingview-container").innerHTML = "";
+            
+            new TradingView.widget({
+                "width": "100%",
+                "height": "450",
+                "symbol": "BINANCE:" + symbol,
+                "interval": "60",
+                "timezone": "Etc/UTC",
+                "theme": "dark",
+                "style": "1",
+                "locale": "tr",
+                "toolbar_bg": "#161b22",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true,
+                "container_id": "tradingview-container"
+            });
+        }
+    </script>
 </body>
 </html>
