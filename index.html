@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - Mobile Engine v1.0</title>
+    <title>NeonArcade Hub - 1. Disco Elysium Pro Engine</title>
     <style>
         :root {
             --bg-color: #030408;
@@ -11,7 +11,6 @@
             --pure-cyan: #00f0ff;
             --pure-pink: #ff007f;
             --pure-yellow: #ffe600;
-            --pure-green: #00ff66;
             --text-main: #ffffff;
             --border-glow: rgba(0, 240, 255, 0.4);
         }
@@ -86,14 +85,14 @@
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
             width: 100%;
             max-width: 760px;
-            height: 480px;
+            height: 440px;
             touch-action: none;
         }
 
         .mobile-controls {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            grid-template-columns: 1fr;
+            gap: 6px;
             width: 100%;
             max-width: 760px;
             padding: 0 2px;
@@ -104,12 +103,12 @@
             color: var(--pure-cyan);
             border: 1px solid rgba(0, 240, 255, 0.4);
             padding: 12px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             border-radius: 6px;
             cursor: pointer;
-            text-align: center;
+            text-align: left;
             transition: background 0.1s;
         }
 
@@ -117,45 +116,6 @@
             background: var(--pure-cyan);
             color: #000;
         }
-
-        .sidebar {
-            width: 100%;
-            max-width: 760px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-glow);
-            border-radius: 6px;
-            padding: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 140px;
-            overflow-y: auto;
-        }
-
-        .sidebar h3 {
-            font-size: 0.7rem;
-            color: var(--pure-yellow);
-            margin: 2px 0;
-        }
-
-        .game-btn {
-            background: rgba(15, 18, 35, 0.9);
-            color: var(--text-main);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 6px;
-            font-size: 0.62rem;
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-            cursor: pointer;
-            border-radius: 4px;
-            text-align: left;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); }
-        .game-btn span { font-size: 0.52rem; color: #8892b0; }
 
         .overlay {
             position: absolute;
@@ -190,30 +150,25 @@
 <body>
 
     <div class="header-bar">
-        <h1>⚡ NEONARCADE : MOBILE ENGINE ⚡</h1>
-        <button class="menu-btn-top" onclick="resetGame()">🔄 YENİDEN</button>
+        <h1>⚡ 1. DISCO ELYSIUM : REVACHOL ENGINE ⚡</h1>
+        <button class="menu-btn-top" onclick="resetGame()">🔄 SIFIRLA</button>
     </div>
 
     <div class="main-layout">
         <div class="canvas-container">
-            <canvas id="gameCanvas" width="760" height="480"></canvas>
+            <canvas id="gameCanvas" width="760" height="440"></canvas>
             
             <div id="menuOverlay" class="overlay">
-                <h2 id="menuTitle">1. DISCO ELYSIUM</h2>
-                <p id="menuDesc">Ayna karşısında iç seslerinle yüzleşme ve mantık yönetimi. Dokunmatik butonları kullanarak kararlar al.</p>
+                <h2>1. DISCO ELYSIUM (Revachol Echoes)</h2>
+                <p>Aynaya bakıyorsun. Yüzün bir felaket. İç seslerin (Mantık, Otorite, İçgörü) kafanın içinde yankılanıyor. Android dokunmatik butonları kullanarak kararlarını ver.</p>
                 <button class="btn" id="startBtn">OYUNA BAŞLA</button>
             </div>
         </div>
 
-        <!-- Android Dokunmatik Kontrol Paneli -->
-        <div class="mobile-controls" id="controlsContainer">
-            <button class="ctrl-btn" onclick="handleAction(1)">[1] Aynaya Sert Tepki (Moral -1)</button>
-            <button class="ctrl-btn" onclick="handleAction(2)">[2] Defteri İncele (+25 Skor)</button>
-        </div>
-
-        <div class="sidebar">
-            <h3>🕹️ AKTİF MOTOR SEÇKİSİ (Sıralı Entegrasyon)</h3>
-            <div id="gameListContainer"></div>
+        <div class="mobile-controls">
+            <button class="ctrl-btn" onclick="makeChoice(1)">🔸 [1] Aynaya öfkeyle bağır (Moral -1, Mantık +1)</button>
+            <button class="ctrl-btn" onclick="makeChoice(2)">🔸 [2] Ceketinin ceplerini karıştır (Skor +25)</button>
+            <button class="ctrl-btn" onclick="makeChoice(3)">🔸 [3] Yatağın altında ipucu ara (İçgörü +1)</button>
         </div>
     </div>
 
@@ -223,148 +178,101 @@
 
         const menuOverlay = document.getElementById("menuOverlay");
         const startBtn = document.getElementById("startBtn");
-        const menuTitle = document.getElementById("menuTitle");
-        const menuDesc = document.getElementById("menuDesc");
-        const gameListContainer = document.getElementById("gameListContainer");
-        const controlsContainer = document.getElementById("controlsContainer");
 
-        // Detaylı ve yalıtılmış tekil motor listesi (Her biri sırayla derinleştirilerek eklenecek)
-        const gamesList = [
-            { 
-                id: 0, 
-                name: "1. Disco Elysium", 
-                genre: "Psikolojik Metin & İç Ses", 
-                desc: "Ayna karşısında iç seslerinle yüzleşme ve mantık yönetimi.",
-                controlsHtml: `
-                    <button class="ctrl-btn" onclick="handleAction(1)">[1] Aynaya Sert Tepki (Moral -1)</button>
-                    <button class="ctrl-btn" onclick="handleAction(2)">[2] Defteri İncele (+25 Skor)</button>
-                `
-            },
-            { 
-                id: 1, 
-                name: "2. Outer Wilds", 
-                genre: "Zaman Döngüsü Keşfi", 
-                desc: "Süpernova patlamadan önce gezegensel verileri toplama.",
-                controlsHtml: `
-                    <button class="ctrl-btn" onclick="handleAction(1)">[1] Gezegeni Tara (+30 Skor)</button>
-                    <button class="ctrl-btn" onclick="handleAction(2)">[2] Kamp Ateşi Dinlen (+10 Can)</button>
-                `
-            }
-        ];
-
-        let activeGameIndex = 0;
         let score = 0;
-        let engineData = {};
-
-        function initEngineState() {
-            score = 0;
-            if (activeGameIndex === 0) {
-                engineData = { morale: 6, logic: 4, text: "Aynadasın. Ne yapacaksın dedektif?" };
-            } else if (activeGameIndex === 1) {
-                engineData = { timeRemaining: 60, scanned: 0, text: "Gezegen verileri toplanmayı bekliyor." };
-            }
-        }
-
-        function buildSidebar() {
-            gameListContainer.innerHTML = "";
-            gamesList.forEach((g, idx) => {
-                let btn = document.createElement("button");
-                btn.className = `game-btn ${idx === activeGameIndex ? 'active' : ''}`;
-                btn.innerHTML = `${g.name} <span>${g.genre}</span>`;
-                btn.onclick = () => switchGame(idx);
-                gameListContainer.appendChild(btn);
-            });
-        }
-
-        function switchGame(index) {
-            activeGameIndex = index;
-            buildSidebar();
-            menuTitle.innerText = gamesList[index].name;
-            menuDesc.innerText = gamesList[index].desc;
-            controlsContainer.innerHTML = gamesList[index].controlsHtml;
-            menuOverlay.classList.remove("hidden");
-            initEngineState();
-        }
+        let morale = 6;
+        let logic = 4;
+        let insight = 2;
+        let dialogueText = "Aynadaki yansıman sana yabancı bakıyor. Whirling-in-Rags otel odasındasın.";
 
         function resetGame() {
-            initEngineState();
-            menuOverlay.classList.add("hidden");
+            score = 0;
+            morale = 6;
+            logic = 4;
+            insight = 2;
+            dialogueText = "Oda sessiz. Hafızanı geri kazanmak için bir hamle yapmalısın.";
+            menuOverlay.classList.remove("hidden");
         }
 
-        function handleAction(actionType) {
+        function makeChoice(type) {
             menuOverlay.classList.add("hidden");
-            if (activeGameIndex === 0) {
-                if (actionType === 1) {
-                    engineData.morale = Math.max(0, engineData.morale - 1);
-                    score += 15;
-                    engineData.text = "Sert bir tepki verdin! İç sesler sessizleşti.";
-                } else if (actionType === 2) {
-                    score += 25;
-                    engineData.text = "Whirling-in-Rags otelindesin. Defterde ipucu buldun.";
-                }
-            } else if (activeGameIndex === 1) {
-                if (actionType === 1) {
-                    engineData.scanned++;
-                    score += 30;
-                    engineData.text = `Kalıntı tarandı! Toplam: ${engineData.scanned}`;
-                } else if (actionType === 2) {
-                    score += 10;
-                    engineData.text = "Kamp ateşinde zaman döngüsü hatırlandı.";
-                }
+            if (type === 1) {
+                morale = Math.max(0, morale - 1);
+                logic += 1;
+                score += 15;
+                dialogueText = "Aynaya bağırdın! Camdaki çatlak yüzünü böldü. İç sesin: 'İyi iş dedektif.'";
+            } else if (type === 2) {
+                score += 25;
+                dialogueText = "Cebinden boş bir şişe ve kırık bir madeni para çıktı. Hayatta kalıyorsun.";
+            } else if (type === 3) {
+                insight += 1;
+                score += 20;
+                dialogueText = "Yatağın altında eski bir defter buldun. Revachol'ün sokakları seni bekliyor.";
+            }
+
+            if (morale <= 0) {
+                dialogueText = "MORAL ÇÖKÜŞÜ! Zihinsel olarak tükendin.";
             }
         }
 
         startBtn.onclick = () => {
             menuOverlay.classList.add("hidden");
-            initEngineState();
         };
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Cyberpunk Arka Plan Izgarası
+            // Arka Plan Izgarası
             ctx.strokeStyle = "rgba(0, 240, 255, 0.04)";
             for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
             for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-            // Üst Bilgi Bantları
-            ctx.fillStyle = "#00f0ff";
+            // Üst İstatistik Kutusu
+            ctx.fillStyle = "#ffe600";
             ctx.font = "bold 12px 'Courier New'";
             ctx.textAlign = "left";
-            ctx.fillText(`MOTOR: ${gamesList[activeGameIndex].name}`, 15, 25);
+            ctx.fillText(`MORAL: ${morale}/6  |  MANTIK: ${logic}  |  İÇGÖRÜ: ${insight}`, 15, 25);
             ctx.textAlign = "right";
             ctx.fillText(`SKOR: ${score}`, canvas.width - 15, 25);
 
-            // Oyun İçi Dinamik Render
-            ctx.save();
-            if (activeGameIndex === 0) {
-                // Disco Elysium Arayüzü
-                ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
-                ctx.fillText(`Moral: ${engineData.morale} / 6   |   Mantık: ${engineData.logic}`, canvas.width/2, 70);
+            // Ana Metin Konsolu Çerçevesi
+            ctx.fillStyle = "#0d111c";
+            ctx.fillRect(40, 50, canvas.width - 80, 280);
+            ctx.strokeStyle = "#00f0ff";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(40, 50, canvas.width - 80, 280);
 
-                ctx.fillStyle = "#0d111c"; ctx.fillRect(80, 110, 600, 240);
-                ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(80, 110, 600, 240);
+            // Başlık
+            ctx.fillStyle = "#00f0ff";
+            ctx.font = "bold 12px 'Courier New'";
+            ctx.textAlign = "center";
+            ctx.fillText("--- REVACHOL İÇ TRIBUNAL AKIŞI ---", canvas.width / 2, 85);
 
-                ctx.fillStyle = "#00f0ff"; ctx.font = "11px 'Courier New'";
-                ctx.fillText("--- BİLİNÇ AKIŞI TERMINALI ---", canvas.width/2, 145);
-
-                ctx.fillStyle = "#d0d8e8"; ctx.font = "13px 'Courier New'";
-                ctx.fillText(engineData.text, canvas.width/2, 225);
-            } else if (activeGameIndex === 1) {
-                // Outer Wilds Arayüzü
-                ctx.fillStyle = "#ffe600"; ctx.textAlign = "center";
-                ctx.fillText(`Taranan Kalıntı: ${engineData.scanned}`, canvas.width/2, 70);
-
-                ctx.fillStyle = "#151828"; ctx.fillRect(80, 110, 600, 240);
-                ctx.strokeStyle = "#ffe600"; ctx.strokeRect(80, 110, 600, 240);
-
-                ctx.fillStyle = "#ffe600"; ctx.font = "11px 'Courier New'";
-                ctx.fillText("--- NOMAI UYGARLIĞI ARŞİVİ ---", canvas.width/2, 145);
-
-                ctx.fillStyle = "#ffffff"; ctx.font = "13px 'Courier New'";
-                ctx.fillText(engineData.text, canvas.width/2, 225);
+            // Diyalog Metni (Satırlara Bölme Yardımıyla)
+            ctx.fillStyle = "#d0d8e8";
+            ctx.font = "13px 'Courier New'";
+            
+            let words = dialogueText.split(" ");
+            let line = "";
+            let y = 135;
+            
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + " ";
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > canvas.width - 120 && n > 0) {
+                    ctx.fillText(line, canvas.width / 2, y);
+                    line = words[n] + " ";
+                    y += 24;
+                } else {
+                    line = testLine;
+                }
             }
-            ctx.restore();
+            ctx.fillText(line, canvas.width / 2, y);
+
+            // Durum Notu
+            ctx.fillStyle = "#ff007f";
+            ctx.font = "11px 'Courier New'";
+            ctx.fillText("Mobil dokunmatik butonları kullanarak kararlarını al.", canvas.width / 2, 305);
         }
 
         function mainLoop() {
@@ -372,8 +280,6 @@
             requestAnimationFrame(mainLoop);
         }
 
-        buildSidebar();
-        initEngineState();
         mainLoop();
     </script>
 </body>
