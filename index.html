@@ -3,856 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - Pro Edition</title>
+    <title>Revachol Echoes: Inner Tribunal - AAA Edition</title>
     <style>
         :root {
-            --bg-color: #020205;
-            --panel-bg: rgba(10, 10, 22, 0.95);
-            --pure-cyan: #00f0ff;
-            --pure-pink: #ff007f;
-            --pure-yellow: #ffe600;
-            --pure-green: #00ff66;
-            --pure-purple: #9d00ff;
-            --text-main: #ffffff;
+            --bg-color: #0b0d12;
+            --panel-bg: rgba(16, 20, 30, 0.96);
+            --border-color: rgba(100, 180, 220, 0.25);
+            --accent-cyan: #00f0ff;
+            --accent-gold: #ffcc00;
+            --accent-crimson: #ff3344;
+            --accent-purple: #9d00ff;
+            --text-main: #d0d8e8;
+            --text-muted: #7888a8;
         }
 
         body {
             background: var(--bg-color);
             color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
-            text-align: center;
             margin: 0;
-            padding: 4px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
             overflow: hidden;
-            touch-action: none;
             user-select: none;
         }
 
-        h1 {
-            font-size: 0.95rem;
-            color: var(--pure-cyan);
-            margin: 2px 0;
-            letter-spacing: 2px;
-            text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+        .game-container {
+            width: 950px;
+            max-width: 98vw;
+            height: 92vh;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: grid;
+            grid-template-rows: 55px 1fr 65px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.03);
+            position: relative;
+            overflow: hidden;
         }
 
-        .hud {
+        /* Üst Durum Çubuğu (HUD) */
+        .hud-header {
             display: flex;
             justify-content: space-between;
-            max-width: 980px;
-            margin: 0 auto 4px auto;
-            padding: 4px 10px;
-            background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.5);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(8, 10, 16, 0.98);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.8rem;
         }
 
-        .hud-item { display: flex; align-items: center; gap: 4px; }
-        .hud-item span { color: var(--pure-cyan); }
-        .hud-item.lives span { color: var(--pure-pink); }
-        .hud-item.high span { color: var(--pure-yellow); }
-        .hud-item.level span { color: var(--pure-green); }
-        .hud-item.combo span { color: var(--pure-purple); }
-
-        .main-layout {
+        .stat-group {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 10px;
-            max-width: 1000px;
-            margin: 0 auto;
+            gap: 15px;
         }
 
-        .canvas-container {
-            position: relative;
-            display: inline-block;
-            cursor: none; /* İmleç tamamen gizlendi */
+        .stat-item span {
+            color: var(--accent-cyan);
+            font-weight: bold;
         }
 
-        #gameCanvas {
-            background: #04040a;
-            border: 1px solid rgba(0, 240, 255, 0.6);
-            border-radius: 6px;
-            display: block;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
-            width: 680px;
-            height: 900px;
-            max-width: 70vw;
-            max-height: 74vh;
-            cursor: none; /* Canvas üzerinde imleç yok */
+        .stat-item.morale span { color: var(--accent-crimson); }
+        .stat-item.psyche span { color: var(--accent-gold); }
+
+        /* Ana İçerik Izgarası */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            overflow: hidden;
         }
 
-        .sidebar {
-            width: 260px;
-            background: var(--panel-bg);
-            border: 1px solid rgba(0, 240, 255, 0.4);
-            border-radius: 6px;
-            padding: 8px;
+        /* Sol Panel: İç Sesler ve Karakter Psikolojisi */
+        .psyche-sidebar {
+            background: rgba(12, 15, 24, 0.9);
+            border-right: 1px solid var(--border-color);
+            padding: 12px;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
-            max-height: 74vh;
+            gap: 10px;
+        }
+
+        .psyche-sidebar h3 {
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            margin: 0 0 5px 0;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 204, 0, 0.2);
+            padding-bottom: 4px;
+        }
+
+        .voice-card {
+            background: rgba(20, 25, 40, 0.6);
+            border: 1px solid rgba(100, 180, 220, 0.15);
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 0.68rem;
+            transition: all 0.3s ease;
+        }
+
+        .voice-card.active {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        .voice-title {
+            font-weight: bold;
+            color: var(--accent-cyan);
+            margin-bottom: 3px;
+        }
+
+        .voice-desc {
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        /* Sağ Panel: Hikaye Akışı ve Seçenekler */
+        .story-area {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: rgba(10, 12, 18, 0.7);
+        }
+
+        .narrative-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            border-left: 2px solid var(--border-color);
+            padding-left: 12px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .log-entry.inner-voice {
+            border-left-color: var(--accent-gold);
+            color: #d8c898;
+            font-style: italic;
+        }
+
+        .log-entry.system {
+            border-left-color: var(--accent-cyan);
+            color: #a8e8f8;
+        }
+
+        .log-entry.action {
+            border-left-color: var(--accent-crimson);
+            color: #f8a8b0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Seçenekler / Eylem Alanı */
+        .choices-box {
+            padding: 12px 20px;
+            background: rgba(14, 18, 28, 0.95);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
             overflow-y: auto;
         }
 
-        .sidebar h3 {
-            font-size: 0.8rem;
-            color: var(--pure-yellow);
-            margin: 2px 0 4px 0;
-            text-shadow: 0 0 8px rgba(255, 230, 0, 0.5);
-        }
-
-        .game-btn {
-            background: rgba(15, 15, 30, 0.9);
+        .choice-btn {
+            background: rgba(22, 28, 45, 0.9);
             color: var(--text-main);
-            border: 1px solid rgba(0, 240, 255, 0.25);
-            padding: 7px 9px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-            cursor: pointer;
-            border-radius: 4px;
+            border: 1px solid rgba(100, 180, 220, 0.3);
+            padding: 10px 14px;
             text-align: left;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .game-btn span { font-size: 0.58rem; color: #8888b0; }
-        .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.12); transform: translateX(2px); }
-        .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); box-shadow: 0 0 10px rgba(255, 0, 127, 0.35); }
-
-        .overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(2, 2, 6, 0.96);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            border-radius: 6px;
-            cursor: default; /* Menülerde imleç görünsün */
-        }
-
-        .overlay.hidden { display: none; }
-
-        .overlay h2 {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-            color: var(--pure-pink);
-            text-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
-        }
-
-        .overlay p {
-            font-size: 0.8rem;
-            color: #b8b8d8;
-            margin-bottom: 12px;
-            padding: 0 15px;
-            max-width: 450px;
-            line-height: 1.4;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
-            color: #000000;
-            border: 1px solid #ffffff;
-            padding: 9px 22px;
-            font-size: 0.85rem;
-            font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
-            cursor: pointer;
+            font-size: 0.78rem;
             border-radius: 4px;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 240, 255, 0.1);
+            transform: translateX(4px);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        }
+
+        .choice-skill {
+            font-size: 0.68rem;
+            color: var(--accent-gold);
+            background: rgba(255, 204, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+
+        /* Alt Durum / Kayıt Çubuğu */
+        .footer-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: rgba(6, 8, 12, 0.98);
+            border-top: 1px solid var(--border-color);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .btn-action {
+            background: transparent;
+            color: var(--accent-cyan);
+            border: 1px solid var(--accent-cyan);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.7rem;
             transition: all 0.2s ease;
         }
 
-        .btn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 240, 255, 0.9); }
+        .btn-action:hover {
+            background: rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
     </style>
 </head>
 <body>
 
-    <h1>⚡ NEON ARCADE ULTRA HUB : PRO GAMES ⚡</h1>
-    <div class="hud">
-        <div class="hud-item">⭐ SKOR: <span id="scoreVal">0</span></div>
-        <div class="hud-item high">🏆 REKOR: <span id="highVal">0</span></div>
-        <div class="hud-item combo" id="comboContainer">🔥 KOMBO: <span id="comboVal">x1</span></div>
-        <div class="hud-item lives" id="livesContainer">🛡️ CAN: <span id="livesVal">3</span></div>
-        <div class="hud-item level" id="levelContainer">📊 LVL: <span id="levelVal">1</span></div>
-    </div>
-
-    <div class="main-layout">
-        <div class="canvas-container">
-            <canvas id="gameCanvas" width="680" height="900"></canvas>
-            
-            <div id="menuOverlay" class="overlay">
-                <h2 id="menuTitle">NEON BOUNCE PRO</h2>
-                <p id="menuDesc">Tam profesyonel, gizli imleç, particle patlamaları ve güçlendirmeler.</p>
-                <button class="btn" id="startBtn">OYUNA BAŞLA</button>
+    <div class="game-container">
+        <!-- HUD -->
+        <div class="hud-header">
+            <div class="stat-group">
+                <div class="stat-item">KİMLİK: <span id="hudName">Dedektif K.</span></div>
+                <div class="stat-item morale">SAĞLIK/MORAL: <span id="hudMorale">6 / 6</span></div>
+                <div class="stat-item psyche">MANTIK: <span id="hudLogic">4</span></div>
             </div>
-
-            <div id="gameOverOverlay" class="overlay hidden">
-                <h2>OYUN BİTTİ</h2>
-                <p id="finalScoreText">Skorun: 0</p>
-                <button class="btn" id="restartBtn">YENİDEN BAŞLA</button>
+            <div class="stat-group">
+                <div class="stat-item">DOSYA: <span>#774-REV</span></div>
+                <div class="stat-item">GÜN: <span id="hudDay">1 (Sabah)</span></div>
             </div>
         </div>
 
-        <div class="sidebar">
-            <h3>🕹️ PRO OYUN SEÇİCİ</h3>
-            <button class="game-btn active" onclick="switchGame(0)">
-                1. Neon Bounce Pro
-                <span>Power-up, Lazer & Boss Tuğlalar</span>
-            </button>
-            <button class="game-btn" onclick="switchGame(1)">
-                2. Cyber Snake X
-                <span>Portal, Hız Yemi & Neon İhtişam</span>
-            </button>
-            <button class="game-btn" onclick="switchGame(2)">
-                3. Neon Invaders X
-                <span>Gelişmiş Düşman Filosu & Kalkan</span>
-            </button>
-            <button class="game-btn" onclick="switchGame(3)">
-                4. Graviton Jump Pro
-                <span>Hareketli Platformlar & Roket Bot</span>
-            </button>
-            <button class="game-btn" onclick="switchGame(4)">
-                5. Pulse Pong Pro
-                <span>Kavisli Vuruşlar & Kalkan Duvarı</span>
-            </button>
-            <button class="game-btn" onclick="switchGame(5)">
-                6. Neon Asteroids Pro
-                <span>Gelişmiş Radar, Bomba & Bölünme</span>
-            </button>
+        <!-- MAIN LAYOUT -->
+        <div class="main-grid">
+            <!-- PSYCHE SIDEBAR -->
+            <div class="psyche-sidebar">
+                <h3>🧠 BİLİNÇALTI PARÇALARI</h3>
+                <div class="voice-card active" id="cardLogic">
+                    <div class="voice-title">MANTIK (Logic)</div>
+                    <div class="voice-desc">Verileri toplar, tutarsızlıkları yakalar ve sert gerçekleri yüzünüze vurur.</div>
+                </div>
+                <div class="voice-card" id="cardEmpathy">
+                    <div class="voice-title">EMPATİ (Empathy)</div>
+                    <div class="voice-desc">İnsanların arkasındaki acıyı, korkuyu ve yalanları sezmenizi sağlar.</div>
+                </div>
+                <div class="voice-card" id="cardEncyclopedia">
+                    <div class="voice-title">ANSİKLOPEDİ (Encyclopaedia)</div>
+                    <div class="voice-desc">Revachol sokaklarının tarihi, politikası ve eski rejim hakkında bilgi verir.</div>
+                </div>
+                <div class="voice-card" id="cardHalfLight">
+                    <div class="voice-title">YARI-KARANLIK (Half Light)</div>
+                    <div class="voice-desc">Tehlike sezgisi, adrenalin ve paranoyanın tetiklediği vahşi hayatta kalma sesi.</div>
+                </div>
+                <div class="voice-card" id="cardDrama">
+                    <div class="voice-title">DRAMA (Drama)</div>
+                    <div class="voice-desc">Komedi, tiyatro, yalanlar ve saray entrikaları üzerine fısıldayan eski dost.</div>
+                </div>
+            </div>
+
+            <!-- STORY AREA -->
+            <div class="story-area">
+                <div class="narrative-box" id="narrativeBox">
+                    <div class="log-entry system">
+                        Tavan lambası titriyor. Otel odasının berbat kokusu mideni bulandırıyor. Aynaya bakmaya korkuyorsun; çünkü orada kimin durduğunu hatırlamıyorsun. Revachol'un gri liman kenti uyanıyor.
+                    </div>
+                </div>
+                <div class="choices-box" id="choicesBox">
+                    <!-- Dinamik Seçenekler Buraya Yüklenecek -->
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer-bar">
+            <div>Durum: Soruşturma Devam Ediyor... (LocalStorage Otomatik Kayıt Aktif)</div>
+            <button class="btn-action" onclick="resetGame()">OYUNU SIFIRLA</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
-        const scoreEl = document.getElementById("scoreVal");
-        const highEl = document.getElementById("highVal");
-        const comboEl = document.getElementById("comboVal");
-        const livesEl = document.getElementById("livesVal");
-        const levelEl = document.getElementById("levelVal");
-        const menuOverlay = document.getElementById("menuOverlay");
-        const gameOverOverlay = document.getElementById("gameOverOverlay");
-        const finalScoreText = document.getElementById("finalScoreText");
-        const startBtn = document.getElementById("startBtn");
-        const restartBtn = document.getElementById("restartBtn");
-        const menuTitle = document.getElementById("menuTitle");
-        const menuDesc = document.getElementById("menuDesc");
-        const comboContainer = document.getElementById("comboContainer");
-        const livesContainer = document.getElementById("livesContainer");
-        const levelContainer = document.getElementById("levelContainer");
-
-        let activeGameIndex = 0;
-        let gameState = "MENU";
-        let score = 0;
-        let highScore = localStorage.getItem("neon_ultra_high") || 0;
-        highEl.innerText = highScore;
-
-        let paddlePos = canvas.width / 2;
-        let keys = {};
-        let particles = [];
-
-        function addParticles(x, y, color, count = 12) {
-            for (let i = 0; i < count; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let speed = Math.random() * 4 + 1;
-                particles.push({
-                    x: x, y: y,
-                    dx: Math.cos(angle) * speed,
-                    dy: Math.sin(angle) * speed,
-                    radius: Math.random() * 3 + 1,
-                    color: color,
-                    life: 30
-                });
-            }
-        }
-
+        // Web Audio API Synth Ses Motoru
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        function playSound(freq, type = "sine", duration = 0.08) {
+        function playTone(freq, type = "sine", duration = 0.1) {
             if (!audioCtx) return;
             try {
                 let osc = audioCtx.createOscillator();
                 let gain = audioCtx.createGain();
                 osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.start(); osc.stop(audioCtx.currentTime + duration);
             } catch(e) {}
         }
 
-        // --- Oyun Modelleri ---
-        let nb = {
-            paddle: { x: 260, y: 840, w: 130, h: 16, color: "#ff007f", laser: false },
-            ball: { x: 340, y: 810, r: 8, dx: 3.2, dy: -3.2, color: "#00f0ff" },
-            bricks: [], powerups: [], lasers: [], lives: 3, level: 1, combo: 1, comboTimer: 0
+        // Oyun Durumu ve Verileri
+        let gameState = {
+            morale: 6,
+            logic: 4,
+            day: 1,
+            currentNode: "start",
+            flags: {}
         };
 
-        function initNeonBounceLevel() {
-            nb.bricks = []; nb.powerups = []; nb.lasers = [];
-            let rows = 6; let cols = 8;
-            let bw = 70; let bh = 22; let pad = 10;
-            let offsetLeft = (canvas.width - (cols * (bw + pad) - pad)) / 2;
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    let hp = r === 0 ? 3 : (r < 2 ? 2 : 1);
-                    nb.bricks.push({
-                        x: offsetLeft + c * (bw + pad), y: 60 + r * (bh + pad), w: bw, h: bh,
-                        status: 1, health: hp, maxHealth: hp,
-                        color: hp === 3 ? "#ffe600" : (hp === 2 ? "#9d00ff" : ["#ff007f", "#00f0ff", "#00ff66"][r % 3])
-                    });
-                }
+        const storyNodes = {
+            start: {
+                text: "Odanın ortasındaki kırık aynaya doğru yaklaşıyorsun. Boğazında kurşun gibi bir acı var. Kim olduğunu hatırlamıyorsun, ama cebinde bir rozet ve defter var.",
+                choices: [
+                    { text: "Aynaya dikkatle bak ve yüzünü incele.", next: "mirror_look", skill: "MANTIK [Zorluk: Kolay]" },
+                    { text: "Yatağın kenarındaki dağınıklığı karıştır.", next: "room_search", skill: "ANNE KOKUSU" },
+                    { text: "Doğrudan koridora çık ve otel resepsiyonuna git.", next: "hallway", skill: "SOKAKLAR" }
+                ],
+                voice: "MANTIK: Kendine acımayı kes dedektif. Burada bir ceset var ya da yakında olacak."
+            },
+            mirror_look: {
+                text: "Gördüğün yüz bir felaket. Kan çanağı gözler, günlerdir tıraş olunmamış sakallar ve tamamen boş bakışlar. İç seslerinden biri hafifçe kıkırdıyor.",
+                choices: [
+                    { text: "'Ben kimim?' diye bağırmaya başla.", next: "mirror_shout", skill: "YARI-KARANLIK" },
+                    { text: "Sakinleş ve cebindeki not defterini aç.", next: "notebook", skill: "MANTIK" }
+                ],
+                voice: "DRAMA: Ah, muazzam bir trajedi! Kral tahtından düştü ve sarayı yandı sire!"
+            },
+            room_search: {
+                text: "Dağınık çarşafların arasında boş şişeler ve tek bir ayakkabı buluyorsun. Diğer ayakkabının nerede olduğunu bulmak büyük bir gizem.",
+                choices: [
+                    { text: "Tek ayakkabıyı ayağına geçir ve odayı terk et.", next: "hallway", skill: "PRATİK ZEKALAR" }
+                ],
+                voice: "EMPATİ: Bu odada yapayalnız ağlayan biri yaşamış gibi... Belki de o kişi sensin."
+            },
+            mirror_shout: {
+                text: "Aynadaki yansımaya bağırıyorsun. Yansıma da sana aynı öfkeyle karşılık veriyor. Moral kaybettin ama gerçek bir adım attın.",
+                effect: () => { gameState.morale = Math.max(1, gameState.morale - 1); },
+                choices: [
+                    { text: "Derin bir nefes al ve koridora yönel.", next: "hallway", skill: "TOPARLANMA" }
+                ],
+                voice: "YARI-KARANLIK: Zayıflık yok! Dünya seni ezmeye çalışıyor, sen onu ez!"
+            },
+            notebook: {
+                text: "Defterin sayfalarını çeviriyorsun: 'ASLA UNUTMA' yazılmış büyük harflerle. Altında ise Whirling-in-Rags otelinin adres bilgisi yer alıyor.",
+                choices: [
+                    { text: "Otelden aşağıya, avluya in.", next: "hallway", skill: "ARAŞTIRMA" }
+                ],
+                voice: "ANİKLOPEDİ: Whirling-in-Rags, revachol'un bu sanayi bölgesindeki en eski kahve kokulu deliklerinden biridir."
+            },
+            hallway: {
+                text: "Ahşap merdivenlerden aşağıya iniyorsun. Alt katta kimliği belirsiz cesedin olduğu arka bahçeye açılan kapı ve endişeli bir otel müdürü seni bekliyor.",
+                choices: [
+                    { text: "Otel müdürü Garte ile konuş ve hesabı sor.", next: "meet_garte", skill: "DİPLOMASİ" },
+                    { text: "Doğrudan arka bahçedeki asılı cesede git.", next: "crime_scene", skill: "ADLİ TIP" }
+                ],
+                voice: "MANTIK: Müdürün yüz ifadesinde suçluluktan ziyade bıkkınlık var. Parayı ödemediğini düşünüyor."
+            },
+            meet_garte: {
+                text: "Garte seni görünce derin bir iç çekiyor: 'Odayı darmadağın ettin, camı kırdın ve hala ödeme yapmadın dedektif!'",
+                choices: [
+                    { text: "'Hepsini ödeyeceğim, bana biraz zaman ver.'", next: "crime_scene", skill: "KARİZMA" }
+                ],
+                voice: "DRAMA: Zavallı esnafın trajikomik öfkesi. Muazzam bir sahne!"
+            },
+            crime_scene: {
+                text: "Arka bahçedeki devasa meşe ağacının dalına asılı duran cesede bakıyorsun. Günlerdir orada sallanıyor. Kukje polis departmanı henüz haberdar değil. Soruşturma resmen başladı.",
+                choices: [
+                    { text: "Birinci Günü başarıyla tamamla ve kaydet.", next: "end_day1", skill: "BAŞARI" }
+                ],
+                voice: "EMPATİ: Rüzgar cesedin paltosunu sallarken sanki son bir kez nefes almak istiyor gibi."
+            },
+            end_day1: {
+                text: "Harika bir ilk adım attın. Revachol'un karanlık sırlarını çözmek için daha çok yolun var. İlerlemeniz localStorage üzerine güvenle kaydedildi.",
+                choices: [
+                    { text: "Yeni güne başla / Oyunu yeniden oyna", next: "start", skill: "DÖNGÜ" }
+                ],
+                voice: "MANTIK: İlk gün bitti. Hafızan hâlâ boş ama ipuçları parlıyor."
             }
-        }
-
-        function resetNeonBounceBall() {
-            nb.ball.x = nb.paddle.x + nb.paddle.w / 2;
-            nb.ball.y = nb.paddle.y - 15;
-            nb.ball.dx = 3.2 * (Math.random() > 0.5 ? 1 : -1);
-            nb.ball.dy = -3.2;
-        }
-
-        let cs = {
-            snake: [{x: 15, y: 15}, {x: 14, y: 15}, {x: 13, y: 15}],
-            dir: {x: 1, y: 0}, nextDir: {x: 1, y: 0},
-            food: {x: 5, y: 5, color: "#00ff66", type: "normal"},
-            portalA: {x: 3, y: 3}, portalB: {x: 20, y: 20}, gridSize: 25, timer: 0
         };
-        function spawnCSFood() {
-            cs.food.x = Math.floor(Math.random() * (canvas.width / cs.gridSize));
-            cs.food.y = Math.floor(Math.random() * (canvas.height / cs.gridSize));
-            cs.food.type = Math.random() < 0.2 ? "bonus" : "normal";
-            cs.food.color = cs.food.type === "bonus" ? "#ffe600" : "#00ff66";
-        }
 
-        let ni = {
-            ship: {x: 310, y: 830, w: 50, h: 25, shield: true},
-            bullets: [], alienBullets: [], aliens: [], lives: 3
-        };
-        function initNeonInvaders() {
-            ni.bullets = []; ni.alienBullets = []; ni.aliens = [];
-            for (let r = 0; r < 5; r++) {
-                for (let c = 0; c < 8; c++) {
-                    ni.aliens.push({
-                        x: 80 + c * 65, y: 70 + r * 45, w: 42, h: 24, status: 1,
-                        color: ["#ff007f", "#00f0ff", "#ffe600", "#00ff66", "#9d00ff"][r]
-                    });
-                }
+        function renderNode(nodeKey) {
+            playTone(480, "triangle", 0.08);
+            gameState.currentNode = nodeKey;
+            let node = storyNodes[nodeKey];
+            if (node.effect) node.effect();
+
+            // HUD Güncelle
+            document.getElementById("hudMorale").innerText = gameState.morale + " / 6";
+            document.getElementById("hudLogic").innerText = gameState.logic;
+
+            let narrativeBox = document.getElementById("narrativeBox");
+            let choicesBox = document.getElementById("choicesBox");
+
+            // İç ses kartlarını güncelle
+            document.querySelectorAll(".voice-card").forEach(c => c.classList.remove("active"));
+            if (nodeKey.includes("mirror")) document.getElementById("cardDrama").classList.add("active");
+            else if (nodeKey.includes("room")) document.getElementById("cardEmpathy").classList.add("active");
+            else document.getElementById("cardLogic").classList.add("active");
+
+            // Hikaye Logu Ekle
+            let entry = document.createElement("div");
+            entry.className = "log-entry";
+            entry.innerText = node.text;
+            narrativeBox.appendChild(entry);
+
+            // İç Ses Balonu Ekle
+            if (node.voice) {
+                let voiceEntry = document.createElement("div");
+                voiceEntry.className = "log-entry inner-voice";
+                voiceEntry.innerText = node.voice;
+                narrativeBox.appendChild(voiceEntry);
             }
-        }
 
-        let gj = {
-            player: {x: 320, y: 700, w: 30, h: 30, vy: 0},
-            platforms: []
-        };
-        function initGravitonJump() {
-            gj.platforms = [{x: 280, y: 820, w: 120, h: 16, type: "normal"}];
-            for (let i = 0; i < 9; i++) {
-                let pType = Math.random() < 0.25 ? "moving" : "normal";
-                gj.platforms.push({
-                    x: Math.random() * (canvas.width - 110),
-                    y: 720 - i * 95,
-                    w: 95, h: 16, type: pType, dx: pType === "moving" ? 2 : 0
-                });
-            }
-            gj.player.x = gj.platforms[0].x + 40;
-            gj.player.y = gj.platforms[0].y - 40;
-            gj.player.vy = -10;
-        }
+            narrativeBox.scrollTop = narrativeBox.scrollHeight;
 
-        let pp = {
-            p1: {x: 25, y: 390, w: 16, h: 90, score: 0},
-            p2: {x: 639, y: 390, w: 16, h: 90, score: 0},
-            ball: {x: 340, y: 450, r: 8, dx: 3.5, dy: 2.5}
-        };
-
-        let na = {
-            ship: {x: 340, y: 450, angle: 0, speed: 0, bomb: 1},
-            bullets: [], asteroids: [], lives: 3
-        };
-        function initNeonAsteroids() {
-            na.bullets = []; na.asteroids = [];
-            for (let i = 0; i < 6; i++) {
-                na.asteroids.push({
-                    x: Math.random() * canvas.width, y: Math.random() * canvas.height,
-                    dx: (Math.random() - 0.5) * 3.5, dy: (Math.random() - 0.5) * 3.5, radius: 32
-                });
-            }
-        }
-
-        function switchGame(index) {
-            activeGameIndex = index;
-            document.querySelectorAll(".sidebar .game-btn").forEach((btn, idx) => {
-                btn.classList.toggle("active", idx === index);
+            // Seçenekleri Yükle
+            choicesBox.innerHTML = "";
+            node.choices.forEach(ch => {
+                let btn = document.createElement("button");
+                btn.className = "choice-btn";
+                btn.innerHTML = `<span>${ch.text}</span> <span class="choice-skill">${ch.skill}</span>`;
+                btn.onclick = () => {
+                    initAudio();
+                    renderNode(ch.next);
+                };
+                choicesBox.appendChild(btn);
             });
 
-            let titles = ["NEON BOUNCE PRO", "CYBER SNAKE X PRO", "NEON INVADERS X", "GRAVITON JUMP PRO", "PULSE PONG PRO", "NEON ASTEROIDS PRO"];
-            let descs = [
-                "Güçlendirmeler, gizli imleç ve boss katmanlı tuğlalar.",
-                "Portallar, bonus yemler ve tam profesyonel yılan dinamikleri.",
-                "Düşman karşı ateşleri, kalkan koruması ve boss filosu.",
-                "Hareketli platformlar, roket bot takviyesi ve dikey tırmanış.",
-                "Yapay zeka düellosu, kavisli vuruşlar ve enerji duvarı.",
-                "Bölünen asteroitler, akıllı radar ve acil durum bombası."
-            ];
-
-            menuTitle.innerText = titles[index];
-            menuDesc.innerText = descs[index];
-
-            comboContainer.style.display = (index === 0) ? "flex" : "none";
-            livesContainer.style.display = (index === 0 || index === 2 || index === 5) ? "flex" : "none";
-            levelContainer.style.display = (index === 0) ? "flex" : "none";
-
-            menuOverlay.classList.remove("hidden");
-            gameOverOverlay.classList.add("hidden");
-            gameState = "MENU";
+            // LocalStorage Kayıt
+            localStorage.setItem("revachol_save", JSON.stringify(gameState));
         }
 
-        function startGame() {
+        function resetGame() {
             initAudio();
-            score = 0;
-            scoreEl.innerText = score;
-            menuOverlay.classList.add("hidden");
-            gameOverOverlay.classList.add("hidden");
-            particles = [];
-
-            // Profesyonel İmleç Kilidi (Pointer Lock)
-            canvas.requestPointerLock();
-
-            if (activeGameIndex === 0) {
-                nb.lives = 3; nb.level = 1; nb.combo = 1;
-                livesEl.innerText = nb.lives; levelEl.innerText = nb.level;
-                initNeonBounceLevel(); resetNeonBounceBall();
-            } else if (activeGameIndex === 1) {
-                cs.snake = [{x: 15, y: 15}, {x: 14, y: 15}, {x: 13, y: 15}];
-                cs.dir = {x: 1, y: 0}; cs.nextDir = {x: 1, y: 0};
-                spawnCSFood();
-            } else if (activeGameIndex === 2) {
-                ni.lives = 3; livesEl.innerText = ni.lives;
-                initNeonInvaders();
-            } else if (activeGameIndex === 3) {
-                initGravitonJump();
-            } else if (activeGameIndex === 4) {
-                pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2;
-            } else if (activeGameIndex === 5) {
-                na.lives = 3; livesEl.innerText = na.lives;
-                initNeonAsteroids();
-            }
-            gameState = "PLAYING";
+            localStorage.removeItem("revachol_save");
+            gameState = { morale: 6, logic: 4, day: 1, currentNode: "start", flags: {} };
+            document.getElementById("narrativeBox").innerHTML = `
+                <div class="log-entry system">
+                    Oyun sıfırlandı. Tavan lambası titriyor. Revachol'un gri liman kenti uyanıyor.
+                </div>
+            `;
+            renderNode("start");
         }
 
-        function triggerGameOver() {
-            gameState = "GAMEOVER";
-            document.exitPointerLock();
-            playSound(120, "sawtooth", 0.3);
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem("neon_ultra_high", highScore);
-                highEl.innerText = highScore;
+        // Kayıt Yükleme Kontrolü
+        window.onload = () => {
+            let saved = localStorage.getItem("revachol_save");
+            if (saved) {
+                try {
+                    gameState = JSON.parse(saved);
+                    renderNode(gameState.currentNode);
+                    return;
+                } catch(e) {}
             }
-            finalScoreText.innerText = "Toplam Skorun: " + score;
-            gameOverOverlay.classList.remove("hidden");
-        }
-
-        // Hassas Gizli İmleç ve Fare Hareket Yönetimi
-        window.addEventListener("mousemove", (e) => {
-            if (gameState !== "PLAYING") return;
-            
-            // Pointer lock aktifse hareket deltası, değilse absolute koordinat
-            let movementX = e.movementX || e.clientX || 0;
-            paddlePos += movementX * 1.2;
-
-            if (activeGameIndex === 0) {
-                nb.paddle.x = paddlePos;
-                if (nb.paddle.x < 0) nb.paddle.x = 0;
-                if (nb.paddle.x + nb.paddle.w > canvas.width) nb.paddle.x = canvas.width - nb.paddle.w;
-            } else if (activeGameIndex === 2) {
-                ni.ship.x = paddlePos;
-                if (ni.ship.x < 0) ni.ship.x = 0;
-                if (ni.ship.x + ni.ship.w > canvas.width) ni.ship.x = canvas.width - ni.ship.w;
-            } else if (activeGameIndex === 3) {
-                gj.player.x = paddlePos;
-                if (gj.player.x < 0) gj.player.x = 0;
-                if (gj.player.x + gj.player.w > canvas.width) gj.player.x = canvas.width - gj.player.w;
-            } else if (activeGameIndex === 4) {
-                pp.p1.y = paddlePos;
-                if (pp.p1.y < 0) pp.p1.y = 0;
-                if (pp.p1.y + pp.p1.h > canvas.height) pp.p1.y = canvas.height - pp.p1.h;
-            }
-        });
-
-        window.addEventListener("keydown", (e) => {
-            keys[e.key] = true;
-            if (activeGameIndex === 1) {
-                if (e.key === "ArrowUp" && cs.dir.y === 0) cs.nextDir = {x: 0, y: -1};
-                if (e.key === "ArrowDown" && cs.dir.y === 0) cs.nextDir = {x: 0, y: 1};
-                if (e.key === "ArrowLeft" && cs.dir.x === 0) cs.nextDir = {x: -1, y: 0};
-                if (e.key === "ArrowRight" && cs.dir.x === 0) cs.nextDir = {x: 1, y: 0};
-            } else if (activeGameIndex === 2 && e.key === " ") {
-                ni.bullets.push({x: ni.ship.x + ni.ship.w / 2 - 3, y: ni.ship.y, w: 6, h: 14});
-                playSound(650, "square", 0.05);
-            } else if (activeGameIndex === 0 && e.key === " " && nb.paddle.laser) {
-                nb.lasers.push({x: nb.paddle.x + 10, y: nb.paddle.y, w: 4, h: 12});
-                nb.lasers.push({x: nb.paddle.x + nb.paddle.w - 14, y: nb.paddle.y, w: 4, h: 12});
-                playSound(700, "sawtooth", 0.06);
-            } else if (activeGameIndex === 5 && e.key === " ") {
-                na.bullets.push({x: na.ship.x, y: na.ship.y, dx: Math.cos(na.ship.angle) * 7.5, dy: Math.sin(na.ship.angle) * 7.5, life: 40});
-                playSound(550, "triangle", 0.05);
-            } else if (activeGameIndex === 5 && (e.key === "b" || e.key === "B") && na.ship.bomb > 0) {
-                na.ship.bomb--;
-                na.asteroids = [];
-                addParticles(canvas.width/2, canvas.height/2, "#ffe600", 50);
-                playSound(150, "sawtooth", 0.4);
-            }
-        });
-        window.addEventListener("keyup", (e) => { keys[e.key] = false; });
-
-        startBtn.addEventListener("click", startGame);
-        restartBtn.addEventListener("click", startGame);
-
-        let snakeCounter = 0;
-        function update() {
-            if (gameState !== "PLAYING") return;
-
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.dx; p.y += p.dy; p.life--;
-                if (p.life <= 0) particles.splice(i, 1);
-            }
-
-            if (activeGameIndex === 0) {
-                if (nb.combo > 1) {
-                    nb.comboTimer--;
-                    if (nb.comboTimer <= 0) { nb.combo = 1; comboEl.innerText = "x" + nb.combo; }
-                }
-
-                nb.ball.x += nb.ball.dx;
-                nb.ball.y += nb.ball.dy;
-
-                if (nb.ball.x - nb.ball.r < 0) { nb.ball.x = nb.ball.r; nb.ball.dx = -nb.ball.dx; playSound(300); }
-                if (nb.ball.x + nb.ball.r > canvas.width) { nb.ball.x = canvas.width - nb.ball.r; nb.ball.dx = -nb.ball.dx; playSound(300); }
-                if (nb.ball.y - nb.ball.r < 0) { nb.ball.y = nb.ball.r; nb.ball.dy = -nb.ball.dy; playSound(300); }
-
-                for (let i = nb.lasers.length - 1; i >= 0; i--) {
-                    nb.lasers[i].y -= 9;
-                    if (nb.lasers[i].y < 0) { nb.lasers.splice(i, 1); continue; }
-                    let l = nb.lasers[i];
-                    nb.bricks.forEach(b => {
-                        if (b.status === 1 && l.x > b.x && l.x < b.x + b.w && l.y > b.y && l.y < b.y + b.h) {
-                            b.health--; nb.lasers.splice(i, 1);
-                            if (b.health <= 0) {
-                                b.status = 0; score += 30; scoreEl.innerText = score;
-                                addParticles(b.x + b.w/2, b.y + b.h/2, b.color);
-                            }
-                        }
-                    });
-                }
-
-                for (let i = nb.powerups.length - 1; i >= 0; i--) {
-                    let p = nb.powerups[i];
-                    p.y += 2.5;
-                    if (
-                        p.y + p.h >= nb.paddle.y && p.y <= nb.paddle.y + nb.paddle.h &&
-                        p.x + p.w >= nb.paddle.x && p.x <= nb.paddle.x + nb.paddle.w
-                    ) {
-                        if (p.type === "laser") { nb.paddle.laser = true; setTimeout(() => nb.paddle.laser = false, 8000); }
-                        else if (p.type === "expand") { nb.paddle.w = Math.min(180, nb.paddle.w + 35); }
-                        score += 100; scoreEl.innerText = score;
-                        playSound(800, "sine", 0.15);
-                        nb.powerups.splice(i, 1);
-                    } else if (p.y > canvas.height) { nb.powerups.splice(i, 1); }
-                }
-
-                if (
-                    nb.ball.y + nb.ball.r >= nb.paddle.y &&
-                    nb.ball.y - nb.ball.r <= nb.paddle.y + nb.paddle.h &&
-                    nb.ball.x >= nb.paddle.x && nb.ball.x <= nb.paddle.x + nb.paddle.w
-                ) {
-                    nb.ball.dy = -Math.abs(nb.ball.dy);
-                    let hit = nb.ball.x - (nb.paddle.x + nb.paddle.w / 2);
-                    nb.ball.dx = hit * 0.13;
-                    addParticles(nb.ball.x, nb.ball.y, "#00f0ff", 6);
-                    playSound(360);
-                }
-
-                if (nb.ball.y > canvas.height + 20) {
-                    nb.lives--; livesEl.innerText = nb.lives;
-                    nb.combo = 1; comboEl.innerText = "x" + nb.combo;
-                    if (nb.lives <= 0) triggerGameOver();
-                    else resetNeonBounceBall();
-                }
-
-                let activeB = 0;
-                nb.bricks.forEach(b => {
-                    if (b.status === 1) {
-                        activeB++;
-                        if (
-                            nb.ball.x + nb.ball.r > b.x && nb.ball.x - nb.ball.r < b.x + b.w &&
-                            nb.ball.y + nb.ball.r > b.y && nb.ball.y - nb.ball.r < b.y + b.h
-                        ) {
-                            nb.ball.dy = -nb.ball.dy;
-                            b.health--;
-                            addParticles(b.x + b.w/2, b.y + b.h/2, b.color, 8);
-                            if (b.health <= 0) {
-                                b.status = 0;
-                                nb.combo++; nb.comboTimer = 180; comboEl.innerText = "x" + nb.combo;
-                                score += 35 * nb.combo; scoreEl.innerText = score;
-                                if (Math.random() < 0.22) {
-                                    nb.powerups.push({x: b.x + b.w/2 - 12, y: b.y, w: 24, h: 24, type: Math.random() < 0.5 ? "laser" : "expand"});
-                                }
-                                playSound(520, "triangle", 0.08);
-                            } else { playSound(210, "square", 0.08); }
-                        }
-                    }
-                });
-                if (activeB === 0) {
-                    nb.level++; levelEl.innerText = nb.level;
-                    initNeonBounceLevel(); resetNeonBounceBall();
-                }
-
-            } else if (activeGameIndex === 1) {
-                snakeCounter++;
-                if (snakeCounter % 6 === 0) {
-                    cs.dir = cs.nextDir;
-                    let head = {x: cs.snake[0].x + cs.dir.x, y: cs.snake[0].y + cs.dir.y};
-                    
-                    if (head.x === cs.portalA.x && head.y === cs.portalA.y) head = {x: cs.portalB.x + 1, y: cs.portalB.y};
-                    else if (head.x === cs.portalB.x && head.y === cs.portalB.y) head = {x: cs.portalA.x + 1, y: cs.portalA.y};
-
-                    if (head.x < 0 || head.x >= canvas.width / cs.gridSize || head.y < 0 || head.y >= canvas.height / cs.gridSize) {
-                        triggerGameOver(); return;
-                    }
-                    for (let s of cs.snake) { if (head.x === s.x && head.y === s.y) { triggerGameOver(); return; } }
-                    cs.snake.unshift(head);
-                    if (head.x === cs.food.x && head.y === cs.food.y) {
-                        let pts = cs.food.type === "bonus" ? 150 : 50;
-                        score += pts; scoreEl.innerText = score;
-                        addParticles(head.x * cs.gridSize, head.y * cs.gridSize, cs.food.color, 15);
-                        playSound(750, "sine", 0.1); spawnCSFood();
-                    } else { cs.snake.pop(); }
-                }
-
-            } else if (activeGameIndex === 2) {
-                for (let i = ni.bullets.length - 1; i >= 0; i--) {
-                    ni.bullets[i].y -= 9;
-                    if (ni.bullets[i].y < 0) { ni.bullets.splice(i, 1); continue; }
-                    let b = ni.bullets[i];
-                    for (let a of ni.aliens) {
-                        if (a.status === 1 && b.x > a.x && b.x < a.x + a.w && b.y > a.y && b.y < a.y + a.h) {
-                            a.status = 0; ni.bullets.splice(i, 1);
-                            score += 50; scoreEl.innerText = score;
-                            addParticles(a.x + a.w/2, a.y + a.h/2, a.color, 12);
-                            playSound(620, "triangle", 0.08);
-                            break;
-                        }
-                    }
-                }
-                let allDead = true;
-                ni.aliens.forEach(a => { if (a.status === 1) allDead = false; });
-                if (allDead) initNeonInvaders();
-
-            } else if (activeGameIndex === 3) {
-                gj.player.vy += 0.36;
-                gj.player.y += gj.player.vy;
-                gj.platforms.forEach(p => {
-                    if (p.type === "moving") {
-                        p.x += p.dx;
-                        if (p.x <= 0 || p.x + p.w >= canvas.width) p.dx = -p.dx;
-                    }
-                    if (
-                        gj.player.vy > 0 &&
-                        gj.player.x + gj.player.w > p.x && gj.player.x < p.x + p.w &&
-                        gj.player.y + gj.player.h >= p.y && gj.player.y + gj.player.h <= p.y + 16
-                    ) {
-                        gj.player.vy = -11.5;
-                        addParticles(gj.player.x + gj.player.w/2, gj.player.y + gj.player.h, "#00ff66", 6);
-                        playSound(460, "sine", 0.05);
-                    }
-                });
-                if (gj.player.y < 380) {
-                    let diff = 380 - gj.player.y;
-                    gj.player.y = 380;
-                    gj.platforms.forEach(p => {
-                        p.y += diff;
-                        if (p.y > canvas.height) {
-                            p.y = 0; p.x = Math.random() * (canvas.width - 100);
-                            score += 20; scoreEl.innerText = score;
-                        }
-                    });
-                }
-                if (gj.player.y > canvas.height) triggerGameOver();
-
-            } else if (activeGameIndex === 4) {
-                pp.ball.x += pp.ball.dx; pp.ball.y += pp.ball.dy;
-                if (pp.ball.y - pp.ball.r < 0 || pp.ball.y + pp.ball.r > canvas.height) pp.ball.dy = -pp.ball.dy;
-
-                let p2Target = pp.ball.y - pp.p2.h / 2;
-                pp.p2.y += (p2Target - pp.p2.y) * 0.085;
-
-                if (pp.ball.x - pp.ball.r <= pp.p1.x + pp.p1.w && pp.ball.y >= pp.p1.y && pp.ball.y <= pp.p1.y + pp.p1.h) {
-                    pp.ball.dx = -pp.ball.dx;
-                    addParticles(pp.ball.x, pp.ball.y, "#ff007f", 8);
-                    playSound(420);
-                }
-                if (pp.ball.x + pp.ball.r >= pp.p2.x && pp.ball.y >= pp.p2.y && pp.ball.y <= pp.p2.y + pp.p2.h) {
-                    pp.ball.dx = -pp.ball.dx;
-                    addParticles(pp.ball.x, pp.ball.y, "#00f0ff", 8);
-                    playSound(420);
-                }
-                if (pp.ball.x < 0) { pp.p2.score++; score += 60; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
-                if (pp.ball.x > canvas.width) { pp.p1.score++; score += 120; scoreEl.innerText = score; pp.ball.x = canvas.width / 2; pp.ball.y = canvas.height / 2; }
-
-            } else if (activeGameIndex === 5) {
-                if (keys["ArrowLeft"]) na.ship.angle -= 0.065;
-                if (keys["ArrowRight"]) na.ship.angle += 0.065;
-                if (keys["ArrowUp"]) {
-                    na.ship.x += Math.cos(na.ship.angle) * 3.5;
-                    na.ship.y += Math.sin(na.ship.angle) * 3.5;
-                }
-                na.ship.x = (na.ship.x + canvas.width) % canvas.width;
-                na.ship.y = (na.ship.y + canvas.height) % canvas.height;
-
-                for (let i = na.bullets.length - 1; i >= 0; i--) {
-                    na.bullets[i].x += na.bullets[i].dx;
-                    na.bullets[i].y += na.bullets[i].dy;
-                    na.bullets[i].life--;
-                    if (na.bullets[i].life <= 0) na.bullets.splice(i, 1);
-                }
-
-                na.asteroids.forEach(ast => {
-                    ast.x += ast.dx; ast.y += ast.dy;
-                    ast.x = (ast.x + canvas.width) % canvas.width;
-                    ast.y = (ast.y + canvas.height) % canvas.height;
-                });
-            }
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            ctx.strokeStyle = "rgba(0, 240, 255, 0.035)";
-            for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-            for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-
-            particles.forEach(p => {
-                ctx.fillStyle = p.color; ctx.shadowBlur = 8; ctx.shadowColor = p.color;
-                ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fill();
-            });
-            ctx.shadowBlur = 0;
-
-            if (activeGameIndex === 0) {
-                nb.bricks.forEach(b => {
-                    if (b.status === 1) {
-                        ctx.shadowBlur = 12; ctx.shadowColor = b.color; ctx.fillStyle = b.color;
-                        ctx.fillRect(b.x, b.y, b.w, b.h);
-                        ctx.fillStyle = "#000000"; ctx.font = "bold 11px monospace";
-                        if (b.health > 1) ctx.fillText(b.health, b.x + b.w/2 - 4, b.y + 15);
-                        ctx.shadowBlur = 0;
-                    }
-                });
-                nb.powerups.forEach(p => {
-                    ctx.fillStyle = p.type === "laser" ? "#ffe600" : "#00ff66";
-                    ctx.shadowBlur = 10; ctx.shadowColor = ctx.fillStyle;
-                    ctx.fillRect(p.x, p.y, p.w, p.h); ctx.shadowBlur = 0;
-                });
-                ctx.fillStyle = "#ffe600";
-                nb.lasers.forEach(l => ctx.fillRect(l.x, l.y, l.w, l.h));
-
-                ctx.shadowBlur = 15; ctx.shadowColor = nb.paddle.color; ctx.fillStyle = nb.paddle.color;
-                ctx.fillRect(nb.paddle.x, nb.paddle.y, nb.paddle.w, nb.paddle.h);
-                if (nb.paddle.laser) {
-                    ctx.fillStyle = "#ffe600";
-                    ctx.fillRect(nb.paddle.x + 10, nb.paddle.y - 6, 4, 6);
-                    ctx.fillRect(nb.paddle.x + nb.paddle.w - 14, nb.paddle.y - 6, 4, 6);
-                }
-                ctx.fillStyle = nb.ball.color; ctx.shadowColor = nb.ball.color;
-                ctx.beginPath(); ctx.arc(nb.ball.x, nb.ball.y, nb.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-
-            } else if (activeGameIndex === 1) {
-                ctx.fillStyle = cs.food.color; ctx.shadowBlur = 15; ctx.shadowColor = cs.food.color;
-                ctx.fillRect(cs.food.x * cs.gridSize, cs.food.y * cs.gridSize, cs.gridSize - 2, cs.gridSize - 2);
-                
-                ctx.fillStyle = "#ffe600"; ctx.shadowColor = "#ffe600";
-                ctx.fillRect(cs.portalA.x * cs.gridSize, cs.portalA.y * cs.gridSize, cs.gridSize, cs.gridSize);
-                ctx.fillRect(cs.portalB.x * cs.gridSize, cs.portalB.y * cs.gridSize, cs.gridSize, cs.gridSize);
-
-                cs.snake.forEach((s, idx) => {
-                    ctx.fillStyle = idx === 0 ? "#ff007f" : "#00f0ff";
-                    ctx.shadowColor = ctx.fillStyle;
-                    ctx.fillRect(s.x * cs.gridSize, s.y * cs.gridSize, cs.gridSize - 2, cs.gridSize - 2);
-                });
-                ctx.shadowBlur = 0;
-
-            } else if (activeGameIndex === 2) {
-                ctx.fillStyle = "#00f0ff"; ctx.shadowBlur = 15; ctx.shadowColor = "#00f0ff";
-                ctx.fillRect(ni.ship.x, ni.ship.y, ni.ship.w, ni.ship.h);
-                ctx.fillStyle = "#ffe600";
-                ni.bullets.forEach(b => ctx.fillRect(b.x, b.y, b.w, b.h));
-                ni.aliens.forEach(a => {
-                    if (a.status === 1) {
-                        ctx.fillStyle = a.color; ctx.shadowColor = a.color;
-                        ctx.fillRect(a.x, a.y, a.w, a.h);
-                    }
-                });
-                ctx.shadowBlur = 0;
-
-            } else if (activeGameIndex === 3) {
-                ctx.fillStyle = "#00ff66"; ctx.shadowBlur = 15; ctx.shadowColor = "#00ff66";
-                ctx.fillRect(gj.player.x, gj.player.y, gj.player.w, gj.player.h);
-                gj.platforms.forEach(p => {
-                    ctx.fillStyle = p.type === "moving" ? "#ffe600" : "#00f0ff";
-                    ctx.shadowColor = ctx.fillStyle;
-                    ctx.fillRect(p.x, p.y, p.w, p.h);
-                });
-                ctx.shadowBlur = 0;
-
-            } else if (activeGameIndex === 4) {
-                ctx.fillStyle = "#ff007f"; ctx.shadowBlur = 12; ctx.shadowColor = "#ff007f";
-                ctx.fillRect(pp.p1.x, pp.p1.y, pp.p1.w, pp.p1.h);
-                ctx.fillStyle = "#00f0ff"; ctx.shadowColor = "#00f0ff";
-                ctx.fillRect(pp.p2.x, pp.p2.y, pp.p2.w, pp.p2.h);
-                ctx.fillStyle = "#ffe600"; ctx.shadowColor = "#ffe600";
-                ctx.beginPath(); ctx.arc(pp.ball.x, pp.ball.y, pp.ball.r, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
-
-            } else if (activeGameIndex === 5) {
-                ctx.save();
-                ctx.translate(na.ship.x, na.ship.y);
-                ctx.rotate(na.ship.angle);
-                ctx.strokeStyle = "#ff007f"; ctx.lineWidth = 3; ctx.shadowBlur = 12; ctx.shadowColor = "#ff007f";
-                ctx.beginPath(); ctx.moveTo(18, 0); ctx.lineTo(-12, -10); ctx.lineTo(-12, 10); ctx.closePath(); ctx.stroke();
-                ctx.restore();
-
-                ctx.fillStyle = "#00f0ff";
-                na.bullets.forEach(b => { ctx.beginPath(); ctx.arc(b.x, b.y, 3, 0, Math.PI * 2); ctx.fill(); });
-                ctx.strokeStyle = "#ffe600"; ctx.lineWidth = 2;
-                na.asteroids.forEach(ast => {
-                    ctx.beginPath(); ctx.arc(ast.x, ast.y, ast.radius, 0, Math.PI * 2); ctx.stroke();
-                });
-                ctx.shadowBlur = 0;
-            }
-        }
-
-        function loop() {
-            update();
-            draw();
-            requestAnimationFrame(loop);
-        }
-
-        loop();
+            renderNode("start");
+        };
     </script>
 </body>
 </html>
