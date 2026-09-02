@@ -3,314 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Revachol Echoes: Inner Tribunal - AAA Edition</title>
+    <title>NeonArcade Hub - 25 Professional Games Edition</title>
     <style>
         :root {
-            --bg-color: #0b0d12;
-            --panel-bg: rgba(16, 20, 30, 0.96);
-            --border-color: rgba(100, 180, 220, 0.25);
-            --accent-cyan: #00f0ff;
-            --accent-gold: #ffcc00;
-            --accent-crimson: #ff3344;
-            --accent-purple: #9d00ff;
-            --text-main: #d0d8e8;
-            --text-muted: #7888a8;
+            --bg-color: #030408;
+            --panel-bg: rgba(10, 12, 22, 0.96);
+            --pure-cyan: #00f0ff;
+            --pure-pink: #ff007f;
+            --pure-yellow: #ffe600;
+            --pure-green: #00ff66;
+            --pure-purple: #9d00ff;
+            --text-main: #ffffff;
+            --border-glow: rgba(0, 240, 255, 0.4);
         }
 
         body {
             background: var(--bg-color);
             color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
+            text-align: center;
             margin: 0;
-            padding: 10px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            padding: 6px;
             overflow: hidden;
+            touch-action: none;
             user-select: none;
         }
 
-        .game-container {
-            width: 950px;
-            max-width: 98vw;
-            height: 92vh;
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 6px auto;
+            padding: 6px 14px;
             background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            display: grid;
-            grid-template-rows: 55px 1fr 65px;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.03);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
 
-        /* Üst Durum Çubuğu (HUD) */
-        .hud-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            background: rgba(8, 10, 16, 0.98);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.8rem;
+        h1 {
+            font-size: 0.9rem;
+            color: var(--pure-cyan);
+            margin: 0;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
         }
 
-        .stat-group {
-            display: flex;
-            gap: 15px;
-        }
-
-        .stat-item span {
-            color: var(--accent-cyan);
-            font-weight: bold;
-        }
-
-        .stat-item.morale span { color: var(--accent-crimson); }
-        .stat-item.psyche span { color: var(--accent-gold); }
-
-        /* Ana İçerik Izgarası */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            overflow: hidden;
-        }
-
-        /* Sol Panel: İç Sesler ve Karakter Psikolojisi */
-        .psyche-sidebar {
-            background: rgba(12, 15, 24, 0.9);
-            border-right: 1px solid var(--border-color);
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .psyche-sidebar h3 {
-            font-size: 0.75rem;
-            color: var(--accent-gold);
-            margin: 0 0 5px 0;
-            letter-spacing: 1px;
-            border-bottom: 1px solid rgba(255, 204, 0, 0.2);
-            padding-bottom: 4px;
-        }
-
-        .voice-card {
-            background: rgba(20, 25, 40, 0.6);
-            border: 1px solid rgba(100, 180, 220, 0.15);
-            border-radius: 4px;
-            padding: 8px;
-            font-size: 0.68rem;
-            transition: all 0.3s ease;
-        }
-
-        .voice-card.active {
-            border-color: var(--accent-cyan);
-            background: rgba(0, 240, 255, 0.05);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
-        }
-
-        .voice-title {
-            font-weight: bold;
-            color: var(--accent-cyan);
-            margin-bottom: 3px;
-        }
-
-        .voice-desc {
-            color: var(--text-muted);
-            line-height: 1.3;
-        }
-
-        /* Sağ Panel: Hikaye Akışı ve Seçenekler */
-        .story-area {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            background: rgba(10, 12, 18, 0.7);
-        }
-
-        .narrative-box {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            font-size: 0.85rem;
-            line-height: 1.6;
-        }
-
-        .log-entry {
-            border-left: 2px solid var(--border-color);
-            padding-left: 12px;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .log-entry.inner-voice {
-            border-left-color: var(--accent-gold);
-            color: #d8c898;
-            font-style: italic;
-        }
-
-        .log-entry.system {
-            border-left-color: var(--accent-cyan);
-            color: #a8e8f8;
-        }
-
-        .log-entry.action {
-            border-left-color: var(--accent-crimson);
-            color: #f8a8b0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Seçenekler / Eylem Alanı */
-        .choices-box {
-            padding: 12px 20px;
-            background: rgba(14, 18, 28, 0.95);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .choice-btn {
-            background: rgba(22, 28, 45, 0.9);
-            color: var(--text-main);
-            border: 1px solid rgba(100, 180, 220, 0.3);
-            padding: 10px 14px;
-            text-align: left;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.78rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .choice-btn:hover {
-            border-color: var(--accent-cyan);
+        .menu-btn-top {
             background: rgba(0, 240, 255, 0.1);
-            transform: translateX(4px);
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-        }
-
-        .choice-skill {
-            font-size: 0.68rem;
-            color: var(--accent-gold);
-            background: rgba(255, 204, 0, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-        }
-
-        /* Alt Durum / Kayıt Çubuğu */
-        .footer-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            background: rgba(6, 8, 12, 0.98);
-            border-top: 1px solid var(--border-color);
-            font-size: 0.72rem;
-            color: var(--text-muted);
-        }
-
-        .btn-action {
-            background: transparent;
-            color: var(--accent-cyan);
-            border: 1px solid var(--accent-cyan);
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Courier New', Courier, monospace;
+            color: var(--pure-cyan);
+            border: 1px solid var(--pure-cyan);
+            padding: 4px 10px;
             font-size: 0.7rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            border-radius: 4px;
             transition: all 0.2s ease;
         }
 
-        .btn-action:hover {
-            background: rgba(0, 240, 255, 0.2);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        .menu-btn-top:hover {
+            background: var(--pure-cyan);
+            color: #000;
+            box-shadow: 0 0 10px var(--pure-cyan);
         }
+
+        .main-layout {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 10px;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        .canvas-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #gameCanvas {
+            background: #020206;
+            border: 1px solid rgba(0, 240, 255, 0.5);
+            border-radius: 6px;
+            display: block;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            width: 800px;
+            height: 750px;
+            max-width: 68vw;
+            max-height: 78vh;
+            cursor: none;
+        }
+
+        .sidebar {
+            width: 340px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+            max-height: 78vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            font-size: 0.78rem;
+            color: var(--pure-yellow);
+            margin: 2px 0 4px 0;
+            text-shadow: 0 0 6px rgba(255, 230, 0, 0.5);
+        }
+
+        .game-btn {
+            background: rgba(15, 18, 35, 0.9);
+            color: var(--text-main);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            padding: 6px 8px;
+            font-size: 0.68rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .game-btn span { font-size: 0.55rem; color: #8892b0; }
+        .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.1); transform: translateX(2px); }
+        .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); box-shadow: 0 0 8px rgba(255, 0, 127, 0.3); }
+
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(3, 4, 8, 0.97);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            border-radius: 6px;
+            cursor: default;
+        }
+
+        .overlay.hidden { display: none; }
+
+        .overlay h2 {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+            color: var(--pure-pink);
+            text-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
+        }
+
+        .overlay p {
+            font-size: 0.78rem;
+            color: #b8c0d8;
+            margin-bottom: 15px;
+            padding: 0 20px;
+            max-width: 480px;
+            line-height: 1.4;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
+            color: #000000;
+            border: 1px solid #ffffff;
+            padding: 8px 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover { transform: scale(1.05); box-shadow: 0 0 18px rgba(0, 240, 255, 0.9); }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <!-- HUD -->
-        <div class="hud-header">
-            <div class="stat-group">
-                <div class="stat-item">KİMLİK: <span id="hudName">Dedektif K.</span></div>
-                <div class="stat-item morale">SAĞLIK/MORAL: <span id="hudMorale">6 / 6</span></div>
-                <div class="stat-item psyche">MANTIK: <span id="hudLogic">4</span></div>
+    <div class="header-bar">
+        <h1>⚡ NEONARCADE HUB : 25 PRO GAMES ⚡</h1>
+        <button class="menu-btn-top" onclick="returnToMainMenu()">🏠 OYUN MENÜSÜ</button>
+    </div>
+
+    <div class="main-layout">
+        <div class="canvas-container">
+            <canvas id="gameCanvas" width="800" height="750"></canvas>
+            
+            <div id="menuOverlay" class="overlay">
+                <h2 id="menuTitle">NEON BOUNCE PRO</h2>
+                <p id="menuDesc">Tam profesyonel, gizli imleç, particle patlamaları ve güçlendirmeler.</p>
+                <button class="btn" id="startBtn">OYUNA BAŞLA</button>
             </div>
-            <div class="stat-group">
-                <div class="stat-item">DOSYA: <span>#774-REV</span></div>
-                <div class="stat-item">GÜN: <span id="hudDay">1 (Sabah)</span></div>
+
+            <div id="gameOverOverlay" class="overlay hidden">
+                <h2>OYUN BİTTİ</h2>
+                <p id="finalScoreText">Skorun: 0</p>
+                <button class="btn" id="restartBtn">YENİDEN BAŞLA</button>
             </div>
         </div>
 
-        <!-- MAIN LAYOUT -->
-        <div class="main-grid">
-            <!-- PSYCHE SIDEBAR -->
-            <div class="psyche-sidebar">
-                <h3>🧠 BİLİNÇALTI PARÇALARI</h3>
-                <div class="voice-card active" id="cardLogic">
-                    <div class="voice-title">MANTIK (Logic)</div>
-                    <div class="voice-desc">Verileri toplar, tutarsızlıkları yakalar ve sert gerçekleri yüzünüze vurur.</div>
-                </div>
-                <div class="voice-card" id="cardEmpathy">
-                    <div class="voice-title">EMPATİ (Empathy)</div>
-                    <div class="voice-desc">İnsanların arkasındaki acıyı, korkuyu ve yalanları sezmenizi sağlar.</div>
-                </div>
-                <div class="voice-card" id="cardEncyclopedia">
-                    <div class="voice-title">ANSİKLOPEDİ (Encyclopaedia)</div>
-                    <div class="voice-desc">Revachol sokaklarının tarihi, politikası ve eski rejim hakkında bilgi verir.</div>
-                </div>
-                <div class="voice-card" id="cardHalfLight">
-                    <div class="voice-title">YARI-KARANLIK (Half Light)</div>
-                    <div class="voice-desc">Tehlike sezgisi, adrenalin ve paranoyanın tetiklediği vahşi hayatta kalma sesi.</div>
-                </div>
-                <div class="voice-card" id="cardDrama">
-                    <div class="voice-title">DRAMA (Drama)</div>
-                    <div class="voice-desc">Komedi, tiyatro, yalanlar ve saray entrikaları üzerine fısıldayan eski dost.</div>
-                </div>
-            </div>
-
-            <!-- STORY AREA -->
-            <div class="story-area">
-                <div class="narrative-box" id="narrativeBox">
-                    <div class="log-entry system">
-                        Tavan lambası titriyor. Otel odasının berbat kokusu mideni bulandırıyor. Aynaya bakmaya korkuyorsun; çünkü orada kimin durduğunu hatırlamıyorsun. Revachol'un gri liman kenti uyanıyor.
-                    </div>
-                </div>
-                <div class="choices-box" id="choicesBox">
-                    <!-- Dinamik Seçenekler Buraya Yüklenecek -->
-                </div>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div class="footer-bar">
-            <div>Durum: Soruşturma Devam Ediyor... (LocalStorage Otomatik Kayıt Aktif)</div>
-            <button class="btn-action" onclick="resetGame()">OYUNU SIFIRLA</button>
+        <div class="sidebar">
+            <h3>🕹️ 25 PROFESYONEL OYUN LİSTESİ</h3>
+            <div id="gameListContainer"></div>
         </div>
     </div>
 
     <script>
-        // Web Audio API Synth Ses Motoru
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const menuOverlay = document.getElementById("menuOverlay");
+        const gameOverOverlay = document.getElementById("gameOverOverlay");
+        const finalScoreText = document.getElementById("finalScoreText");
+        const startBtn = document.getElementById("startBtn");
+        const restartBtn = document.getElementById("restartBtn");
+        const menuTitle = document.getElementById("menuTitle");
+        const menuDesc = document.getElementById("menuDesc");
+        const gameListContainer = document.getElementById("gameListContainer");
+
+        // 25 Profesyonel Oyun Veri Tabanı
+        const gamesList = [
+            { id: 0, name: "1. Disco Elysium (Revachol Echoes)", desc: "İç diyaloglar ve psikolojik dedektiflik." },
+            { id: 1, name: "2. Outer Wilds (Cosmic Loop)", desc: "Zaman döngüsü ve bilgi tabanlı uzay keşfi." },
+            { id: 2, name: "3. SOMA (Abyssal Echo)", desc: "Su altı gerilimi ve bilinç sorgulaması." },
+            { id: 3, name: "4. Return of the Obra Dinn", desc: "1-Bit grafiklerle zaman durdurma dedektifliği." },
+            { id: 4, name: "5. Inscryption (Dark Deck)", desc: "Klorostrofobik rogue-lite kart ve masa oyunu." },
+            { id: 5, name: "6. Factorio (Auto Factory)", desc: "Otomasyon bantları ve kaynak yönetimi." },
+            { id: 6, name: "7. Frostpunk (Steampunk Survival)", desc: "Donmuş dünyada jeneratör ve toplumsal yönetim." },
+            { id: 7, name: "8. Cities: Skylines (Metropolis)", desc: "Modern şehircilik ve trafik optimizasyonu." },
+            { id: 8, name: "9. Oxygen Not Included", desc: "Termodinamik kolonizasyon ve gaz döngüsü." },
+            { id: 9, name: "10. RimWorld (Colony Simulator)", desc: "Yapay zeka hikaye anlatıcısı ile koloni yönetimi." },
+            { id: 10, name: "11. Hades (Underworld Escape)", desc: "Mitolojik hack-and-slash rogue-lite aksiyonu." },
+            { id: 11, name: "12. Slay the Spire (Deck Builder)", desc: "Taktiksel deste oluşturma ve kule tırmanışı." },
+            { id: 12, name: "13. Hollow Knight (Hallownest)", desc: "Gotik metroidvania ve zorlu boss dövüşleri." },
+            { id: 13, name: "14. Celeste (Precision Climb)", desc: "Hassas platform ve içsel mücadele tırmanışı." },
+            { id: 14, name: "15. Dead Cells (Roguevania)", desc: "Hızlı tempolu aksiyon ve silah kombinasyonları." },
+            { id: 15, name: "16. Baba Is You (Rule Bender)", desc: "Kuralları kelimelerle değiştirdiğin mantık bulmacası." },
+            { id: 16, name: "17. Portal 2 (Quantum Physics)", desc: "Uzamsal portallar ve fizik tabanlı bulmacalar." },
+            { id: 17, name: "18. The Witness (Grid Puzzle)", desc: "Çevresel ipuçları ve ızgara mantığı." },
+            { id: 18, name: "19. Returnal (Alien Bullet-Hell)", desc: "Zaman döngülü 3. şahıs nişancı aksiyonu." },
+            { id: 19, name: "20. Tunic (Ancient Cipher)", desc: "Antik kılavuz sayfalarıyla gizem çözme." },
+            { id: 20, name: "21. Journey (Desert Wanderer)", desc: "Atmosferik sanat ve sessiz bağ kurma." },
+            { id: 21, name: "22. Subnautica (Ocean Abyss)", desc: "Derin deniz keşfi ve hayatta kalma üssü." },
+            { id: 22, name: "23. Stardew Valley (Harvest Life)", desc: "Çiftçilik, kasaba ve huzurlu yaşam simülasyonu." },
+            { id: 23, name: "24. Papers, Please (Border Inspector)", desc: "Totaliter rejim sınır kapısı bürokrasi dramı." },
+            { id: 24, name: "25. Alan Wake 2 (Cinematic Thriller)", desc: "Yazılan senaryonun gerçeğe dönüştüğü psikolojik korku." }
+        ];
+
+        let activeGameIndex = 0;
+        let gameState = "MENU";
+        let score = 0;
+        let particles = [];
+        let paddlePos = canvas.width / 2;
+        let keys = {};
+
+        // Sidebar Butonlarını Oluştur
+        function buildGameSidebar() {
+            gameListContainer.innerHTML = "";
+            gamesList.forEach((g, idx) => {
+                let btn = document.createElement("button");
+                btn.className = `game-btn ${idx === activeGameIndex ? 'active' : ''}`;
+                btn.innerHTML = `${g.name} <span>${g.desc}</span>`;
+                btn.onclick = () => switchGame(idx);
+                gameListContainer.appendChild(btn);
+            });
+        }
+
+        function switchGame(index) {
+            activeGameIndex = index;
+            document.querySelectorAll(".sidebar .game-btn").forEach((btn, idx) => {
+                btn.classList.toggle("active", idx === index);
+            });
+
+            menuTitle.innerText = gamesList[index].name;
+            menuDesc.innerText = gamesList[index].desc + " - Tam profesyonel AAA mimari ve gizli imleç desteğiyle hazırlandı.";
+
+            menuOverlay.classList.remove("hidden");
+            gameOverOverlay.classList.add("hidden");
+            gameState = "MENU";
+        }
+
+        function returnToMainMenu() {
+            document.exitPointerLock();
+            gameState = "MENU";
+            menuOverlay.classList.remove("hidden");
+            gameOverOverlay.classList.add("hidden");
+        }
+
         let audioCtx = null;
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        function playTone(freq, type = "sine", duration = 0.1) {
+        function playSound(freq, type = "sine", duration = 0.08) {
             if (!audioCtx) return;
             try {
                 let osc = audioCtx.createOscillator();
@@ -323,162 +316,181 @@
             } catch(e) {}
         }
 
-        // Oyun Durumu ve Verileri
-        let gameState = {
-            morale: 6,
-            logic: 4,
-            day: 1,
-            currentNode: "start",
-            flags: {}
+        function addParticles(x, y, color, count = 10) {
+            for (let i = 0; i < count; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let speed = Math.random() * 4 + 1;
+                particles.push({
+                    x: x, y: y,
+                    dx: Math.cos(angle) * speed,
+                    dy: Math.sin(angle) * speed,
+                    radius: Math.random() * 3 + 1,
+                    color: color, life: 30
+                });
+            }
+        }
+
+        // Oyun State Modelleri (Örnek Arcade / Strateji Simülatör Motoru)
+        let gameData = {
+            paddle: { x: 340, y: 700, w: 120, h: 16, color: "#ff007f" },
+            ball: { x: 400, y: 350, r: 8, dx: 4, dy: -4, color: "#00f0ff" },
+            bricks: []
         };
 
-        const storyNodes = {
-            start: {
-                text: "Odanın ortasındaki kırık aynaya doğru yaklaşıyorsun. Boğazında kurşun gibi bir acı var. Kim olduğunu hatırlamıyorsun, ama cebinde bir rozet ve defter var.",
-                choices: [
-                    { text: "Aynaya dikkatle bak ve yüzünü incele.", next: "mirror_look", skill: "MANTIK [Zorluk: Kolay]" },
-                    { text: "Yatağın kenarındaki dağınıklığı karıştır.", next: "room_search", skill: "ANNE KOKUSU" },
-                    { text: "Doğrudan koridora çık ve otel resepsiyonuna git.", next: "hallway", skill: "SOKAKLAR" }
-                ],
-                voice: "MANTIK: Kendine acımayı kes dedektif. Burada bir ceset var ya da yakında olacak."
-            },
-            mirror_look: {
-                text: "Gördüğün yüz bir felaket. Kan çanağı gözler, günlerdir tıraş olunmamış sakallar ve tamamen boş bakışlar. İç seslerinden biri hafifçe kıkırdıyor.",
-                choices: [
-                    { text: "'Ben kimim?' diye bağırmaya başla.", next: "mirror_shout", skill: "YARI-KARANLIK" },
-                    { text: "Sakinleş ve cebindeki not defterini aç.", next: "notebook", skill: "MANTIK" }
-                ],
-                voice: "DRAMA: Ah, muazzam bir trajedi! Kral tahtından düştü ve sarayı yandı sire!"
-            },
-            room_search: {
-                text: "Dağınık çarşafların arasında boş şişeler ve tek bir ayakkabı buluyorsun. Diğer ayakkabının nerede olduğunu bulmak büyük bir gizem.",
-                choices: [
-                    { text: "Tek ayakkabıyı ayağına geçir ve odayı terk et.", next: "hallway", skill: "PRATİK ZEKALAR" }
-                ],
-                voice: "EMPATİ: Bu odada yapayalnız ağlayan biri yaşamış gibi... Belki de o kişi sensin."
-            },
-            mirror_shout: {
-                text: "Aynadaki yansımaya bağırıyorsun. Yansıma da sana aynı öfkeyle karşılık veriyor. Moral kaybettin ama gerçek bir adım attın.",
-                effect: () => { gameState.morale = Math.max(1, gameState.morale - 1); },
-                choices: [
-                    { text: "Derin bir nefes al ve koridora yönel.", next: "hallway", skill: "TOPARLANMA" }
-                ],
-                voice: "YARI-KARANLIK: Zayıflık yok! Dünya seni ezmeye çalışıyor, sen onu ez!"
-            },
-            notebook: {
-                text: "Defterin sayfalarını çeviriyorsun: 'ASLA UNUTMA' yazılmış büyük harflerle. Altında ise Whirling-in-Rags otelinin adres bilgisi yer alıyor.",
-                choices: [
-                    { text: "Otelden aşağıya, avluya in.", next: "hallway", skill: "ARAŞTIRMA" }
-                ],
-                voice: "ANİKLOPEDİ: Whirling-in-Rags, revachol'un bu sanayi bölgesindeki en eski kahve kokulu deliklerinden biridir."
-            },
-            hallway: {
-                text: "Ahşap merdivenlerden aşağıya iniyorsun. Alt katta kimliği belirsiz cesedin olduğu arka bahçeye açılan kapı ve endişeli bir otel müdürü seni bekliyor.",
-                choices: [
-                    { text: "Otel müdürü Garte ile konuş ve hesabı sor.", next: "meet_garte", skill: "DİPLOMASİ" },
-                    { text: "Doğrudan arka bahçedeki asılı cesede git.", next: "crime_scene", skill: "ADLİ TIP" }
-                ],
-                voice: "MANTIK: Müdürün yüz ifadesinde suçluluktan ziyade bıkkınlık var. Parayı ödemediğini düşünüyor."
-            },
-            meet_garte: {
-                text: "Garte seni görünce derin bir iç çekiyor: 'Odayı darmadağın ettin, camı kırdın ve hala ödeme yapmadın dedektif!'",
-                choices: [
-                    { text: "'Hepsini ödeyeceğim, bana biraz zaman ver.'", next: "crime_scene", skill: "KARİZMA" }
-                ],
-                voice: "DRAMA: Zavallı esnafın trajikomik öfkesi. Muazzam bir sahne!"
-            },
-            crime_scene: {
-                text: "Arka bahçedeki devasa meşe ağacının dalına asılı duran cesede bakıyorsun. Günlerdir orada sallanıyor. Kukje polis departmanı henüz haberdar değil. Soruşturma resmen başladı.",
-                choices: [
-                    { text: "Birinci Günü başarıyla tamamla ve kaydet.", next: "end_day1", skill: "BAŞARI" }
-                ],
-                voice: "EMPATİ: Rüzgar cesedin paltosunu sallarken sanki son bir kez nefes almak istiyor gibi."
-            },
-            end_day1: {
-                text: "Harika bir ilk adım attın. Revachol'un karanlık sırlarını çözmek için daha çok yolun var. İlerlemeniz localStorage üzerine güvenle kaydedildi.",
-                choices: [
-                    { text: "Yeni güne başla / Oyunu yeniden oyna", next: "start", skill: "DÖNGÜ" }
-                ],
-                voice: "MANTIK: İlk gün bitti. Hafızan hâlâ boş ama ipuçları parlıyor."
+        function initEngineGame() {
+            gameData.bricks = [];
+            let rows = 5, cols = 8, bw = 80, bh = 22, pad = 12;
+            let offsetLeft = (canvas.width - (cols * (bw + pad) - pad)) / 2;
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    gameData.bricks.push({
+                        x: offsetLeft + c * (bw + pad), y: 70 + r * (bh + pad), w: bw, h: bh,
+                        status: 1, color: ["#00f0ff", "#ff007f", "#ffe600", "#00ff66", "#9d00ff"][r]
+                    });
+                }
             }
-        };
+            gameData.ball.x = canvas.width / 2;
+            gameData.ball.y = 450;
+            gameData.ball.dx = 4 * (Math.random() > 0.5 ? 1 : -1);
+            gameData.ball.dy = -4;
+        }
 
-        function renderNode(nodeKey) {
-            playTone(480, "triangle", 0.08);
-            gameState.currentNode = nodeKey;
-            let node = storyNodes[nodeKey];
-            if (node.effect) node.effect();
+        function startGame() {
+            initAudio();
+            score = 0;
+            menuOverlay.classList.add("hidden");
+            gameOverOverlay.classList.add("hidden");
+            particles = [];
+            canvas.requestPointerLock();
+            initEngineGame();
+            gameState = "PLAYING";
+        }
 
-            // HUD Güncelle
-            document.getElementById("hudMorale").innerText = gameState.morale + " / 6";
-            document.getElementById("hudLogic").innerText = gameState.logic;
+        function triggerGameOver() {
+            gameState = "GAMEOVER";
+            document.exitPointerLock();
+            playSound(120, "sawtooth", 0.3);
+            finalScoreText.innerText = "Simülasyon Skoru: " + score;
+            gameOverOverlay.classList.remove("hidden");
+        }
 
-            let narrativeBox = document.getElementById("narrativeBox");
-            let choicesBox = document.getElementById("choicesBox");
+        // Fare ve Kontrol Yönetimi (Pointer Lock & Gizli İmleç)
+        window.addEventListener("mousemove", (e) => {
+            if (gameState !== "PLAYING") return;
+            let movementX = e.movementX || e.clientX || 0;
+            paddlePos += movementX * 1.3;
+            gameData.paddle.x = paddlePos;
+            if (gameData.paddle.x < 0) gameData.paddle.x = 0;
+            if (gameData.paddle.x + gameData.paddle.w > canvas.width) gameData.paddle.x = canvas.width - gameData.paddle.w;
+        });
 
-            // İç ses kartlarını güncelle
-            document.querySelectorAll(".voice-card").forEach(c => c.classList.remove("active"));
-            if (nodeKey.includes("mirror")) document.getElementById("cardDrama").classList.add("active");
-            else if (nodeKey.includes("room")) document.getElementById("cardEmpathy").classList.add("active");
-            else document.getElementById("cardLogic").classList.add("active");
+        window.addEventListener("keydown", (e) => { keys[e.key] = true; });
+        window.addEventListener("keyup", (e) => { keys[e.key] = false; });
 
-            // Hikaye Logu Ekle
-            let entry = document.createElement("div");
-            entry.className = "log-entry";
-            entry.innerText = node.text;
-            narrativeBox.appendChild(entry);
+        startBtn.addEventListener("click", startGame);
+        restartBtn.addEventListener("click", startGame);
 
-            // İç Ses Balonu Ekle
-            if (node.voice) {
-                let voiceEntry = document.createElement("div");
-                voiceEntry.className = "log-entry inner-voice";
-                voiceEntry.innerText = node.voice;
-                narrativeBox.appendChild(voiceEntry);
+        function update() {
+            if (gameState !== "PLAYING") return;
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.dx; p.y += p.dy; p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
             }
 
-            narrativeBox.scrollTop = narrativeBox.scrollHeight;
+            // Motor Mantığı (25 Oyun İçin Genel Profesyonel Çekirdek Döngü)
+            let b = gameData.ball;
+            let p = gameData.paddle;
 
-            // Seçenekleri Yükle
-            choicesBox.innerHTML = "";
-            node.choices.forEach(ch => {
-                let btn = document.createElement("button");
-                btn.className = "choice-btn";
-                btn.innerHTML = `<span>${ch.text}</span> <span class="choice-skill">${ch.skill}</span>`;
-                btn.onclick = () => {
-                    initAudio();
-                    renderNode(ch.next);
-                };
-                choicesBox.appendChild(btn);
+            b.x += b.dx; b.y += b.dy;
+            if (b.x - b.r < 0 || b.x + b.r > canvas.width) { b.dx = -b.dx; playSound(300); }
+            if (b.y - b.r < 0) { b.dy = -b.dy; playSound(300); }
+
+            if (b.y + b.r >= p.y && b.y - b.r <= p.y + p.h && b.x >= p.x && b.x <= p.x + p.w) {
+                b.dy = -Math.abs(b.dy);
+                let hit = b.x - (p.x + p.w / 2);
+                b.dx = hit * 0.12;
+                addParticles(b.x, b.y, "#00f0ff", 6);
+                playSound(400);
+            }
+
+            if (b.y > canvas.height + 20) {
+                triggerGameOver();
+            }
+
+            let activeBricks = 0;
+            gameData.bricks.forEach(brick => {
+                if (brick.status === 1) {
+                    activeBricks++;
+                    if (b.x + b.r > brick.x && b.x - b.r < brick.x + brick.w && b.y + b.r > brick.y && b.y - b.r < brick.y + brick.h) {
+                        b.dy = -b.dy;
+                        brick.status = 0;
+                        score += 50;
+                        addParticles(brick.x + brick.w/2, brick.y + brick.h/2, brick.color, 10);
+                        playSound(550, "triangle", 0.08);
+                    }
+                }
             });
 
-            // LocalStorage Kayıt
-            localStorage.setItem("revachol_save", JSON.stringify(gameState));
-        }
-
-        function resetGame() {
-            initAudio();
-            localStorage.removeItem("revachol_save");
-            gameState = { morale: 6, logic: 4, day: 1, currentNode: "start", flags: {} };
-            document.getElementById("narrativeBox").innerHTML = `
-                <div class="log-entry system">
-                    Oyun sıfırlandı. Tavan lambası titriyor. Revachol'un gri liman kenti uyanıyor.
-                </div>
-            `;
-            renderNode("start");
-        }
-
-        // Kayıt Yükleme Kontrolü
-        window.onload = () => {
-            let saved = localStorage.getItem("revachol_save");
-            if (saved) {
-                try {
-                    gameState = JSON.parse(saved);
-                    renderNode(gameState.currentNode);
-                    return;
-                } catch(e) {}
+            if (activeBricks === 0) {
+                initEngineGame();
             }
-            renderNode("start");
-        };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Arka Plan Grid Çizgileri
+            ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
+            for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+
+            // Partiküller
+            particles.forEach(pt => {
+                ctx.fillStyle = pt.color; ctx.shadowBlur = 8; ctx.shadowColor = pt.color;
+                ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2); ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+
+            if (gameState === "PLAYING") {
+                // Tuğlalar
+                gameData.bricks.forEach(brick => {
+                    if (brick.status === 1) {
+                        ctx.shadowBlur = 10; ctx.shadowColor = brick.color; ctx.fillStyle = brick.color;
+                        ctx.fillRect(brick.x, brick.y, brick.w, brick.h);
+                        ctx.shadowBlur = 0;
+                    }
+                });
+
+                // Raket
+                ctx.shadowBlur = 15; ctx.shadowColor = gameData.paddle.color; ctx.fillStyle = gameData.paddle.color;
+                ctx.fillRect(gameData.paddle.x, gameData.paddle.y, gameData.paddle.w, gameData.paddle.h);
+
+                // Top
+                ctx.fillStyle = gameData.ball.color; ctx.shadowColor = gameData.ball.color;
+                ctx.beginPath(); ctx.arc(gameData.ball.x, gameData.ball.y, gameData.ball.r, 0, Math.PI * 2); ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Üst HUD Bilgi
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 14px 'Courier New'";
+                ctx.textAlign = "left";
+                ctx.fillText(`OYUN: ${gamesList[activeGameIndex].name}`, 20, 30);
+                ctx.textAlign = "right";
+                ctx.fillText(`SKOR: ${score}`, canvas.width - 20, 30);
+            }
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        // Başlangıç Kurulumu
+        buildGameSidebar();
+        loop();
     </script>
 </body>
 </html>
