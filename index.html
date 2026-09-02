@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - 1. Disco Elysium Pro Engine</title>
+    <title>NeonArcade Hub - 2. Outer Wilds Engine</title>
     <style>
         :root {
             --bg-color: #030408;
@@ -12,7 +12,7 @@
             --pure-pink: #ff007f;
             --pure-yellow: #ffe600;
             --text-main: #ffffff;
-            --border-glow: rgba(0, 240, 255, 0.4);
+            --border-glow: rgba(255, 230, 0, 0.4);
         }
 
         * { box-sizing: border-box; }
@@ -44,15 +44,15 @@
 
         h1 {
             font-size: 0.75rem;
-            color: var(--pure-cyan);
+            color: var(--pure-yellow);
             margin: 0;
             letter-spacing: 1px;
         }
 
         .menu-btn-top {
-            background: rgba(0, 240, 255, 0.1);
-            color: var(--pure-cyan);
-            border: 1px solid var(--pure-cyan);
+            background: rgba(255, 230, 0, 0.1);
+            color: var(--pure-yellow);
+            border: 1px solid var(--pure-yellow);
             padding: 4px 8px;
             font-size: 0.65rem;
             font-weight: bold;
@@ -79,10 +79,10 @@
 
         #gameCanvas {
             background: #020206;
-            border: 1px solid rgba(0, 240, 255, 0.5);
+            border: 1px solid rgba(255, 230, 0, 0.5);
             border-radius: 6px;
             display: block;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 0 20px rgba(255, 230, 0, 0.15);
             width: 100%;
             max-width: 760px;
             height: 440px;
@@ -99,9 +99,9 @@
         }
 
         .ctrl-btn {
-            background: rgba(0, 240, 255, 0.08);
-            color: var(--pure-cyan);
-            border: 1px solid rgba(0, 240, 255, 0.4);
+            background: rgba(255, 230, 0, 0.08);
+            color: var(--pure-yellow);
+            border: 1px solid rgba(255, 230, 0, 0.4);
             padding: 12px;
             font-size: 0.72rem;
             font-weight: bold;
@@ -113,7 +113,7 @@
         }
 
         .ctrl-btn:active {
-            background: var(--pure-cyan);
+            background: var(--pure-yellow);
             color: #000;
         }
 
@@ -131,11 +131,11 @@
         }
 
         .overlay.hidden { display: none; }
-        .overlay h2 { font-size: 1.2rem; margin-bottom: 6px; color: var(--pure-pink); }
+        .overlay h2 { font-size: 1.2rem; margin-bottom: 6px; color: var(--pure-yellow); }
         .overlay p { font-size: 0.7rem; color: #b8c0d8; margin-bottom: 12px; padding: 0 15px; line-height: 1.3; }
 
         .btn {
-            background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
+            background: linear-gradient(135deg, var(--pure-yellow), #ff9900);
             color: #000000;
             border: 1px solid #ffffff;
             padding: 8px 18px;
@@ -150,8 +150,8 @@
 <body>
 
     <div class="header-bar">
-        <h1>⚡ 1. DISCO ELYSIUM : REVACHOL ENGINE ⚡</h1>
-        <button class="menu-btn-top" onclick="resetGame()">🔄 SIFIRLA</button>
+        <h1>⚡ 2. OUTER WILDS : TIMELOOP ENGINE ⚡</h1>
+        <button class="menu-btn-top" onclick="resetGame()">🔄 DÖNGÜYÜ BAŞLAT</button>
     </div>
 
     <div class="main-layout">
@@ -159,16 +159,17 @@
             <canvas id="gameCanvas" width="760" height="440"></canvas>
             
             <div id="menuOverlay" class="overlay">
-                <h2>1. DISCO ELYSIUM (Revachol Echoes)</h2>
-                <p>Aynaya bakıyorsun. Yüzün bir felaket. İç seslerin (Mantık, Otorite, İçgörü) kafanın içinde yankılanıyor. Android dokunmatik butonları kullanarak kararlarını ver.</p>
-                <button class="btn" id="startBtn">OYUNA BAŞLA</button>
+                <h2>2. OUTER WILDS (Timber Hearth)</h2>
+                <p>Güneş 22 dakika sonra süpernova patlayacak. Bilgiyi yanına alarak zaman döngüsünde yeniden doğuyorsun. Android dokunmatik butonlarla keşif yap.</p>
+                <button class="btn" id="startBtn">KEŞFE BAŞLA</button>
             </div>
         </div>
 
+        <!-- Android Dokunmatik Kontrol Paneli -->
         <div class="mobile-controls">
-            <button class="ctrl-btn" onclick="makeChoice(1)">🔸 [1] Aynaya öfkeyle bağır (Moral -1, Mantık +1)</button>
-            <button class="ctrl-btn" onclick="makeChoice(2)">🔸 [2] Ceketinin ceplerini karıştır (Skor +25)</button>
-            <button class="ctrl-btn" onclick="makeChoice(3)">🔸 [3] Yatağın altında ipucu ara (İçgörü +1)</button>
+            <button class="ctrl-btn" onclick="makeChoice(1)">🔸 [1] Nomai Harabelerini Tara (Bilgi +1, Süre -3dk)</button>
+            <button class="ctrl-btn" onclick="makeChoice(2)">🔸 [2] Kuantum Ayı Sinyalini Dinle (Frekans +1)</button>
+            <button class="ctrl-btn" onclick="makeChoice(3)">🔸 [3] Kamp Ateşinde Marshmallow Kızart (Can +1)</button>
         </div>
     </div>
 
@@ -180,38 +181,44 @@
         const startBtn = document.getElementById("startBtn");
 
         let score = 0;
-        let morale = 6;
-        let logic = 4;
-        let insight = 2;
-        let dialogueText = "Aynadaki yansıman sana yabancı bakıyor. Whirling-in-Rags otel odasındasın.";
+        let timeRemaining = 22; // Dakika cinsinden döngü sayacı
+        let knowledgeCount = 0;
+        let frequency = 1;
+        let statusText = "Güneş sistemi sakin görünüyor. Güneş henüz patlamadı.";
 
         function resetGame() {
             score = 0;
-            morale = 6;
-            logic = 4;
-            insight = 2;
-            dialogueText = "Oda sessiz. Hafızanı geri kazanmak için bir hamle yapmalısın.";
+            timeRemaining = 22;
+            knowledgeCount = 0;
+            frequency = 1;
+            statusText = "Yeni döngü başladı. Hatıraların seninle birlikte kaldı.";
             menuOverlay.classList.remove("hidden");
         }
 
         function makeChoice(type) {
             menuOverlay.classList.add("hidden");
             if (type === 1) {
-                morale = Math.max(0, morale - 1);
-                logic += 1;
-                score += 15;
-                dialogueText = "Aynaya bağırdın! Camdaki çatlak yüzünü böldü. İç sesin: 'İyi iş dedektif.'";
+                knowledgeCount += 1;
+                timeRemaining = Math.max(0, timeRemaining - 3);
+                score += 35;
+                statusText = "Nomai yazıtlarını çözdün: Göz'ün koordinatları netleşiyor!";
             } else if (type === 2) {
+                frequency += 1;
+                timeRemaining = Math.max(0, timeRemaining - 2);
                 score += 25;
-                dialogueText = "Cebinden boş bir şişe ve kırık bir madeni para çıktı. Hayatta kalıyorsun.";
+                statusText = "Kuantum dalga boyu yakalandı. Ay konum değiştirdi.";
             } else if (type === 3) {
-                insight += 1;
-                score += 20;
-                dialogueText = "Yatağın altında eski bir defter buldun. Revachol'ün sokakları seni bekliyor.";
+                timeRemaining = Math.max(0, timeRemaining - 1);
+                score += 15;
+                statusText = "Kamp ateşinin çıtırtısı ruhunu dinlendirdi. Hatıralar taze.";
             }
 
-            if (morale <= 0) {
-                dialogueText = "MORAL ÇÖKÜŞÜ! Zihinsel olarak tükendin.";
+            if (timeRemaining <= 0) {
+                statusText = "SÜPERNOVA PATLADI! Döngü Başa Sarıyor...";
+                setTimeout(() => {
+                    timeRemaining = 22;
+                    statusText = "Heykel gözlerini açtı. Yeni bir döngüdesin dedektif.";
+                }, 2000);
             }
         }
 
@@ -222,37 +229,40 @@
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Arka Plan Izgarası
-            ctx.strokeStyle = "rgba(0, 240, 255, 0.04)";
-            for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-            for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+            // Uzay Arka Plan Noktaları (Yıldızlar)
+            ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.fillRect(50, 40, 3, 3);
+            ctx.fillRect(200, 100, 2, 2);
+            ctx.fillRect(450, 70, 4, 4);
+            ctx.fillRect(680, 150, 2, 2);
+            ctx.fillRect(300, 380, 3, 3);
 
             // Üst İstatistik Kutusu
             ctx.fillStyle = "#ffe600";
             ctx.font = "bold 12px 'Courier New'";
             ctx.textAlign = "left";
-            ctx.fillText(`MORAL: ${morale}/6  |  MANTIK: ${logic}  |  İÇGÖRÜ: ${insight}`, 15, 25);
+            ctx.fillText(`KALAN SÜRE: ${timeRemaining} DK  |  BİLGİ: ${knowledgeCount}  |  FREKANS: ${frequency}`, 15, 25);
             ctx.textAlign = "right";
             ctx.fillText(`SKOR: ${score}`, canvas.width - 15, 25);
 
-            // Ana Metin Konsolu Çerçevesi
+            // Ana Konsol Çerçevesi
             ctx.fillStyle = "#0d111c";
             ctx.fillRect(40, 50, canvas.width - 80, 280);
-            ctx.strokeStyle = "#00f0ff";
+            ctx.strokeStyle = "#ffe600";
             ctx.lineWidth = 1.5;
             ctx.strokeRect(40, 50, canvas.width - 80, 280);
 
             // Başlık
-            ctx.fillStyle = "#00f0ff";
+            ctx.fillStyle = "#ffe600";
             ctx.font = "bold 12px 'Courier New'";
             ctx.textAlign = "center";
-            ctx.fillText("--- REVACHOL İÇ TRIBUNAL AKIŞI ---", canvas.width / 2, 85);
+            ctx.fillText("--- GEMİ BİLGİSAYARI VE SİNYAL İZLEME ---", canvas.width / 2, 85);
 
-            // Diyalog Metni (Satırlara Bölme Yardımıyla)
+            // Durum Metni
             ctx.fillStyle = "#d0d8e8";
             ctx.font = "13px 'Courier New'";
             
-            let words = dialogueText.split(" ");
+            let words = statusText.split(" ");
             let line = "";
             let y = 135;
             
@@ -269,10 +279,10 @@
             }
             ctx.fillText(line, canvas.width / 2, y);
 
-            // Durum Notu
-            ctx.fillStyle = "#ff007f";
+            // Alt Not
+            ctx.fillStyle = "#00f0ff";
             ctx.font = "11px 'Courier New'";
-            ctx.fillText("Mobil dokunmatik butonları kullanarak kararlarını al.", canvas.width / 2, 305);
+            ctx.fillText("Dokunmatik butonları kullanarak evrenin sırlarını keşfet.", canvas.width / 2, 305);
         }
 
         function mainLoop() {
