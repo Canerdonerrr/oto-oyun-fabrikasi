@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - Stable Engine Edition</title>
+    <title>NeonArcade Hub - Mobile Engine v1.0</title>
     <style>
         :root {
             --bg-color: #030408;
-            --panel-bg: rgba(10, 12, 22, 0.96);
+            --panel-bg: rgba(10, 12, 22, 0.98);
             --pure-cyan: #00f0ff;
             --pure-pink: #ff007f;
             --pure-yellow: #ffe600;
@@ -16,68 +16,66 @@
             --border-glow: rgba(0, 240, 255, 0.4);
         }
 
+        * { box-sizing: border-box; }
+
         body {
             background: var(--bg-color);
             color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
             text-align: center;
             margin: 0;
-            padding: 6px;
+            padding: 4px;
             overflow: hidden;
-            touch-action: none;
+            touch-action: manipulation;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         .header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1250px;
-            margin: 0 auto 6px auto;
-            padding: 6px 14px;
+            max-width: 800px;
+            margin: 0 auto 4px auto;
+            padding: 6px 12px;
             background: var(--panel-bg);
             border: 1px solid var(--border-glow);
             border-radius: 6px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
         }
 
         h1 {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: var(--pure-cyan);
             margin: 0;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .menu-btn-top {
             background: rgba(0, 240, 255, 0.1);
             color: var(--pure-cyan);
             border: 1px solid var(--pure-cyan);
-            padding: 4px 10px;
-            font-size: 0.7rem;
+            padding: 4px 8px;
+            font-size: 0.65rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
             border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .menu-btn-top:hover {
-            background: var(--pure-cyan);
-            color: #000;
         }
 
         .main-layout {
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 10px;
-            max-width: 1300px;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .canvas-container {
             position: relative;
-            display: inline-block;
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         #gameCanvas {
@@ -85,53 +83,79 @@
             border: 1px solid rgba(0, 240, 255, 0.5);
             border-radius: 6px;
             display: block;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-            width: 820px;
-            height: 750px;
-            max-width: 68vw;
-            max-height: 78vh;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);
+            width: 100%;
+            max-width: 760px;
+            height: 480px;
+            touch-action: none;
+        }
+
+        .mobile-controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
+            max-width: 760px;
+            padding: 0 2px;
+        }
+
+        .ctrl-btn {
+            background: rgba(0, 240, 255, 0.08);
+            color: var(--pure-cyan);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            padding: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.1s;
+        }
+
+        .ctrl-btn:active {
+            background: var(--pure-cyan);
+            color: #000;
         }
 
         .sidebar {
-            width: 360px;
+            width: 100%;
+            max-width: 760px;
             background: var(--panel-bg);
             border: 1px solid var(--border-glow);
             border-radius: 6px;
-            padding: 8px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
-            max-height: 78vh;
+            gap: 4px;
+            max-height: 140px;
             overflow-y: auto;
         }
 
         .sidebar h3 {
-            font-size: 0.78rem;
+            font-size: 0.7rem;
             color: var(--pure-yellow);
-            margin: 2px 0 4px 0;
+            margin: 2px 0;
         }
 
         .game-btn {
             background: rgba(15, 18, 35, 0.9);
             color: var(--text-main);
             border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 6px 8px;
-            font-size: 0.66rem;
+            padding: 6px;
+            font-size: 0.62rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
             border-radius: 4px;
             text-align: left;
-            transition: all 0.2s ease;
             display: flex;
-            flex-direction: column;
-            gap: 2px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .game-btn span { font-size: 0.52rem; color: #8892b0; }
-        .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.1); }
         .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); }
+        .game-btn span { font-size: 0.52rem; color: #8892b0; }
 
         .overlay {
             position: absolute;
@@ -147,64 +171,48 @@
         }
 
         .overlay.hidden { display: none; }
-
-        .overlay h2 {
-            font-size: 1.5rem;
-            margin-bottom: 6px;
-            color: var(--pure-pink);
-        }
-
-        .overlay p {
-            font-size: 0.76rem;
-            color: #b8c0d8;
-            margin-bottom: 15px;
-            padding: 0 20px;
-            max-width: 480px;
-            line-height: 1.4;
-        }
+        .overlay h2 { font-size: 1.2rem; margin-bottom: 6px; color: var(--pure-pink); }
+        .overlay p { font-size: 0.7rem; color: #b8c0d8; margin-bottom: 12px; padding: 0 15px; line-height: 1.3; }
 
         .btn {
             background: linear-gradient(135deg, var(--pure-cyan), #0077ff);
             color: #000000;
             border: 1px solid #ffffff;
-            padding: 8px 20px;
-            font-size: 0.8rem;
+            padding: 8px 18px;
+            font-size: 0.75rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
             border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
-
-        .btn:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <div class="header-bar">
-        <h1>⚡ NEONARCADE HUB : STABLE ENGINE EDITION ⚡</h1>
-        <button class="menu-btn-top" onclick="returnToMainMenu()">🏠 OYUN MENÜSÜ</button>
+        <h1>⚡ NEONARCADE : MOBILE ENGINE ⚡</h1>
+        <button class="menu-btn-top" onclick="resetGame()">🔄 YENİDEN</button>
     </div>
 
     <div class="main-layout">
         <div class="canvas-container">
-            <canvas id="gameCanvas" width="820" height="750"></canvas>
+            <canvas id="gameCanvas" width="760" height="480"></canvas>
             
             <div id="menuOverlay" class="overlay">
-                <h2 id="menuTitle">OYUN BAŞLIYOR</h2>
-                <p id="menuDesc">Seçilen oyunun motoru başlatılmaya hazır.</p>
-                <button class="btn" id="startBtn">OYUNU BAŞLAT</button>
-            </div>
-
-            <div id="gameOverOverlay" class="overlay hidden">
-                <h2>SEANS TAMAMLANDI</h2>
-                <p id="finalScoreText">Skor: 0</p>
-                <button class="btn" id="restartBtn">YENİDEN DENE</button>
+                <h2 id="menuTitle">1. DISCO ELYSIUM</h2>
+                <p id="menuDesc">Ayna karşısında iç seslerinle yüzleşme ve mantık yönetimi. Dokunmatik butonları kullanarak kararlar al.</p>
+                <button class="btn" id="startBtn">OYUNA BAŞLA</button>
             </div>
         </div>
 
+        <!-- Android Dokunmatik Kontrol Paneli -->
+        <div class="mobile-controls" id="controlsContainer">
+            <button class="ctrl-btn" onclick="handleAction(1)">[1] Aynaya Sert Tepki (Moral -1)</button>
+            <button class="ctrl-btn" onclick="handleAction(2)">[2] Defteri İncele (+25 Skor)</button>
+        </div>
+
         <div class="sidebar">
-            <h3>🕹️ OYUN LİSTESİ (25 ÖZGÜN MOTOR)</h3>
+            <h3>🕹️ AKTİF MOTOR SEÇKİSİ (Sıralı Entegrasyon)</h3>
             <div id="gameListContainer"></div>
         </div>
     </div>
@@ -214,48 +222,48 @@
         const ctx = canvas.getContext("2d");
 
         const menuOverlay = document.getElementById("menuOverlay");
-        const gameOverOverlay = document.getElementById("gameOverOverlay");
-        const finalScoreText = document.getElementById("finalScoreText");
         const startBtn = document.getElementById("startBtn");
-        const restartBtn = document.getElementById("restartBtn");
         const menuTitle = document.getElementById("menuTitle");
         const menuDesc = document.getElementById("menuDesc");
         const gameListContainer = document.getElementById("gameListContainer");
+        const controlsContainer = document.getElementById("controlsContainer");
 
+        // Detaylı ve yalıtılmış tekil motor listesi (Her biri sırayla derinleştirilerek eklenecek)
         const gamesList = [
-            { id: 0, name: "1. Disco Elysium", genre: "Psikolojik Metin & İç Ses", desc: "Ayna karşısında iç seslerinle yüzleşme ve mantık yönetimi." },
-            { id: 1, name: "2. Outer Wilds", genre: "Zaman Döngüsü Keşfi", desc: "Süpernova patlamadan önce gezegensel verileri toplama." },
-            { id: 2, name: "3. SOMA", genre: "Su Altı Bilinç Terminali", desc: "Okyanus tabanında sistem kurtarma ve veri sorgulama." },
-            { id: 3, name: "4. Return of Obra Dinn", genre: "1-Bit Ölüm Analizi", desc: "Kaderi mühürlenmiş denizcilerin loglarını inceleme." },
-            { id: 4, name: "5. Inscryption", genre: "Karanlık Kart Düellosu", desc: "Kurban vererek yaratık çağırma ve canavar boss savaşı." },
-            { id: 5, name: "6. Factorio", genre: "Otomasyon & Bant Yönetimi", desc: "Otomatik demir bantları kurarak kaynak üretme." },
-            { id: 6, name: "7. Frostpunk", genre: "Jeneratör & Isı Dengesi", desc: "Donmuş dünyada kömür ve ısı optimizasyonu sağlama." },
-            { id: 7, name: "8. Cities: Skylines", genre: "Metropol Planlama", desc: "Bütçe ve trafik akışını dengede tutma." },
-            { id: 8, name: "9. Oxygen Not Included", genre: "Termodinamik Gaz Döngüsü", desc: "Kolonide basınç ve gaz akışını yönetme." },
-            { id: 9, name: "10. RimWorld", genre: "Yapay Zeka Kolonisi", desc: "Kolonist moral ve güvenlik takibi." },
-            { id: 10, name: "11. Hades", genre: "Yeraltı Hack & Slash", desc: "Fareyle dash atarak yeraltı varlıklarını alt etme." },
-            { id: 11, name: "12. Slay the Spire", genre: "Taktiksel Kart Destesi", desc: "Saldırı ve blok kartlarıyla rakip zırhını kırma." },
-            { id: 12, name: "13. Hollow Knight", genre: "Gotik Zindan Platformu", desc: "Zıplama ve kılıç darbeleriyle yaratıkları temizleme." },
-            { id: 13, name: "14. Celeste", genre: "Hassas Uçurum Tırmanışı", desc: "Yönlü dash yeteneğiyle zirveye ulaşma." },
-            { id: 14, name: "15. Dead Cells", genre: "Roguevania Aksiyonu", desc: "Hızlı silah kombinasyonları ve zindan yağmalama." },
-            { id: 15, name: "16. Baba Is You", genre: "Kural Değiştirme Bulmacası", desc: "Mantık cümlelerini değiştirerek objeleri yönetme." },
-            { id: 16, name: "17. Portal 2", genre: "Fizik & Portal Bulmacası", desc: "Enerji topunu engellerden sektirerek hedefe ulaştırma." },
-            { id: 17, name: "18. The Witness", genre: "Çevresel Izgara Mantığı", desc: "Labyrinth çizgilerini kurallara göre tamamlama." },
-            { id: 18, name: "19. Returnal", genre: "Uzay Bullet-Hell Nişancı", desc: "Düşman mermilerinden kaçarak hayatta kalma." },
-            { id: 19, name: "20. Tunic", genre: "Antik Şifre Çözme", desc: "Runik sembolleri eşleştirerek kapı açma." },
-            { id: 20, name: "21. Journey", genre: "Çöl Uçuşu & Kalıntılar", desc: "Kuma gömülü kalıntıları toplayarak yükseklere süzülme." },
-            { id: 21, name: "22. Subnautica", genre: "Derin Deniz Kaynakçılığı", desc: "Okyanus dibinde titanyum madeni toplama." },
-            { id: 22, name: "23. Stardew Valley", genre: "Çiftçilik & Sulama", desc: "Toprağı sulayarak ekinleri büyütme." },
-            { id: 23, name: "24. Papers, Please", genre: "Sınır Kapısı Denetimi", desc: "Gelen yolcuların pasaportlarını onaylama / reddetme." },
-            { id: 24, name: "25. Alan Wake 2", genre: "El Feneri Gerilimi", desc: "Karanlık varlıklara ışık tutarak hikayeyi aydınlatma." }
+            { 
+                id: 0, 
+                name: "1. Disco Elysium", 
+                genre: "Psikolojik Metin & İç Ses", 
+                desc: "Ayna karşısında iç seslerinle yüzleşme ve mantık yönetimi.",
+                controlsHtml: `
+                    <button class="ctrl-btn" onclick="handleAction(1)">[1] Aynaya Sert Tepki (Moral -1)</button>
+                    <button class="ctrl-btn" onclick="handleAction(2)">[2] Defteri İncele (+25 Skor)</button>
+                `
+            },
+            { 
+                id: 1, 
+                name: "2. Outer Wilds", 
+                genre: "Zaman Döngüsü Keşfi", 
+                desc: "Süpernova patlamadan önce gezegensel verileri toplama.",
+                controlsHtml: `
+                    <button class="ctrl-btn" onclick="handleAction(1)">[1] Gezegeni Tara (+30 Skor)</button>
+                    <button class="ctrl-btn" onclick="handleAction(2)">[2] Kamp Ateşi Dinlen (+10 Can)</button>
+                `
+            }
         ];
 
         let activeGameIndex = 0;
-        let gameState = "MENU";
         let score = 0;
-        let gameTime = 0;
         let engineData = {};
-        let keys = {};
+
+        function initEngineState() {
+            score = 0;
+            if (activeGameIndex === 0) {
+                engineData = { morale: 6, logic: 4, text: "Aynadasın. Ne yapacaksın dedektif?" };
+            } else if (activeGameIndex === 1) {
+                engineData = { timeRemaining: 60, scanned: 0, text: "Gezegen verileri toplanmayı bekliyor." };
+            }
+        }
 
         function buildSidebar() {
             gameListContainer.innerHTML = "";
@@ -270,249 +278,102 @@
 
         function switchGame(index) {
             activeGameIndex = index;
-            document.querySelectorAll(".sidebar .game-btn").forEach((b, i) => {
-                b.classList.toggle("active", i === index);
-            });
+            buildSidebar();
             menuTitle.innerText = gamesList[index].name;
             menuDesc.innerText = gamesList[index].desc;
+            controlsContainer.innerHTML = gamesList[index].controlsHtml;
             menuOverlay.classList.remove("hidden");
-            gameOverOverlay.classList.add("hidden");
-            gameState = "MENU";
-        }
-
-        function returnToMainMenu() {
-            gameState = "MENU";
-            menuOverlay.classList.remove("hidden");
-            gameOverOverlay.classList.add("hidden");
-        }
-
-        function initEngineState() {
-            score = 0;
-            gameTime = 0;
-            engineData = {
-                x: 410, y: 375,
-                morale: 6, logic: 4, text: "Aynadasın. Ne yapacaksın?",
-                time: 60,
-                hp: 10, bossHp: 5,
-                iron: 0, coal: 50,
-                enemyX: 600, enemyY: 375, enemyHp: 8,
-                block: 10,
-                ballX: 100, ballY: 600, ballVx: 3, ballVy: -2, targetX: 700, targetY: 150,
-                titanium: 0, inspected: 0
-            };
-        }
-
-        function startGame() {
-            menuOverlay.classList.add("hidden");
-            gameOverOverlay.classList.add("hidden");
             initEngineState();
-            gameState = "PLAYING";
         }
 
-        function triggerGameOver(won) {
-            gameState = "GAMEOVER";
-            finalScoreText.innerText = (won ? "TEBRİKLER! GÖREV BAŞARILI! " : "SİMÜLASYON SONLANDI. ") + "Skor: " + score;
-            gameOverOverlay.classList.remove("hidden");
+        function resetGame() {
+            initEngineState();
+            menuOverlay.classList.add("hidden");
         }
 
-        // Global Event Dinleyicileri (Çakışmasız)
-        window.addEventListener("keydown", (e) => {
-            keys[e.key] = true;
-            if (gameState !== "PLAYING") return;
-
-            // Oyun bazlı hızlı tuş kontrolleri
-            if (activeGameIndex === 0) { // Disco Elysium
-                if (e.key === "1") { engineData.morale--; score += 15; engineData.text = "Sert bir tepki verdin. Mantık arttı, moral azaldı."; }
-                if (e.key === "2") { score += 25; engineData.text = "Defteri inceledin. Whirling-in-Rags otelindesin."; }
-            } else if (activeGameIndex === 4 && e.key === "1") { // Inscryption
-                score += 40; engineData.bossHp--; 
-                if (engineData.bossHp <= 0) triggerGameOver(true);
-            } else if (activeGameIndex === 11) { // Slay the Spire
-                if (e.key === "1") { engineData.enemyHp -= 4; score += 20; }
-                if (e.key === "2") { engineData.block += 5; }
-                if (engineData.enemyHp <= 0) triggerGameOver(true);
-            } else if (activeGameIndex === 23) { // Papers Please
-                if (e.key.toLowerCase() === "y") { engineData.inspected++; score += 25; }
-                if (e.key.toLowerCase() === "n") { engineData.inspected++; score += 10; }
-            }
-        });
-
-        window.addEventListener("keyup", (e) => { keys[e.key] = false; });
-
-        canvas.addEventListener("click", (e) => {
-            if (gameState !== "PLAYING") return;
-            let rect = canvas.getBoundingClientRect();
-            let mx = e.clientX - rect.left;
-            let my = e.clientY - rect.top;
-
-            if (activeGameIndex === 10) { // Hades Dash
-                engineData.x = mx; engineData.y = my; score += 10;
-                if (Math.hypot(mx - engineData.enemyX, my - engineData.enemyY) < 50) {
-                    engineData.enemyHp -= 3;
-                    if (engineData.enemyHp <= 0) triggerGameOver(true);
+        function handleAction(actionType) {
+            menuOverlay.classList.add("hidden");
+            if (activeGameIndex === 0) {
+                if (actionType === 1) {
+                    engineData.morale = Math.max(0, engineData.morale - 1);
+                    score += 15;
+                    engineData.text = "Sert bir tepki verdin! İç sesler sessizleşti.";
+                } else if (actionType === 2) {
+                    score += 25;
+                    engineData.text = "Whirling-in-Rags otelindesin. Defterde ipucu buldun.";
                 }
-            } else if (activeGameIndex === 21) { // Subnautica Maden
-                if (mx > 330 && mx < 490 && my > 310 && my < 470) {
-                    engineData.titanium++; score += 15;
-                    if (engineData.titanium >= 5) triggerGameOver(true);
-                }
-            } else if (activeGameIndex === 22) { // Stardew Sulama
-                score += 10;
-                if (score >= 80) triggerGameOver(true);
-            }
-        });
-
-        startBtn.onclick = startGame;
-        restartBtn.onclick = startGame;
-
-        function update() {
-            if (gameState !== "PLAYING") return;
-            gameTime++;
-
-            let spd = 4;
-            if (keys["ArrowLeft"] || keys["a"]) engineData.x -= spd;
-            if (keys["ArrowRight"] || keys["d"]) engineData.x += spd;
-
-            // Motor güncellemeleri
-            if (activeGameIndex === 1 && gameTime % 60 === 0) {
-                if (engineData.time > 0) engineData.time--;
-                else triggerGameOver(false);
-            } else if (activeGameIndex === 5 && gameTime % 30 === 0) {
-                engineData.iron += 2; score += 5;
-                if (engineData.iron >= 30) triggerGameOver(true);
-            } else if (activeGameIndex === 6 && gameTime % 40 === 0) {
-                engineData.coal -= 3; score += 3;
-                if (engineData.coal <= 0) triggerGameOver(false);
-            } else if (activeGameIndex === 16) { // Portal fizik topu
-                engineData.ballX += engineData.ballVx; engineData.ballY += engineData.ballVy;
-                if (engineData.ballX < 40 || engineData.ballX > 780) engineData.ballVx *= -1;
-                if (engineData.ballY < 40 || engineData.ballY > 710) engineData.ballVy *= -1;
-                if (Math.hypot(engineData.ballX - engineData.targetX, engineData.ballY - engineData.targetY) < 30) {
-                    triggerGameOver(true);
+            } else if (activeGameIndex === 1) {
+                if (actionType === 1) {
+                    engineData.scanned++;
+                    score += 30;
+                    engineData.text = `Kalıntı tarandı! Toplam: ${engineData.scanned}`;
+                } else if (actionType === 2) {
+                    score += 10;
+                    engineData.text = "Kamp ateşinde zaman döngüsü hatırlandı.";
                 }
             }
         }
+
+        startBtn.onclick = () => {
+            menuOverlay.classList.add("hidden");
+            initEngineState();
+        };
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Arka Plan Izgara
-            ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
-            for (let x = 0; x < canvas.width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-            for (let y = 0; y < canvas.height; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+            // Cyberpunk Arka Plan Izgarası
+            ctx.strokeStyle = "rgba(0, 240, 255, 0.04)";
+            for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-            // Üst Bilgi Barı
+            // Üst Bilgi Bantları
             ctx.fillStyle = "#00f0ff";
-            ctx.font = "bold 13px 'Courier New'";
+            ctx.font = "bold 12px 'Courier New'";
             ctx.textAlign = "left";
-            ctx.fillText(`MOTOR: ${gamesList[activeGameIndex].name}`, 20, 30);
+            ctx.fillText(`MOTOR: ${gamesList[activeGameIndex].name}`, 15, 25);
             ctx.textAlign = "right";
-            ctx.fillText(`SKOR: ${score}`, canvas.width - 20, 30);
+            ctx.fillText(`SKOR: ${score}`, canvas.width - 15, 25);
 
-            // Oyun İçi Render
+            // Oyun İçi Dinamik Render
             ctx.save();
-            switch(activeGameIndex) {
-                case 0: // Disco Elysium
-                    ctx.fillStyle = "#ffffff"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`Moral: ${engineData.morale} / 6  |  Mantık: ${engineData.logic}`, canvas.width/2, 90);
-                    ctx.fillStyle = "#111625"; ctx.fillRect(160, 220, 500, 260);
-                    ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(160, 220, 500, 260);
-                    ctx.fillStyle = "#d0d8e8"; ctx.font = "13px 'Courier New'"; ctx.textAlign = "left";
-                    ctx.fillText(engineData.text, 190, 270);
-                    ctx.fillStyle = "#00f0ff";
-                    ctx.fillText("[1] Aynaya sert tepki ver (Moral -1)", 190, 360);
-                    ctx.fillText("[2] Not defterini oku (Skor +25)", 190, 400);
-                    break;
+            if (activeGameIndex === 0) {
+                // Disco Elysium Arayüzü
+                ctx.fillStyle = "#ffffff"; ctx.textAlign = "center";
+                ctx.fillText(`Moral: ${engineData.morale} / 6   |   Mantık: ${engineData.logic}`, canvas.width/2, 70);
 
-                case 1: // Outer Wilds
-                    ctx.fillStyle = "#ffe600"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`SÜPERNOVA PATLAMASINA KALAN: ${engineData.time} SANİYE`, canvas.width/2, 100);
-                    ctx.fillStyle = "#00f0ff"; ctx.fillRect(260, 260, 300, 180);
-                    ctx.fillStyle = "#000"; ctx.fillText("Gezegen Kalıntıları Taranıyor...", canvas.width/2, 355);
-                    break;
+                ctx.fillStyle = "#0d111c"; ctx.fillRect(80, 110, 600, 240);
+                ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(80, 110, 600, 240);
 
-                case 4: // Inscryption
-                    ctx.fillStyle = "#9d00ff"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`KORU KARTI DÜELLOSU | Rakip Can: ${engineData.bossHp}`, canvas.width/2, 90);
-                    ctx.fillStyle = "#ff007f"; ctx.fillText("[1] Tuşuna basarak karta kurban ver ve saldır!", canvas.width/2, 500);
-                    break;
+                ctx.fillStyle = "#00f0ff"; ctx.font = "11px 'Courier New'";
+                ctx.fillText("--- BİLİNÇ AKIŞI TERMINALI ---", canvas.width/2, 145);
 
-                case 5: // Factorio
-                    ctx.fillStyle = "#ff6600"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`ÜRETİLEN DEMİR: ${engineData.iron} / 30`, canvas.width/2, 100);
-                    ctx.fillStyle = "#222"; ctx.fillRect(200, 320, 420, 80);
-                    ctx.fillStyle = "#ffcc00"; ctx.fillRect(220 + (gameTime % 360), 345, 30, 30);
-                    break;
+                ctx.fillStyle = "#d0d8e8"; ctx.font = "13px 'Courier New'";
+                ctx.fillText(engineData.text, canvas.width/2, 225);
+            } else if (activeGameIndex === 1) {
+                // Outer Wilds Arayüzü
+                ctx.fillStyle = "#ffe600"; ctx.textAlign = "center";
+                ctx.fillText(`Taranan Kalıntı: ${engineData.scanned}`, canvas.width/2, 70);
 
-                case 6: // Frostpunk
-                    ctx.fillStyle = "#00f0ff"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`JENERATÖR KÖMÜRÜ: ${engineData.coal}`, canvas.width/2, 100);
-                    ctx.fillStyle = "#1b2838"; ctx.beginPath(); ctx.arc(canvas.width/2, 380, 90, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = "#ff5500"; ctx.beginPath(); ctx.arc(canvas.width/2, 380, 40, 0, Math.PI*2); ctx.fill();
-                    break;
+                ctx.fillStyle = "#151828"; ctx.fillRect(80, 110, 600, 240);
+                ctx.strokeStyle = "#ffe600"; ctx.strokeRect(80, 110, 600, 240);
 
-                case 10: // Hades
-                    ctx.fillStyle = "#ff007f"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`YERALTI DÖVÜŞÜ | Düşman Canı: ${engineData.enemyHp}`, canvas.width/2, 90);
-                    ctx.fillText("Fareye tıklayarak Dash at ve düşmana yaklaş!", canvas.width/2, 120);
-                    ctx.fillStyle = "#00f0ff"; ctx.beginPath(); ctx.arc(engineData.x, engineData.y, 16, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = "#ff3344"; ctx.beginPath(); ctx.arc(engineData.enemyX, engineData.enemyY, 22, 0, Math.PI*2); ctx.fill();
-                    break;
+                ctx.fillStyle = "#ffe600"; ctx.font = "11px 'Courier New'";
+                ctx.fillText("--- NOMAI UYGARLIĞI ARŞİVİ ---", canvas.width/2, 145);
 
-                case 11: // Slay the Spire
-                    ctx.fillStyle = "#ffe600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`BLOK: ${engineData.block} | DÜŞMAN CAN: ${engineData.enemyHp}`, canvas.width/2, 90);
-                    ctx.fillStyle = "#00f0ff";
-                    ctx.fillText("[1] Strike Atk Vur", 260, 360);
-                    ctx.fillText("[2] Defend Blok Kazan", 540, 360);
-                    break;
-
-                case 16: // Portal 2
-                    ctx.fillStyle = "#ff6600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText("PORTAL FİZİK TOPU", canvas.width/2, 90);
-                    ctx.fillStyle = "#00ff66"; ctx.fillRect(engineData.targetX-20, engineData.targetY-20, 40, 40);
-                    ctx.fillStyle = "#00f0ff"; ctx.beginPath(); ctx.arc(engineData.ballX, engineData.ballY, 12, 0, Math.PI*2); ctx.fill();
-                    break;
-
-                case 21: // Subnautica
-                    ctx.fillStyle = "#0077ff"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`DERİNLİK: 45m | TİTANYUM: ${engineData.titanium} / 5`, canvas.width/2, 90);
-                    ctx.fillText("Sarı maden cevherine fareyle tıklayarak topla!", canvas.width/2, 120);
-                    ctx.fillStyle = "#ffe600"; ctx.fillRect(330, 310, 160, 160);
-                    break;
-
-                case 22: // Stardew Valley
-                    ctx.fillStyle = "#00ff66"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`ÇİFTLİK SULAMA | Skor: ${score} / 80`, canvas.width/2, 90);
-                    ctx.fillText("Ekrana tıklayarak tarlayı sula ve mahsul üret!", canvas.width/2, 120);
-                    ctx.fillStyle = "#8b4513"; ctx.fillRect(260, 300, 300, 180);
-                    break;
-
-                case 23: // Papers Please
-                    ctx.fillStyle = "#ffe600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText(`SINIR KAPISI | İncelenen: ${engineData.inspected}`, canvas.width/2, 90);
-                    ctx.fillStyle = "#1e2235"; ctx.fillRect(240, 220, 340, 260);
-                    ctx.fillStyle = "#ffffff"; ctx.font = "13px 'Courier New'"; ctx.textAlign = "left";
-                    ctx.fillText("Pasaport: ARSTOTZKA CITIZEN", 270, 270);
-                    ctx.fillStyle = "#00ff66"; ctx.fillText("[Y] Onayla", 270, 380);
-                    ctx.fillStyle = "#ff3344"; ctx.fillText("[N] Reddet", 450, 380);
-                    break;
-
-                default:
-                    ctx.fillStyle = "#00f0ff"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
-                    ctx.fillText("Bu oyun motoru aktif ve çalışmaya hazır.", canvas.width/2, 350);
-                    break;
+                ctx.fillStyle = "#ffffff"; ctx.font = "13px 'Courier New'";
+                ctx.fillText(engineData.text, canvas.width/2, 225);
             }
             ctx.restore();
         }
 
         function mainLoop() {
-            update();
             draw();
             requestAnimationFrame(mainLoop);
         }
 
         buildSidebar();
+        initEngineState();
         mainLoop();
     </script>
 </body>
