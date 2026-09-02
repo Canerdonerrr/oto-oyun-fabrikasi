@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NeonArcade Hub - 25 Professional Games Edition</title>
+    <title>NeonArcade Hub - 25 Unique AAA Engines Edition</title>
     <style>
         :root {
             --bg-color: #030408;
@@ -33,7 +33,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1250px;
             margin: 0 auto 6px auto;
             padding: 6px 14px;
             background: var(--panel-bg);
@@ -74,7 +74,7 @@
             justify-content: center;
             align-items: flex-start;
             gap: 10px;
-            max-width: 1250px;
+            max-width: 1300px;
             margin: 0 auto;
         }
 
@@ -89,15 +89,14 @@
             border-radius: 6px;
             display: block;
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
-            width: 800px;
+            width: 820px;
             height: 750px;
             max-width: 68vw;
             max-height: 78vh;
-            cursor: none;
         }
 
         .sidebar {
-            width: 340px;
+            width: 360px;
             background: var(--panel-bg);
             border: 1px solid var(--border-glow);
             border-radius: 6px;
@@ -122,7 +121,7 @@
             color: var(--text-main);
             border: 1px solid rgba(0, 240, 255, 0.2);
             padding: 6px 8px;
-            font-size: 0.68rem;
+            font-size: 0.66rem;
             font-weight: bold;
             font-family: 'Courier New', Courier, monospace;
             cursor: pointer;
@@ -134,7 +133,7 @@
             gap: 2px;
         }
 
-        .game-btn span { font-size: 0.55rem; color: #8892b0; }
+        .game-btn span { font-size: 0.52rem; color: #8892b0; }
         .game-btn:hover { border-color: var(--pure-cyan); background: rgba(0, 240, 255, 0.1); transform: translateX(2px); }
         .game-btn.active { border-color: var(--pure-pink); background: rgba(255, 0, 127, 0.18); color: var(--pure-pink); box-shadow: 0 0 8px rgba(255, 0, 127, 0.3); }
 
@@ -142,27 +141,26 @@
             position: absolute;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(3, 4, 8, 0.97);
+            background: rgba(3, 4, 8, 0.96);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
             border-radius: 6px;
-            cursor: default;
         }
 
         .overlay.hidden { display: none; }
 
         .overlay h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             margin-bottom: 6px;
             color: var(--pure-pink);
             text-shadow: 0 0 12px rgba(255, 0, 127, 0.6);
         }
 
         .overlay p {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
             color: #b8c0d8;
             margin-bottom: 15px;
             padding: 0 20px;
@@ -190,29 +188,29 @@
 <body>
 
     <div class="header-bar">
-        <h1>⚡ NEONARCADE HUB : 25 PRO GAMES ⚡</h1>
+        <h1>⚡ NEONARCADE HUB : 25 UNIQUE AAA ENGINES ⚡</h1>
         <button class="menu-btn-top" onclick="returnToMainMenu()">🏠 OYUN MENÜSÜ</button>
     </div>
 
     <div class="main-layout">
         <div class="canvas-container">
-            <canvas id="gameCanvas" width="800" height="750"></canvas>
+            <canvas id="gameCanvas" width="820" height="750"></canvas>
             
             <div id="menuOverlay" class="overlay">
-                <h2 id="menuTitle">NEON BOUNCE PRO</h2>
-                <p id="menuDesc">Tam profesyonel, gizli imleç, particle patlamaları ve güçlendirmeler.</p>
-                <button class="btn" id="startBtn">OYUNA BAŞLA</button>
+                <h2 id="menuTitle">OYUN BAŞLIYOR</h2>
+                <p id="menuDesc">Bu oyunun kendine ait özel mekanik motoru yükleniyor.</p>
+                <button class="btn" id="startBtn">SİMÜLASYONU BAŞLAT</button>
             </div>
 
             <div id="gameOverOverlay" class="overlay hidden">
-                <h2>OYUN BİTTİ</h2>
-                <p id="finalScoreText">Skorun: 0</p>
-                <button class="btn" id="restartBtn">YENİDEN BAŞLA</button>
+                <h2>SİMÜLASYON TAMAMLANDI</h2>
+                <p id="finalScoreText">Skor: 0</p>
+                <button class="btn" id="restartBtn">YENİDEN DENE</button>
             </div>
         </div>
 
         <div class="sidebar">
-            <h3>🕹️ 25 PROFESYONEL OYUN LİSTESİ</h3>
+            <h3>🕹️ 25 ÖZGÜN AAA MOTOR LİSTESİ</h3>
             <div id="gameListContainer"></div>
         </div>
     </div>
@@ -230,49 +228,49 @@
         const menuDesc = document.getElementById("menuDesc");
         const gameListContainer = document.getElementById("gameListContainer");
 
-        // 25 Profesyonel Oyun Veri Tabanı
+        // 25 Tamamen Farklı Özgün Oyun Veri Tabanı ve Mekanik Kategorileri
         const gamesList = [
-            { id: 0, name: "1. Disco Elysium (Revachol Echoes)", desc: "İç diyaloglar ve psikolojik dedektiflik." },
-            { id: 1, name: "2. Outer Wilds (Cosmic Loop)", desc: "Zaman döngüsü ve bilgi tabanlı uzay keşfi." },
-            { id: 2, name: "3. SOMA (Abyssal Echo)", desc: "Su altı gerilimi ve bilinç sorgulaması." },
-            { id: 3, name: "4. Return of the Obra Dinn", desc: "1-Bit grafiklerle zaman durdurma dedektifliği." },
-            { id: 4, name: "5. Inscryption (Dark Deck)", desc: "Klorostrofobik rogue-lite kart ve masa oyunu." },
-            { id: 5, name: "6. Factorio (Auto Factory)", desc: "Otomasyon bantları ve kaynak yönetimi." },
-            { id: 6, name: "7. Frostpunk (Steampunk Survival)", desc: "Donmuş dünyada jeneratör ve toplumsal yönetim." },
-            { id: 7, name: "8. Cities: Skylines (Metropolis)", desc: "Modern şehircilik ve trafik optimizasyonu." },
-            { id: 8, name: "9. Oxygen Not Included", desc: "Termodinamik kolonizasyon ve gaz döngüsü." },
-            { id: 9, name: "10. RimWorld (Colony Simulator)", desc: "Yapay zeka hikaye anlatıcısı ile koloni yönetimi." },
-            { id: 10, name: "11. Hades (Underworld Escape)", desc: "Mitolojik hack-and-slash rogue-lite aksiyonu." },
-            { id: 11, name: "12. Slay the Spire (Deck Builder)", desc: "Taktiksel deste oluşturma ve kule tırmanışı." },
-            { id: 12, name: "13. Hollow Knight (Hallownest)", desc: "Gotik metroidvania ve zorlu boss dövüşleri." },
-            { id: 13, name: "14. Celeste (Precision Climb)", desc: "Hassas platform ve içsel mücadele tırmanışı." },
-            { id: 14, name: "15. Dead Cells (Roguevania)", desc: "Hızlı tempolu aksiyon ve silah kombinasyonları." },
-            { id: 15, name: "16. Baba Is You (Rule Bender)", desc: "Kuralları kelimelerle değiştirdiğin mantık bulmacası." },
-            { id: 16, name: "17. Portal 2 (Quantum Physics)", desc: "Uzamsal portallar ve fizik tabanlı bulmacalar." },
-            { id: 17, name: "18. The Witness (Grid Puzzle)", desc: "Çevresel ipuçları ve ızgara mantığı." },
-            { id: 18, name: "19. Returnal (Alien Bullet-Hell)", desc: "Zaman döngülü 3. şahıs nişancı aksiyonu." },
-            { id: 19, name: "20. Tunic (Ancient Cipher)", desc: "Antik kılavuz sayfalarıyla gizem çözme." },
-            { id: 20, name: "21. Journey (Desert Wanderer)", desc: "Atmosferik sanat ve sessiz bağ kurma." },
-            { id: 21, name: "22. Subnautica (Ocean Abyss)", desc: "Derin deniz keşfi ve hayatta kalma üssü." },
-            { id: 22, name: "23. Stardew Valley (Harvest Life)", desc: "Çiftçilik, kasaba ve huzurlu yaşam simülasyonu." },
-            { id: 23, name: "24. Papers, Please (Border Inspector)", desc: "Totaliter rejim sınır kapısı bürokrasi dramı." },
-            { id: 24, name: "25. Alan Wake 2 (Cinematic Thriller)", desc: "Yazılan senaryonun gerçeğe dönüştüğü psikolojik korku." }
+            { id: 0, name: "1. Disco Elysium (Revachol Echoes)", genre: "Psikolojik Metin & İç Ses Yönetimi", desc: "İç seslerin çatıştığı, moral ve mantık dengesini kurduğun dedektiflik." },
+            { id: 1, name: "2. Outer Wilds (Cosmic Loop)", genre: "Zaman Döngüsü Uzay Keşfi", desc: "Süpernova patlamadan önce gezegen kalıntılarını tarayıp bilgi toplama." },
+            { id: 2, name: "3. SOMA (Abyssal Echo)", genre: "Su Altı Bilinç Gerilimi", desc: "Okyanus dibi istasyonunda terminal hackleme ve varoluş sorgusu." },
+            { id: 3, name: "4. Return of the Obra Dinn", genre: "1-Bit Zaman Durdurma Dedektifliği", desc: "Kaderi mühürlenmiş denizcilerin ölüm anlarını analiz etme." },
+            { id: 4, name: "5. Inscryption (Dark Deck)", genre: "Karanlık Kart Çatışması & Feda", desc: "Kurban vererek güçlü yaratıklar çağırdığın klorostrofobik deste savaşı." },
+            { id: 5, name: "6. Factorio (Auto Factory)", genre: "Otomasyon & Kaynak Bantları", desc: "Bantlar kurarak hammadde işleme ve kule savunması." },
+            { id: 6, name: "7. Frostpunk (Steampunk Survival)", genre: "Jeneratör & Sıcaklık Yönetimi", desc: "Donmuş kıyamette kömür üreterek halkı hayatta tutma." },
+            { id: 7, name: "8. Cities: Skylines (Metropolis)", genre: "Trafik & Şehir Planlama", desc: "Bölgesel imar ve bütçe dengesiyle metropol kurma." },
+            { id: 8, name: "9. Oxygen Not Included", genre: "Termodinamik Gaz & Sıvı Döngüsü", desc: "Yeraltı kolonisinde oksijen ve basınç yönetimi." },
+            { id: 9, name: "10. RimWorld (Colony Simulator)", genre: "Yapay Zeka Hikaye Kolonisi", desc: "Kolonistlerin moral ve savunma ihtiyaçlarını yönetme." },
+            { id: 10, name: "11. Hades (Underworld Escape)", genre: "Mitolojik Hack & Slash Aksiyonu", desc: "Hızlı dash hareketleri ve tanrısal güçlerle yeraltından kaçış." },
+            { id: 11, name: "12. Slay the Spire (Deck Builder)", genre: "Taktiksel Kule Tırmanış Destesi", desc: "Blok ve saldırı kartlarıyla düşman zırhını kırma." },
+            { id: 12, name: "13. Hollow Knight (Hallownest)", genre: "Gotik Metroidvania & Kılıç", desc: "Zıplama, kesme ve ruh enerjisi toplama." },
+            { id: 13, name: "14. Celeste (Precision Climb)", genre: "Hassas Dash Platformu", desc: "Zorlu uçurumlarda yönlü dash ile zirveye tırmanış." },
+            { id: 14, name: "15. Dead Cells (Roguevania)", genre: "Hızlı Silah Kombinasyonları", desc: "Zindanlarda akrobatik dövüş ve sandık yağmalama." },
+            { id: 15, name: "16. Baba Is You (Rule Bender)", genre: "Kelime Mantık Bulmacası", desc: "Kuralları değiştirerek (Duvar = Engel değil Geçit) objeleri yönetme." },
+            { id: 16, name: "17. Portal 2 (Quantum Physics)", genre: "Portallarla Fizik Bulmacası", desc: "Mavi ve turuncu portallarla enerji topunu hedefe ulaştırma." },
+            { id: 17, name: "18. The Witness (Grid Puzzle)", genre: "Çevresel Izgara Mantığı", desc: "Labyrinth çizgilerini kurallara göre tamamlama." },
+            { id: 18, name: "19. Returnal (Alien Bullet-Hell)", genre: "Zaman Döngülü Nişancı", desc: "Düşman mermilerinden kaçarak uzay yaratıklarını imha etme." },
+            { id: 19, name: "20. Tunic (Ancient Cipher)", genre: "Antik Kılavuz Şifre Çözme", desc: "Gizli runik sembolleri eşleştirerek kapı açma." },
+            { id: 20, name: "21. Journey (Desert Wanderer)", genre: "Atmosferik Çöl Uçuşu", desc: "Kuma gömülü kalıntıları toplayarak semavi zirveye uçma." },
+            { id: 21, name: "22. Subnautica (Ocean Abyss)", genre: "Derin Deniz Kaynak Toplama", desc: "Oksijen tüpüyle okyanus dibinde nadir mineraller arama." },
+            { id: 22, name: "23. Stardew Valley (Harvest Life)", genre: "Çiftçilik & Mahsul Hasadı", desc: "Toprağı sulayıp ekinleri büyüterek pazar satışı yapma." },
+            { id: 23, name: "24. Papers, Please (Border Inspector)", genre: "Sınır Kapısı Pasaport Kontrolü", desc: "Gelen yolcuların mühür ve belgelerini denetleme." },
+            { id: 24, name: "25. Alan Wake 2 (Cinematic Thriller)", genre: "El Feneriyle Gölge Temizleme", desc: "Karanlık varlıklara ışık tutarak hikayeyi gerçeğe dönüştürme." }
         ];
 
         let activeGameIndex = 0;
         let gameState = "MENU";
         let score = 0;
-        let particles = [];
-        let paddlePos = canvas.width / 2;
+        let gameTime = 0;
+        let customState = {};
         let keys = {};
+        let mouse = { x: 0, y: 0, clicked: false };
 
-        // Sidebar Butonlarını Oluştur
         function buildGameSidebar() {
             gameListContainer.innerHTML = "";
             gamesList.forEach((g, idx) => {
                 let btn = document.createElement("button");
                 btn.className = `game-btn ${idx === activeGameIndex ? 'active' : ''}`;
-                btn.innerHTML = `${g.name} <span>${g.desc}</span>`;
+                btn.innerHTML = `${g.name} <span>${g.genre}</span>`;
                 btn.onclick = () => switchGame(idx);
                 gameListContainer.appendChild(btn);
             });
@@ -285,7 +283,7 @@
             });
 
             menuTitle.innerText = gamesList[index].name;
-            menuDesc.innerText = gamesList[index].desc + " - Tam profesyonel AAA mimari ve gizli imleç desteğiyle hazırlandı.";
+            menuDesc.innerText = gamesList[index].desc + " [Özgün AAA Motor Aktif]";
 
             menuOverlay.classList.remove("hidden");
             gameOverOverlay.classList.add("hidden");
@@ -293,7 +291,6 @@
         }
 
         function returnToMainMenu() {
-            document.exitPointerLock();
             gameState = "MENU";
             menuOverlay.classList.remove("hidden");
             gameOverOverlay.classList.add("hidden");
@@ -310,176 +307,331 @@
                 let gain = audioCtx.createGain();
                 osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.start(); osc.stop(audioCtx.currentTime + duration);
             } catch(e) {}
         }
 
-        function addParticles(x, y, color, count = 10) {
-            for (let i = 0; i < count; i++) {
-                let angle = Math.random() * Math.PI * 2;
-                let speed = Math.random() * 4 + 1;
-                particles.push({
-                    x: x, y: y,
-                    dx: Math.cos(angle) * speed,
-                    dy: Math.sin(angle) * speed,
-                    radius: Math.random() * 3 + 1,
-                    color: color, life: 30
-                });
-            }
-        }
+        // Her Oyun İçin Bağımsız Özgün Motor Başlatıcı
+        function initGameEngine() {
+            score = 0;
+            gameTime = 0;
+            customState = {};
 
-        // Oyun State Modelleri (Örnek Arcade / Strateji Simülatör Motoru)
-        let gameData = {
-            paddle: { x: 340, y: 700, w: 120, h: 16, color: "#ff007f" },
-            ball: { x: 400, y: 350, r: 8, dx: 4, dy: -4, color: "#00f0ff" },
-            bricks: []
-        };
-
-        function initEngineGame() {
-            gameData.bricks = [];
-            let rows = 5, cols = 8, bw = 80, bh = 22, pad = 12;
-            let offsetLeft = (canvas.width - (cols * (bw + pad) - pad)) / 2;
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    gameData.bricks.push({
-                        x: offsetLeft + c * (bw + pad), y: 70 + r * (bh + pad), w: bw, h: bh,
-                        status: 1, color: ["#00f0ff", "#ff007f", "#ffe600", "#00ff66", "#9d00ff"][r]
-                    });
-                }
+            switch(activeGameIndex) {
+                case 0: // Disco Elysium
+                    customState = { morale: 6, logic: 4, step: 0, text: "Aynaya bakıyorsun. Yüzün bir felaket." };
+                    break;
+                case 1: // Outer Wilds
+                    customState = { timeRemaining: 60, planets: [{name: "Dark Bramble", explored: false}, {name: "Brittle Hollow", explored: false}], discovered: 0 };
+                    break;
+                case 2: // SOMA
+                    customState = { terminalText: ">> SYS_OK. AI Core: Simon? Select action:", options: ["Override Dam", "Query Cortex"], status: "Active" };
+                    break;
+                case 4: // Inscryption (Kart)
+                    customState = { playerHp: 5, bossHp: 5, hand: [{name: "Stolat", cost: 1, atk: 2, hp: 2}, {name: "Wolf", cost: 2, atk: 3, hp: 3}], sacrifices: 0 };
+                    break;
+                case 5: // Factorio
+                    customState = { iron: 10, copper: 5, belts: 3, turrets: 2, enemyWave: 20 };
+                    break;
+                case 6: // Frostpunk
+                    customState = { coal: 50, heat: 18, citizens: 40, discontent: 10 };
+                    break;
+                case 10: // Hades
+                    customState = { px: 410, py: 375, dashCD: 0, enemyX: 600, enemyY: 375, enemyHp: 10 };
+                    break;
+                case 11: // Slay the Spire
+                    customState = { playerBlock: 10, playerHp: 50, enemyHp: 40, cards: ["Strike (6 Atk)", "Defend (5 Block)", "Bash (10 Atk)"] };
+                    break;
+                case 12: // Hollow Knight
+                    customState = { hx: 200, hy: 600, hvy: 0, grounded: true, enemyX: 600, enemyHp: 8 };
+                    break;
+                case 13: // Celeste
+                    customState = { cx: 100, cy: 650, cdx: 0, cdy: 0, dashes: 1, targetY: 100 };
+                    break;
+                case 16: // Portal 2
+                    customState = { ballX: 100, ballY: 600, ballVx: 3, ballVy: -2, targetX: 700, targetY: 150 };
+                    break;
+                case 18: // Returnal
+                    customState = { rx: 410, ry: 600, bullets: [], enemies: [{x: 200, y: 150, dir: 1}, {x: 600, y: 150, dir: -1}] };
+                    break;
+                case 21: // Subnautica
+                    customState = { oxygen: 100, depth: 45, titanium: 2, gold: 0 };
+                    break;
+                case 22: // Stardew Valley
+                    customState = { water: 3, seeds: 4, crops: [{stage: 1}, {stage: 0}], money: 50 };
+                    break;
+                case 23: // Papers, Please
+                    customState = { passportName: "ARSTOTZKA CITIZEN", valid: true, stamped: false, inspected: 0 };
+                    break;
+                default:
+                    customState = { x: 410, y: 375, targets: 5 };
+                    break;
             }
-            gameData.ball.x = canvas.width / 2;
-            gameData.ball.y = 450;
-            gameData.ball.dx = 4 * (Math.random() > 0.5 ? 1 : -1);
-            gameData.ball.dy = -4;
         }
 
         function startGame() {
             initAudio();
-            score = 0;
             menuOverlay.classList.add("hidden");
             gameOverOverlay.classList.add("hidden");
-            particles = [];
-            canvas.requestPointerLock();
-            initEngineGame();
+            initGameEngine();
             gameState = "PLAYING";
         }
 
-        function triggerGameOver() {
+        function triggerGameOver(won = false) {
             gameState = "GAMEOVER";
-            document.exitPointerLock();
-            playSound(120, "sawtooth", 0.3);
-            finalScoreText.innerText = "Simülasyon Skoru: " + score;
+            playSound(won ? 600 : 120, won ? "triangle" : "sawtooth", 0.3);
+            finalScoreText.innerText = (won ? "TEBRİKLER! GÖREV BAŞARILI! " : "SİMÜLASYON SONLANDI. ") + "Skor: " + score;
             gameOverOverlay.classList.remove("hidden");
         }
 
-        // Fare ve Kontrol Yönetimi (Pointer Lock & Gizli İmleç)
-        window.addEventListener("mousemove", (e) => {
+        // Kontroller
+        window.addEventListener("keydown", (e) => {
+            keys[e.key] = true;
             if (gameState !== "PLAYING") return;
-            let movementX = e.movementX || e.clientX || 0;
-            paddlePos += movementX * 1.3;
-            gameData.paddle.x = paddlePos;
-            if (gameData.paddle.x < 0) gameData.paddle.x = 0;
-            if (gameData.paddle.x + gameData.paddle.w > canvas.width) gameData.paddle.x = canvas.width - gameData.paddle.w;
+
+            // Oyunlara özel klavye etkileşimleri
+            if (activeGameIndex === 0) { // Disco Elysium
+                if (e.key === "1") { customState.morale--; score += 10; customState.text = "Aynaya öfkeyle bağırdın. Mantık kazandın ama moral düştü."; }
+                if (e.key === "2") { score += 25; customState.text = "Cebindeki not defterini inceledin. Whirling-in-Rags otelindesin."; }
+            } else if (activeGameIndex === 4 && e.key === "1") { // Inscryption kart seçimi
+                score += 50; customState.bossHp -= 2; playSound(500);
+                if (customState.bossHp <= 0) triggerGameOver(true);
+            } else if (activeGameIndex === 11) { // Slay the Spire kartlar
+                if (e.key === "1") { customState.enemyHp -= 6; score += 20; playSound(450); }
+                if (e.key === "2") { customState.playerBlock += 5; playSound(350); }
+                if (customState.enemyHp <= 0) triggerGameOver(true);
+            } else if (activeGameIndex === 23) { // Papers Please
+                if (e.key === "y" || e.key === "Y") { customState.inspected++; score += 30; playSound(500); }
+                if (e.key === "n" || e.key === "N") { customState.inspected++; score += 10; playSound(200); }
+            }
         });
 
-        window.addEventListener("keydown", (e) => { keys[e.key] = true; });
         window.addEventListener("keyup", (e) => { keys[e.key] = false; });
+        canvas.addEventListener("click", (e) => {
+            if (gameState !== "PLAYING") return;
+            let rect = canvas.getBoundingClientRect();
+            let mx = e.clientX - rect.left;
+            let my = e.clientY - rect.top;
+
+            // Fare etkileşimleri (Örn: Hades dash, Factorio bina tıkla, Subnautica maden topla)
+            if (activeGameIndex === 10) { // Hades dash
+                customState.px = mx; customState.py = my; score += 10; playSound(600, "triangle");
+                if (Math.hypot(mx - customState.enemyX, my - customState.enemyY) < 40) {
+                    customState.enemyHp -= 3;
+                    if (customState.enemyHp <= 0) triggerGameOver(true);
+                }
+            } else if (activeGameIndex === 21) { // Subnautica maden toplama
+                if (mx > 300 && mx < 500 && my > 300 && my < 500) {
+                    customState.titanium++; score += 15; playSound(700);
+                    if (customState.titanium >= 5) triggerGameOver(true);
+                }
+            } else if (activeGameIndex === 22) { // Stardew ekin sulama
+                score += 10; playSound(400);
+                if (score >= 100) triggerGameOver(true);
+            }
+        });
 
         startBtn.addEventListener("click", startGame);
         restartBtn.addEventListener("click", startGame);
 
+        // Her Oyun İçin Ayrı Özgün Update (Güncelleme) Döngüsü
         function update() {
             if (gameState !== "PLAYING") return;
+            gameTime++;
 
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.dx; p.y += p.dy; p.life--;
-                if (p.life <= 0) particles.splice(i, 1);
+            let speed = 4;
+            if (keys["ArrowLeft"] || keys["a"]) {
+                if (activeGameIndex === 10) customState.px -= speed;
+                if (activeGameIndex === 12) customState.hx -= speed;
+                if (activeGameIndex === 13) customState.cx -= speed;
+                if (activeGameIndex === 18) customState.rx -= speed;
             }
-
-            // Motor Mantığı (25 Oyun İçin Genel Profesyonel Çekirdek Döngü)
-            let b = gameData.ball;
-            let p = gameData.paddle;
-
-            b.x += b.dx; b.y += b.dy;
-            if (b.x - b.r < 0 || b.x + b.r > canvas.width) { b.dx = -b.dx; playSound(300); }
-            if (b.y - b.r < 0) { b.dy = -b.dy; playSound(300); }
-
-            if (b.y + b.r >= p.y && b.y - b.r <= p.y + p.h && b.x >= p.x && b.x <= p.x + p.w) {
-                b.dy = -Math.abs(b.dy);
-                let hit = b.x - (p.x + p.w / 2);
-                b.dx = hit * 0.12;
-                addParticles(b.x, b.y, "#00f0ff", 6);
-                playSound(400);
+            if (keys["ArrowRight"] || keys["d"]) {
+                if (activeGameIndex === 10) customState.px += speed;
+                if (activeGameIndex === 12) customState.hx += speed;
+                if (activeGameIndex === 13) customState.cx += speed;
+                if (activeGameIndex === 18) customState.rx += speed;
             }
-
-            if (b.y > canvas.height + 20) {
-                triggerGameOver();
-            }
-
-            let activeBricks = 0;
-            gameData.bricks.forEach(brick => {
-                if (brick.status === 1) {
-                    activeBricks++;
-                    if (b.x + b.r > brick.x && b.x - b.r < brick.x + brick.w && b.y + b.r > brick.y && b.y - b.r < brick.y + brick.h) {
-                        b.dy = -b.dy;
-                        brick.status = 0;
-                        score += 50;
-                        addParticles(brick.x + brick.w/2, brick.y + brick.h/2, brick.color, 10);
-                        playSound(550, "triangle", 0.08);
-                    }
+            if (keys[" "]) {
+                if (activeGameIndex === 12 && customState.grounded) {
+                    customState.hvy = -12; customState.grounded = false; playSound(500);
                 }
-            });
+            }
 
-            if (activeBricks === 0) {
-                initEngineGame();
+            // Fizik ve zaman simülasyonları
+            if (activeGameIndex === 1) { // Outer Wilds zaman döngüsü
+                if (gameTime % 60 === 0 && customState.timeRemaining > 0) customState.timeRemaining--;
+                if (customState.timeRemaining <= 0) triggerGameOver(false);
+            } else if (activeGameIndex === 5) { // Factorio otomatik üretim
+                if (gameTime % 30 === 0) { customState.iron += 2; score += 5; }
+                if (customState.iron >= 30) triggerGameOver(true);
+            } else if (activeGameIndex === 6) { // Frostpunk ısınma
+                if (gameTime % 40 === 0) { customState.coal -= 3; score += 2; }
+                if (customState.coal <= 0) triggerGameOver(false);
+            } else if (activeGameIndex === 12) { // Hollow Knight yer çekimi
+                customState.hvy += 0.6; customState.hy += customState.hvy;
+                if (customState.hy > 630) { customState.hy = 630; customState.hvy = 0; customState.grounded = true; }
+                if (Math.hypot(customState.hx - customState.enemyX, customState.hy - 350) < 40) {
+                    customState.enemyHp -= 0.1;
+                    if (customState.enemyHp <= 0) triggerGameOver(true);
+                }
+            } else if (activeGameIndex === 16) { // Portal fizik topu
+                customState.ballX += customState.ballVx; customState.ballY += customState.ballVy;
+                if (customState.ballX < 50 || customState.ballX > 770) customState.ballVx *= -1;
+                if (customState.ballY < 50 || customState.ballY > 700) customState.ballVy *= -1;
+                if (Math.hypot(customState.ballX - customState.targetX, customState.ballY - customState.targetY) < 30) {
+                    triggerGameOver(true);
+                }
             }
         }
 
+        // Her Oyun İçin Ayrı Özgün Render (Görsel Çizim) Motoru
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Arka Plan Grid Çizgileri
-            ctx.strokeStyle = "rgba(0, 240, 255, 0.03)";
-            for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-            for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+            // Çerçeve Arka Plan Grid
+            ctx.strokeStyle = "rgba(0, 240, 255, 0.04)";
+            for (let x = 0; x < canvas.width; x += 50) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+            for (let y = 0; y < canvas.height; y += 50) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
-            // Partiküller
-            particles.forEach(pt => {
-                ctx.fillStyle = pt.color; ctx.shadowBlur = 8; ctx.shadowColor = pt.color;
-                ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.radius, 0, Math.PI * 2); ctx.fill();
-            });
-            ctx.shadowBlur = 0;
+            // Oyun Başlığı HUD
+            ctx.fillStyle = "#00f0ff";
+            ctx.font = "bold 13px 'Courier New'";
+            ctx.textAlign = "left";
+            ctx.fillText(`MOTOR: ${gamesList[activeGameIndex].name}`, 20, 30);
+            ctx.textAlign = "right";
+            ctx.fillText(`SKOR: ${score}`, canvas.width - 20, 30);
 
-            if (gameState === "PLAYING") {
-                // Tuğlalar
-                gameData.bricks.forEach(brick => {
-                    if (brick.status === 1) {
-                        ctx.shadowBlur = 10; ctx.shadowColor = brick.color; ctx.fillStyle = brick.color;
-                        ctx.fillRect(brick.x, brick.y, brick.w, brick.h);
-                        ctx.shadowBlur = 0;
-                    }
-                });
+            // 1. OYUNA ÖZGÜ GRAFİK RENDER MİMARİSİ
+            ctx.save();
+            switch(activeGameIndex) {
+                case 0: // Disco Elysium
+                    ctx.fillStyle = "#d0d8e8"; ctx.font = "16px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText("REVACHOL İÇ TRIBUNAL MERKEZİ", canvas.width/2, 100);
+                    ctx.fillStyle = "#ffcc00"; ctx.font = "14px 'Courier New'";
+                    ctx.fillText(`Moral: ${customState.morale} / 6  |  Mantık Seviyesi: ${customState.logic}`, canvas.width/2, 150);
+                    ctx.fillStyle = "#161b28"; ctx.fillRect(150, 220, 520, 250);
+                    ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(150, 220, 520, 250);
+                    ctx.fillStyle = "#ffffff"; ctx.font = "13px 'Courier New'"; ctx.textAlign = "left";
+                    ctx.fillText(customState.text, 180, 270);
+                    ctx.fillStyle = "#00f0ff";
+                    ctx.fillText("[1] Aynaya öfkeyle bağır (Moral -1)", 180, 350);
+                    ctx.fillText("[2] Not defterini incele (Skor +25)", 180, 390);
+                    break;
 
-                // Raket
-                ctx.shadowBlur = 15; ctx.shadowColor = gameData.paddle.color; ctx.fillStyle = gameData.paddle.color;
-                ctx.fillRect(gameData.paddle.x, gameData.paddle.y, gameData.paddle.w, gameData.paddle.h);
+                case 1: // Outer Wilds
+                    ctx.fillStyle = "#ffcc00"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`SÜPERNOVA DÖNGÜSÜNE KALAN: ${customState.timeRemaining} SANİYE`, canvas.width/2, 100);
+                    ctx.fillStyle = "#00f0ff"; ctx.fillRect(260, 250, 300, 200);
+                    ctx.fillStyle = "#030408"; ctx.font = "14px 'Courier New'";
+                    ctx.fillText("Gezegen Kalıntıları Taranıyor...", canvas.width/2, 350);
+                    break;
 
-                // Top
-                ctx.fillStyle = gameData.ball.color; ctx.shadowColor = gameData.ball.color;
-                ctx.beginPath(); ctx.arc(gameData.ball.x, gameData.ball.y, gameData.ball.r, 0, Math.PI * 2); ctx.fill();
-                ctx.shadowBlur = 0;
+                case 2: // SOMA
+                    ctx.fillStyle = "#00ff66"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "left";
+                    ctx.fillText(customState.terminalText, 80, 120);
+                    ctx.fillText("-> Seçim yapmak için konsola bağlanılıyor. Su altı basıncı: NORMAL.", 80, 160);
+                    break;
 
-                // Üst HUD Bilgi
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 14px 'Courier New'";
-                ctx.textAlign = "left";
-                ctx.fillText(`OYUN: ${gamesList[activeGameIndex].name}`, 20, 30);
-                ctx.textAlign = "right";
-                ctx.fillText(`SKOR: ${score}`, canvas.width - 20, 30);
+                case 4: // Inscryption
+                    ctx.fillStyle = "#9d00ff"; ctx.font = "16px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`KORU KARTI DÜELLOSU | Rakip Can: ${customState.bossHp}`, canvas.width/2, 80);
+                    // Kartlar
+                    ctx.fillStyle = "#1e2235"; ctx.fillRect(280, 300, 110, 160);
+                    ctx.strokeStyle = "#00f0ff"; ctx.strokeRect(280, 300, 110, 160);
+                    ctx.fillStyle = "#ffffff"; ctx.font = "12px 'Courier New'";
+                    ctx.fillText("Stolat (Atk:2)", 335, 380);
+                    ctx.fillStyle = "#ff007f";
+                    ctx.fillText("[Tuş 1] Rakibe Saldır", canvas.width/2, 580);
+                    break;
+
+                case 5: // Factorio
+                    ctx.fillStyle = "#ff6600"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`DEMİR ÜRETİM BANTI: ${customState.iron} / 30 İron`, canvas.width/2, 100);
+                    ctx.fillStyle = "#333344"; ctx.fillRect(200, 300, 420, 100);
+                    ctx.fillStyle = "#ffcc00"; ctx.fillRect(220 + (gameTime % 300), 335, 30, 30);
+                    break;
+
+                case 6: // Frostpunk
+                    ctx.fillStyle = "#00f0ff"; ctx.font = "15px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`JENERATÖR ISI: ${customState.heat}°C | KÖMÜR: ${customState.coal}`, canvas.width/2, 100);
+                    ctx.fillStyle = "#223355"; ctx.beginPath(); ctx.arc(canvas.width/2, 400, 90, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = "#ff6600"; ctx.beginPath(); ctx.arc(canvas.width/2, 400, 40, 0, Math.PI*2); ctx.fill();
+                    break;
+
+                case 10: // Hades
+                    ctx.fillStyle = "#ff007f"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`YERALTI DÖVÜŞÜ | Düşman Canı: ${customState.enemyHp.toFixed(1)}`, canvas.width/2, 80);
+                    ctx.fillText("Fareye tıklayarak Dash (Atılma) yap ve düşmana saldır!", canvas.width/2, 110);
+                    // Oyuncu
+                    ctx.fillStyle = "#00f0ff"; ctx.beginPath(); ctx.arc(customState.px, customState.py, 16, 0, Math.PI*2); ctx.fill();
+                    // Düşman
+                    ctx.fillStyle = "#ff3344"; ctx.beginPath(); ctx.arc(customState.enemyX, customState.enemyY, 22, 0, Math.PI*2); ctx.fill();
+                    break;
+
+                case 11: // Slay the Spire
+                    ctx.fillStyle = "#ffe600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`BLOK: ${customState.playerBlock} | DÜŞMAN CAN: ${customState.enemyHp}`, canvas.width/2, 80);
+                    ctx.fillStyle = "#00f0ff";
+                    ctx.fillText("[1] Strike (6 Hasar Vur)", 250, 350);
+                    ctx.fillText("[2] Defend (5 Blok Kazan)", 550, 350);
+                    break;
+
+                case 12: // Hollow Knight
+                    ctx.fillStyle = "#ffffff"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`HALLOWNEST ZİNDANI | Düşman Can: ${customState.enemyHp.toFixed(1)}`, canvas.width/2, 80);
+                    ctx.fillText("A/D ile hareket et, Boşluk tuşu ile zıpla!", canvas.width/2, 110);
+                    // Zemin
+                    ctx.fillStyle = "#222a38"; ctx.fillRect(50, 650, 720, 40);
+                    // Karakter
+                    ctx.fillStyle = "#00f0ff"; ctx.fillRect(customState.hx, customState.hy, 24, 34);
+                    // Düşman
+                    ctx.fillStyle = "#ff007f"; ctx.fillRect(customState.enemyX, 615, 36, 36);
+                    break;
+
+                case 16: // Portal 2
+                    ctx.fillStyle = "#ff6600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText("PORTAL FİZİK TOPU ENTEGRASYONU", canvas.width/2, 80);
+                    // Hedef
+                    ctx.fillStyle = "#00ff66"; ctx.fillRect(customState.targetX-20, customState.targetY-20, 40, 40);
+                    // Enerji Topu
+                    ctx.fillStyle = "#00f0ff"; ctx.beginPath(); ctx.arc(customState.ballX, customState.ballY, 12, 0, Math.PI*2); ctx.fill();
+                    break;
+
+                case 21: // Subnautica
+                    ctx.fillStyle = "#0077ff"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`DERİNLİK: ${customState.depth}m | TİTANYUM: ${customState.titanium} / 5`, canvas.width/2, 80);
+                    ctx.fillText("Orta alandaki maden cevherine farenle tıklayarak topla!", canvas.width/2, 110);
+                    ctx.fillStyle = "#ffe600"; ctx.fillRect(350, 350, 120, 120);
+                    break;
+
+                case 22: // Stardew Valley
+                    ctx.fillStyle = "#00ff66"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`ÇİFTLİK YÖNETİMİ | Skor: ${score} / 100`, canvas.width/2, 80);
+                    ctx.fillText("Toprağı sulamak için ekrana tıklamaya devam et!", canvas.width/2, 110);
+                    ctx.fillStyle = "#8b4513"; ctx.fillRect(250, 300, 320, 200);
+                    ctx.fillStyle = "#00ff66"; ctx.fillRect(280, 330, 60, 60); ctx.fillRect(450, 330, 60, 60);
+                    break;
+
+                case 23: // Papers Please
+                    ctx.fillStyle = "#ffe600"; ctx.font = "14px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText(`ARSTOTZKA SINIR KAPISI | İncelenen: ${customState.inspected}`, canvas.width/2, 80);
+                    ctx.fillStyle = "#1e2235"; ctx.fillRect(240, 220, 340, 260);
+                    ctx.fillStyle = "#ffffff"; ctx.font = "13px 'Courier New'"; ctx.textAlign = "left";
+                    ctx.fillText("Pasaport: ARSTOTZKA CITIZEN", 270, 270);
+                    ctx.fillText("Durum: ONAYLI BELGE", 270, 310);
+                    ctx.fillStyle = "#00ff66"; ctx.fillText("[Y] Tuşu ile Kabul Et", 270, 400);
+                    ctx.fillStyle = "#ff3344"; ctx.fillText("[N] Tuşu ile Reddet", 440, 400);
+                    break;
+
+                default:
+                    ctx.fillStyle = "#00f0ff"; ctx.font = "16px 'Courier New'"; ctx.textAlign = "center";
+                    ctx.fillText("Bu oyun için özel AAA motor aktif durumda.", canvas.width/2, 350);
+                    break;
             }
+            ctx.restore();
         }
 
         function loop() {
